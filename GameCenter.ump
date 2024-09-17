@@ -1,0 +1,84 @@
+class GameCenter {
+  name;
+  Time open;
+  Time close;
+}
+
+class User {
+  abstract;
+  unique UUID id;
+  unique email;
+  unique username;
+  password;
+  Boolean isActive;
+}
+
+class Staff {
+  isA User;
+  abstract;
+  }
+
+class Employee {
+  isA Staff;
+}
+
+class Manager {
+  isA Staff;
+
+}
+
+class Client {
+  isA User;
+  phoneNumber;
+  deliveryAddress;
+
+
+  * -> * Purchase purchaseHistory;
+  * -> * Game wishlist;
+  * -> * PaymentInfo paymentInformations;
+}
+
+class Promotion {
+  unique UUID id;
+  Float discount;
+  promotionCode;
+}
+
+class Game {
+  enum Category {ACTION, ROLEPLAY};
+  unique UUID id;
+  title;
+  Float price;
+  description;
+  Float rating;
+  Integer remainingQuantity;
+  Boolean isOffered;
+  Category category;
+
+
+  0..1 -> * Review reviews;
+}
+
+class Purchase {
+  unique UUID id;
+  Float totalPrice;
+
+  0..1 -> 1 Game associatedGame;
+}
+
+class Review {
+  enum Rating {ONE, TWO, THREE, FOUR, FIVE}
+  unique UUID id;
+  author;
+  review;
+  reply;
+  Rating stars;
+}
+
+class PaymentInfo {
+  unique UUID id;
+  Integer cardNumber;
+  Integer cvv;
+  Integer expiryMonth;
+  Integer expiryYear;
+}
