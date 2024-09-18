@@ -25,6 +25,7 @@ class Employee {
 class Manager {
   isA Staff;
 
+  0..1 -> * Game approvalLog;
 }
 
 class Client {
@@ -52,6 +53,7 @@ class Game {
   description;
   Float rating;
   Integer remainingQuantity;
+  Boolean isApproved;
   Boolean isOffered;
   Category category;
 
