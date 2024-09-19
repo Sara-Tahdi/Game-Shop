@@ -2,6 +2,7 @@ class GameCenter {
   name;
   Time open;
   Time close;
+  storePolicy;
 }
 
 class User {
@@ -25,47 +26,76 @@ class Employee {
 class Manager {
   isA Staff;
 
-  0..1 -> * Game approvalLog;
+  0..1 -> * Request requestLog;
 }
 
 class Client {
   isA User;
   phoneNumber;
   deliveryAddress;
+  Integer numberOfFlags;
 
 
   * -> * Purchase purchaseHistory;
   * -> * Game wishlist;
   * -> * PaymentInfo paymentInformations;
+  * -> * Review thumbsUp;
+  * -> * Review thumbsDown;
 }
 
 class Promotion {
   unique UUID id;
-  Float discount;
-  promotionCode;
+  Float newPrice;
 }
 
 class Game {
   enum Category {ACTION, ROLEPLAY};
+  enum GeneralFeeling {VERYPOSITIVE, POSITIVE ,NEUTRAL, NEGATIVE, VERYNEGATIVE};
   unique UUID id;
   title;
   Float price;
   description;
   Float rating;
   Integer remainingQuantity;
-  Boolean isApproved;
   Boolean isOffered;
   Category category;
+  GeneralFeeling publicOpinion;
+
 
 
   0..1 -> * Review reviews;
+  0..1 -> 0..1 Promotion promotion;
+}
+
+class Request {
+  abstract;
+  enum Status {PENDING, APPROVED, DENIED};
+  Status status;
+
+  0..1 -> 1 Staff createdRequest;
+}
+
+class GameRequest {
+  isA Request;
+  enum Type {ADD, REMOVE};
+
+  0..1 -> 1 Game game;
+}
+
+class UserRequest {
+  isA Request;
+
+  0..1 -> 1 Client userFacingJudgement;
 }
 
 class Purchase {
   unique UUID id;
   Float totalPrice;
+  Integer trackingCode;
+  Date purchaseDate;
+  refundReason;
 
-  0..1 -> 1 Game associatedGame;
+  0..1 -> 1..* Game associatedGames;
 }
 
 class Review {
@@ -73,8 +103,10 @@ class Review {
   unique UUID id;
   author;
   review;
-  reply;
+  managerReply;
   Rating stars;
+  Integer thumbsUp;
+  Integer thumbsDown;
 }
 
 class PaymentInfo {
