@@ -5,7 +5,7 @@ class GameCenter {
   storePolicy;
 }
 
-class User {
+class AppUser {
   abstract;
   unique UUID id;
   unique email;
@@ -15,7 +15,7 @@ class User {
 }
 
 class Staff {
-  isA User;
+  isA AppUser;
   abstract;
   }
 
@@ -23,14 +23,12 @@ class Employee {
   isA Staff;
 }
 
-class Manager {
+class Owner {
   isA Staff;
-
-  0..1 -> * Request requestLog;
 }
 
 class Client {
-  isA User;
+  isA AppUser;
   phoneNumber;
   deliveryAddress;
   Integer numberOfFlags;
@@ -38,6 +36,7 @@ class Client {
 
   * -> * Purchase purchaseHistory;
   * -> * Game wishlist;
+  * -> * Game cart;
   * -> * PaymentInfo paymentInformations;
   * -> * Review thumbsUp;
   * -> * Review thumbsDown;
@@ -46,11 +45,13 @@ class Client {
 class Promotion {
   unique UUID id;
   Float newPrice;
+  Date startDate;
+  Date endDate;
 }
 
 class Game {
-  enum Category {ACTION, ROLEPLAY};
   enum GeneralFeeling {VERYPOSITIVE, POSITIVE ,NEUTRAL, NEGATIVE, VERYNEGATIVE};
+
   unique UUID id;
   title;
   Float price;
@@ -58,13 +59,15 @@ class Game {
   Float rating;
   Integer remainingQuantity;
   Boolean isOffered;
-  Category category;
   GeneralFeeling publicOpinion;
 
-
-
   0..1 -> * Review reviews;
-  0..1 -> 0..1 Promotion promotion;
+  0..1 -> * Promotion promotions;
+}
+
+class GameCategory {
+  unique UUID id;
+  unique category;
 }
 
 class Request {
@@ -78,6 +81,8 @@ class Request {
 class GameRequest {
   isA Request;
   enum Type {ADD, REMOVE};
+
+  Type type;
 
   0..1 -> 1 Game game;
 }
@@ -115,4 +120,8 @@ class PaymentInfo {
   Integer cvv;
   Integer expiryMonth;
   Integer expiryYear;
+}
+
+association {
+  1..* GameCategory categories -- * Game games;
 }
