@@ -1,0 +1,126 @@
+namespace ca.mcgill.ecse321.gamecenter.model;
+
+class GameCenter {
+  name;
+  Time open;
+  Time close;
+  storePolicy;
+}
+
+class AppUser {
+  abstract;
+  unique Integer id;
+  unique email;
+  unique username;
+  password;
+  Boolean isActive;
+}
+
+class Staff {
+  isA AppUser;
+  abstract;
+  }
+
+class Employee {
+  isA Staff;
+}
+
+class Owner {
+  isA Staff;
+}
+
+class Client {
+  isA AppUser;
+  phoneNumber;
+  deliveryAddress;
+  Integer numberOfFlags;
+
+
+  * -> * Purchase purchaseHistory;
+  * -> * Game wishlist;
+  * -> * Game cart;
+  * -> * PaymentInfo paymentInformations;
+  * -> * Review thumbsUp;
+  * -> * Review thumbsDown;
+}
+
+class Promotion {
+  unique Integer id;
+  Float newPrice;
+  Date startDate;
+  Date endDate;
+}
+
+class Game {
+  enum GeneralFeeling {VERYPOSITIVE, POSITIVE ,NEUTRAL, NEGATIVE, VERYNEGATIVE};
+
+  unique Integer id;
+  title;
+  Float price;
+  description;
+  Float rating;
+  Integer remainingQuantity;
+  Boolean isOffered;
+  GeneralFeeling publicOpinion;
+
+  0..1 -> * Review reviews;
+  0..1 -> * Promotion promotions;
+  0..1 -> 1..* GameCategory categories;
+}
+
+class GameCategory {
+  unique Integer id;
+  unique category;
+}
+
+class Request {
+  abstract;
+  enum Status {PENDING, APPROVED, DENIED};
+  Status status;
+
+  0..1 -> 1 Staff createdRequest;
+}
+
+class GameRequest {
+  isA Request;
+  enum Type {ADD, REMOVE};
+
+  Type type;
+
+  0..1 -> 1 Game game;
+}
+
+class UserRequest {
+  isA Request;
+
+  0..1 -> 1 Client userFacingJudgement;
+}
+
+class Purchase {
+  unique Integer id;
+  Float totalPrice;
+  Integer trackingCode;
+  Date purchaseDate;
+  refundReason;
+
+  0..1 -> 1..* Game associatedGames;
+}
+
+class Review {
+  enum Rating {ONE, TWO, THREE, FOUR, FIVE}
+  unique Integer id;
+  author;
+  review;
+  managerReply;
+  Rating stars;
+  Integer thumbsUp;
+  Integer thumbsDown;
+}
+
+class PaymentInfo {
+  unique Integer id;
+  Integer cardNumber;
+  Integer cvv;
+  Integer expiryMonth;
+  Integer expiryYear;
+}
