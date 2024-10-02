@@ -2,10 +2,13 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.Entity;
+
 import java.util.*;
 import java.sql.Date;
 
 // line 99 "../../../../../../GameCenter.ump"
+@Entity
 public class Purchase
 {
 
@@ -32,6 +35,8 @@ public class Purchase
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Purchase() {}
 
   public Purchase(int aId, float aTotalPrice, int aTrackingCode, Date aPurchaseDate, String aRefundReason, Game... allAssociatedGames)
   {

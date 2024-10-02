@@ -2,9 +2,15 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.*;
+
 import java.util.*;
 
 // line 10 "../../../../../../GameCenter.ump"
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "appUsers")
+@DiscriminatorColumn(name = "USER_TYPE")
 public abstract class AppUser
 {
 
@@ -21,6 +27,8 @@ public abstract class AppUser
   //------------------------
 
   //AppUser Attributes
+  @Id
+  @GeneratedValue
   private int id;
   private String email;
   private String username;
@@ -31,6 +39,7 @@ public abstract class AppUser
   // CONSTRUCTOR
   //------------------------
 
+  public AppUser() {}
   public AppUser(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive)
   {
     password = aPassword;

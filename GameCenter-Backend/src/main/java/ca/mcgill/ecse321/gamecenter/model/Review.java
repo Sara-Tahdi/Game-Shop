@@ -2,9 +2,13 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.Entity;
+
 import java.util.*;
 
-// line 109 "../../../../../../GameCenter.ump"
+// line 109 "../../../../../../GameCenter.ump"\
+
+@Entity
 public class Review
 {
 
@@ -36,6 +40,8 @@ public class Review
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Review() {}
 
   public Review(int aId, String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown)
   {
