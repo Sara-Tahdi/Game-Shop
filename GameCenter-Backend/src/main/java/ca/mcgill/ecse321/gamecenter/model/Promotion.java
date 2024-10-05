@@ -47,6 +47,10 @@ public class Promotion
     }
   }
 
+  public Promotion() {
+    // TODO
+  }
+
   //------------------------
   // INTERFACE
   //------------------------

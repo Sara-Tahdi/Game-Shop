@@ -46,6 +46,10 @@ public class GameCategory
     }
   }
 
+  public GameCategory() {
+    // TODO
+  }
+
   //------------------------
   // INTERFACE
   //------------------------
