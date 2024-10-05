@@ -3,6 +3,8 @@
 
 package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.util.*;
 
@@ -29,6 +31,8 @@ public class Review
   //------------------------
 
   //Review Attributes
+  @Id
+  @GeneratedValue
   private int id;
   private String author;
   private String review;

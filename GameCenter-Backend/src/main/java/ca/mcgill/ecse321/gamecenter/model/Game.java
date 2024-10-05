@@ -2,7 +2,7 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.util.*;
 
@@ -28,6 +28,8 @@ public class Game
   //------------------------
 
   //Game Attributes
+  @Id
+  @GeneratedValue
   private int id;
   private String title;
   private float price;
@@ -38,8 +40,25 @@ public class Game
   private GeneralFeeling publicOpinion;
 
   //Game Associations
+  @OneToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<Review> reviews;
+
+  @OneToMany(
+          mappedBy = "client",
+          cascade = CascadeType.ALL,
+          fetch = FetchType.LAZY
+  )
   private List<Promotion> promotions;
+
+  @OneToMany(
+          mappedBy = "client",
+          cascade = CascadeType.ALL,
+          fetch = FetchType.LAZY
+  )
   private List<GameCategory> categories;
 
   //------------------------
