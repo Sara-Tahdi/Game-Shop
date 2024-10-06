@@ -1,10 +1,8 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
-
 package ca.mcgill.ecse321.gamecenter.model;
 import java.util.*;
 
 // line 32 "../../../../../../GameCenter.ump"
+@Entity
 public class Client extends AppUser
 {
 

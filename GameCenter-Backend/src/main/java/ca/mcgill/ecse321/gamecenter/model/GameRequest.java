@@ -1,9 +1,10 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
-
 package ca.mcgill.ecse321.gamecenter.model;
+import java.util.*;
+import jakarta.persistence.*;
 
 // line 84 "../../../../../../GameCenter.ump"
+@Entity
+@DiscrinimatorValue("USER_REQUEST")
 public class GameRequest extends Request
 {
 
@@ -21,11 +22,16 @@ public class GameRequest extends Request
   private Type type;
 
   //GameRequest Associations
+  @OneToOne // TODO Check other attributes
   private Game game;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public GameRequest()
+  {
+    super();
+  }
 
   public GameRequest(Status aStatus, Staff aCreatedRequest, Type aType, Game aGame)
   {

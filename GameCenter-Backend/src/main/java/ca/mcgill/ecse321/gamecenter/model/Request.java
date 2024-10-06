@@ -1,9 +1,12 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
-
 package ca.mcgill.ecse321.gamecenter.model;
+import java.util.*;
+import jakarta.persistence.*;
 
 // line 76 "../../../../../../GameCenter.ump"
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "requests")
+@DiscriminatorColumn(name = "REQUEST_TYPE")
 public abstract class Request
 {
 
@@ -18,14 +21,19 @@ public abstract class Request
   //------------------------
 
   //Request Attributes
-  private Status status;
+  @Id
+  @GeneratedValue
+  private int id;         // TODO: Check for not includes function as id was added manually
+  private Status status;  // TODO: Change to ENUM
 
   //Request Associations
+  @OneToOne // TODO Check other attributes
   private Staff createdRequest;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Request() {}
 
   public Request(Status aStatus, Staff aCreatedRequest)
   {
