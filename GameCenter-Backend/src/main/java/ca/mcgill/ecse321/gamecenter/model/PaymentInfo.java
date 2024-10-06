@@ -2,9 +2,15 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 import java.util.*;
 
 // line 120 "../../../../../../GameCenter.ump"
+
+@Entity
 public class PaymentInfo
 {
 
@@ -19,6 +25,8 @@ public class PaymentInfo
   //------------------------
 
   //PaymentInfo Attributes
+  @Id
+  @GeneratedValue
   private int id;
   private int cardNumber;
   private int cvv;
@@ -28,6 +36,8 @@ public class PaymentInfo
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public PaymentInfo() {}
 
   public PaymentInfo(int aId, int aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear)
   {

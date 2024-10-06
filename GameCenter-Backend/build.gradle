@@ -26,5 +26,6 @@ dependencies {
 }
 
 tasks.named('test') {
+	// TODO: Add test thing that TA has in his version
 	useJUnitPlatform()
 }
