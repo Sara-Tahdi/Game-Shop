@@ -20,42 +20,36 @@ public class Client extends AppUser
 
   //Client Associations
   @OneToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Purchase> purchaseHistory;
 
   @ManyToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Game> wishlist;
 
   @ManyToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Game> cart;
 
   @OneToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<PaymentInfo> paymentInformations;
 
   @ManyToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Review> thumbsUp;
 
   @ManyToMany(
-          mappedBy = "client",
           cascade = CascadeType.ALL,
           fetch = FetchType.LAZY
   )

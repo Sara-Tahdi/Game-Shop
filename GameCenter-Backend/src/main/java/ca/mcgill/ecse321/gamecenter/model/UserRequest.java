@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 // line 93 "../../../../../../GameCenter.ump"
 @Entity
-@DiscrinimatorValue("USER_REQUEST")
+@DiscriminatorValue("USER_REQUEST")
 public class UserRequest extends Request {
 
     // ------------------------
