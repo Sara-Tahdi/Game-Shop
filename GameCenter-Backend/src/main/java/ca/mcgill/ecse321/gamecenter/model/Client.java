@@ -62,9 +62,9 @@ public class Client extends AppUser
     super();
   }
 
-  public Client(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
+  public Client(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
   {
-    super(aId, aEmail, aUsername, aPassword, aIsActive);
+    super(aEmail, aUsername, aPassword);
     phoneNumber = aPhoneNumber;
     deliveryAddress = aDeliveryAddress;
     numberOfFlags = aNumberOfFlags;

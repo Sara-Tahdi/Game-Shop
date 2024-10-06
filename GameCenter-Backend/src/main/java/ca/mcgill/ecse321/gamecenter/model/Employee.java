@@ -26,9 +26,9 @@ public class Employee extends Staff
     super();
   }
 
-  public Employee(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive)
+  public Employee(String aEmail, String aUsername, String aPassword)
   {
-    super(aId, aEmail, aUsername, aPassword, aIsActive);
+    super(aEmail, aUsername, aPassword);
   }
 
   //------------------------

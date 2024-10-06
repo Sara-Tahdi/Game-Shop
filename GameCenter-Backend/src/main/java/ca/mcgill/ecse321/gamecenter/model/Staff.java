@@ -24,9 +24,9 @@ public abstract class Staff extends AppUser
     super();
   }
 
-  public Staff(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive)
+  public Staff(String aEmail, String aUsername, String aPassword)
   {
-    super(aId, aEmail, aUsername, aPassword, aIsActive);
+    super(aEmail, aUsername, aPassword);
   }
 
   //------------------------

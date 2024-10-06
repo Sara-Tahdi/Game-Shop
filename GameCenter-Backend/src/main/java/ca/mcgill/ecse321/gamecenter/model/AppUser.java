@@ -40,14 +40,10 @@ public abstract class AppUser
   //------------------------
 
   public AppUser() {}
-  public AppUser(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive)
+  public AppUser(String aEmail, String aUsername, String aPassword)
   {
     password = aPassword;
-    isActive = aIsActive;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
+    isActive = true;
     if (!setEmail(aEmail))
     {
       throw new RuntimeException("Cannot create due to duplicate email. See https://manual.umple.org?RE003ViolationofUniqueness.html");
