@@ -36,10 +36,10 @@ class Client {
   Integer numberOfFlags;
 
 
-  * -> * Purchase purchaseHistory;
+  0..1 -> * Purchase purchaseHistory;
   * -> * Game wishlist;
   * -> * Game cart;
-  * -> * PaymentInfo paymentInformations;
+  0..1 -> * PaymentInfo paymentInformations;
   * -> * Review thumbsUp;
   * -> * Review thumbsDown;
 }

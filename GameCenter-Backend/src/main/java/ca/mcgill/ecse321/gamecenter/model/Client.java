@@ -1,8 +1,11 @@
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.*;
+
 import java.util.*;
 
 // line 32 "../../../../../../GameCenter.ump"
 @Entity
+@DiscriminatorValue("CLIENT")
 public class Client extends AppUser
 {
 
@@ -16,16 +19,54 @@ public class Client extends AppUser
   private int numberOfFlags;
 
   //Client Associations
+  @OneToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<Purchase> purchaseHistory;
+
+  @ManyToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<Game> wishlist;
+
+  @ManyToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<Game> cart;
+
+  @OneToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<PaymentInfo> paymentInformations;
+
+  @ManyToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<Review> thumbsUp;
+
+  @ManyToMany(
+          mappedBy = "client",
+          cascade = CascadeType.ALL,
+          fetch = FetchType.LAZY
+  )
   private List<Review> thumbsDown;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Client() {
+    super();
+  }
 
   public Client(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
   {

@@ -2,9 +2,12 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.*;
+
 import java.util.*;
 
 // line 54 "../../../../../../GameCenter.ump"
+@Entity
 public class Game
 {
 
@@ -25,6 +28,8 @@ public class Game
   //------------------------
 
   //Game Attributes
+  @Id
+  @GeneratedValue
   private int id;
   private String title;
   private float price;
@@ -35,13 +40,32 @@ public class Game
   private GeneralFeeling publicOpinion;
 
   //Game Associations
+  @OneToMany(
+    mappedBy = "client",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY
+  )
   private List<Review> reviews;
+
+  @OneToMany(
+          mappedBy = "client",
+          cascade = CascadeType.ALL,
+          fetch = FetchType.LAZY
+  )
   private List<Promotion> promotions;
+
+  @OneToMany(
+          mappedBy = "client",
+          cascade = CascadeType.ALL,
+          fetch = FetchType.LAZY
+  )
   private List<GameCategory> categories;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Game() {}
 
   public Game(int aId, String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory... allCategories)
   {
