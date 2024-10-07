@@ -20,42 +20,36 @@ public class Client extends AppUser
 
   //Client Associations
   @OneToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Purchase> purchaseHistory;
 
   @ManyToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Game> wishlist;
 
   @ManyToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Game> cart;
 
   @OneToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<PaymentInfo> paymentInformations;
 
   @ManyToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Review> thumbsUp;
 
   @ManyToMany(
-          mappedBy = "client",
           cascade = CascadeType.ALL,
           fetch = FetchType.LAZY
   )
@@ -68,9 +62,9 @@ public class Client extends AppUser
     super();
   }
 
-  public Client(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
+  public Client(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
   {
-    super(aId, aEmail, aUsername, aPassword, aIsActive);
+    super(aEmail, aUsername, aPassword);
     phoneNumber = aPhoneNumber;
     deliveryAddress = aDeliveryAddress;
     numberOfFlags = aNumberOfFlags;
@@ -655,7 +649,6 @@ public class Client extends AppUser
     paymentInformations.clear();
     thumbsUp.clear();
     thumbsDown.clear();
-    super.delete();
   }
 
 

@@ -41,21 +41,18 @@ public class Game
 
   //Game Associations
   @OneToMany(
-    mappedBy = "client",
     cascade = CascadeType.ALL,
     fetch = FetchType.LAZY
   )
   private List<Review> reviews;
 
   @OneToMany(
-          mappedBy = "client",
           cascade = CascadeType.ALL,
           fetch = FetchType.LAZY
   )
   private List<Promotion> promotions;
 
   @OneToMany(
-          mappedBy = "client",
           cascade = CascadeType.ALL,
           fetch = FetchType.LAZY
   )

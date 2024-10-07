@@ -34,7 +34,6 @@ public class Purchase
   //Purchase Associations
 
   @OneToMany(
-          mappedBy = "client",
           cascade = CascadeType.ALL,
           fetch = FetchType.LAZY
   )
