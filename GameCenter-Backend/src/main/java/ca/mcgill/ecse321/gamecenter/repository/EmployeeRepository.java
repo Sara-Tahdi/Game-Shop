@@ -1,7 +1,8 @@
 package ca.mcgill.ecse321.gamecenter.repository;
 
 import ca.mcgill.ecse321.gamecenter.model.AppUser;
-import ca.mcgill.ecse321.gamecenter.model.Staff;
+import ca.mcgill.ecse321.gamecenter.model.Employee;
+import ca.mcgill.ecse321.gamecenter.model.Employee;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,15 +12,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface StaffRepository extends CrudRepository<Staff, Integer> {
-    Optional<Staff> findStaffById(int id);
+public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
+    Optional<Employee> findEmployeeById(int id);
 
-    Optional<Staff> findStaffByUsername(String username);
+    Optional<Employee> findEmployeeByUsername(String username);
 
-    Optional<Staff> findStaffByEmail(String email);
+    Optional<Employee> findEmployeeByEmail(String email);
 
     @Query("SELECT a FROM AppUser a WHERE TYPE(a) = :type")
-    Optional<List<AppUser>> findStaffByUserType(@Param("type") Class<?> type);
+    Optional<List<AppUser>> findEmployeeByUserType(@Param("type") Class<?> type);
 
     @Modifying
     @Transactional

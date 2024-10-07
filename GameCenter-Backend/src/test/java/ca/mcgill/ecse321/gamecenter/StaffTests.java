@@ -181,7 +181,7 @@ public class StaffTests {
         assertNotNull(employee2);
 
         // Getting AppUser by filter "OWNER"
-        List<AppUser> owner_list = staffRepository.findAppUserByUserType(Owner.class).orElse(null);
+        List<AppUser> owner_list = staffRepository.findStaffByUserType(Owner.class).orElse(null);
         assertNotNull(owner_list);
         assertEquals(1, owner_list.size());
 
@@ -189,7 +189,7 @@ public class StaffTests {
             assertTrue(user instanceof Owner);
         }
 
-        List<AppUser> employee_list = staffRepository.findAppUserByUserType(Employee.class).orElse(null);
+        List<AppUser> employee_list = staffRepository.findStaffByUserType(Employee.class).orElse(null);
         assertNotNull(employee_list);
         assertEquals(2, employee_list.size());
 
