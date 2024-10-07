@@ -39,7 +39,9 @@ public abstract class AppUser
   // CONSTRUCTOR
   //------------------------
 
-  public AppUser() {}
+  public AppUser() {
+    isActive = true;
+  }
   public AppUser(String aEmail, String aUsername, String aPassword)
   {
     password = aPassword;
