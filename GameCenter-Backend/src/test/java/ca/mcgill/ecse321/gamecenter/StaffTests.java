@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.gamecenter;
 
-import ca.mcgill.ecse321.gamecenter.model.AppUser;
+import ca.mcgill.ecse321.gamecenter.model.Staff;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Employee;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
@@ -42,7 +42,7 @@ public class StaffTests {
         String password = owner.getPassword();
 
         // Get by ID tests
-        AppUser ownerFromDb = staffRepository.findStaffById(id).orElse(null);
+        Staff ownerFromDb = staffRepository.findStaffById(id).orElse(null);
         assertNotNull(ownerFromDb);
 
         assertTrue(ownerFromDb.getIsActive());
@@ -89,7 +89,7 @@ public class StaffTests {
         String password = employee.getPassword();
 
         // Get by ID tests
-        AppUser employeeFromDb = staffRepository.findStaffById(id).orElse(null);
+        Staff employeeFromDb = staffRepository.findStaffById(id).orElse(null);
         assertNotNull(employeeFromDb);
 
         assertTrue(employeeFromDb.getIsActive());
@@ -132,7 +132,7 @@ public class StaffTests {
         String username = owner.getUsername();
 
         staffRepository.updateByUsername(username);
-        AppUser ownerFromDb = staffRepository.findStaffByUsername(username).orElse(null);
+        Staff ownerFromDb = staffRepository.findStaffByUsername(username).orElse(null);
         assertNotNull(ownerFromDb);
 
         assertFalse(ownerFromDb.isIsActive());
@@ -152,7 +152,7 @@ public class StaffTests {
         String username = employee.getUsername();
 
         staffRepository.updateByUsername(username);
-        AppUser employeeFromDb = staffRepository.findStaffByUsername(username).orElse(null);
+        Staff employeeFromDb = staffRepository.findStaffByUsername(username).orElse(null);
         assertNotNull(employeeFromDb);
 
         assertFalse(employeeFromDb.isIsActive());
@@ -180,20 +180,20 @@ public class StaffTests {
         employee2 = staffRepository.save(employee2);
         assertNotNull(employee2);
 
-        // Getting AppUser by filter "OWNER"
-        List<AppUser> owner_list = staffRepository.findStaffByUserType(Owner.class).orElse(null);
+        // Getting Staff by filter "OWNER"
+        List<Staff> owner_list = staffRepository.findStaffByUserType(Owner.class).orElse(null);
         assertNotNull(owner_list);
         assertEquals(1, owner_list.size());
 
-        for (AppUser user: owner_list) {
+        for (Staff user: owner_list) {
             assertTrue(user instanceof Owner);
         }
 
-        List<AppUser> employee_list = staffRepository.findStaffByUserType(Employee.class).orElse(null);
+        List<Staff> employee_list = staffRepository.findStaffByUserType(Employee.class).orElse(null);
         assertNotNull(employee_list);
         assertEquals(2, employee_list.size());
 
-        for (AppUser user: employee_list) {
+        for (Staff user: employee_list) {
             assertTrue(user instanceof Employee);
         }
     }

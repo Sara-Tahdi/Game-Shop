@@ -20,7 +20,7 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
     Optional<Employee> findEmployeeByEmail(String email);
 
     @Query("SELECT a FROM AppUser a WHERE TYPE(a) = :type")
-    Optional<List<AppUser>> findEmployeeByUserType(@Param("type") Class<?> type);
+    Optional<List<Employee>> findEmployeeByUserType(@Param("type") Class<?> type);
 
     @Modifying
     @Transactional

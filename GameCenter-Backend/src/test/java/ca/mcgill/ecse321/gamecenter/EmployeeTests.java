@@ -107,11 +107,11 @@ public class EmployeeTests {
         employee2 = employeeRepository.save(employee2);
         assertNotNull(employee2);
 
-        List<AppUser> employee_list = employeeRepository.findEmployeeByUserType(Employee.class).orElse(null);
+        List<Employee> employee_list = employeeRepository.findEmployeeByUserType(Employee.class).orElse(null);
         assertNotNull(employee_list);
         assertEquals(2, employee_list.size());
 
-        for (AppUser user: employee_list) {
+        for (Employee user: employee_list) {
             assertTrue(user instanceof Employee);
         }
     }
