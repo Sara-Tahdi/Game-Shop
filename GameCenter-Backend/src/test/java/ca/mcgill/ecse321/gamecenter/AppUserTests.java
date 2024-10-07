@@ -38,6 +38,7 @@ public class AppUserTests {
 
         owner = appUserRepository.save(owner);
         assertNotNull(owner);
+        assertTrue(owner.isIsActive());
 
         int id = owner.getId();
         String username = owner.getUsername();
@@ -48,7 +49,7 @@ public class AppUserTests {
         AppUser ownerFromDb = appUserRepository.findAppUserById(id).orElse(null);
         assertNotNull(ownerFromDb);
 
-        assert((owner.getIsActive() == ownerFromDb.getIsActive()) == true);
+        assertTrue(ownerFromDb.getIsActive());
         assertEquals(id, ownerFromDb.getId());
         assertEquals(username, ownerFromDb.getUsername());
         assertEquals(email, ownerFromDb.getEmail());
@@ -58,7 +59,7 @@ public class AppUserTests {
         ownerFromDb = appUserRepository.findAppUserByUsername(username).orElse(null);
         assertNotNull(ownerFromDb);
 
-        assert((owner.getIsActive() == ownerFromDb.getIsActive()) == true);
+        assertTrue(ownerFromDb.getIsActive());
         assertEquals(id, ownerFromDb.getId());
         assertEquals(username, ownerFromDb.getUsername());
         assertEquals(email, ownerFromDb.getEmail());
@@ -68,7 +69,7 @@ public class AppUserTests {
         ownerFromDb = appUserRepository.findAppUserByEmail(email).orElse(null);
         assertNotNull(ownerFromDb);
 
-        assert((owner.getIsActive() == ownerFromDb.getIsActive()) == true);
+        assertTrue(ownerFromDb.getIsActive());
         assertEquals(id, ownerFromDb.getId());
         assertEquals(username, ownerFromDb.getUsername());
         assertEquals(email, ownerFromDb.getEmail());
@@ -84,6 +85,7 @@ public class AppUserTests {
 
         employee = appUserRepository.save(employee);
         assertNotNull(employee);
+        assertTrue(employee.isIsActive());
 
         int id = employee.getId();
         String username = employee.getUsername();
@@ -94,7 +96,7 @@ public class AppUserTests {
         AppUser employeeFromDb = appUserRepository.findAppUserById(id).orElse(null);
         assertNotNull(employeeFromDb);
 
-        assert((employee.getIsActive() == employeeFromDb.getIsActive()) == true);
+        assertTrue(employeeFromDb.getIsActive());
         assertEquals(id, employeeFromDb.getId());
         assertEquals(username, employeeFromDb.getUsername());
         assertEquals(email, employeeFromDb.getEmail());
@@ -104,7 +106,7 @@ public class AppUserTests {
         employeeFromDb = appUserRepository.findAppUserByUsername(username).orElse(null);
         assertNotNull(employeeFromDb);
 
-        assert((employee.getIsActive() == employeeFromDb.getIsActive()) == true);
+        assertTrue(employeeFromDb.getIsActive());
         assertEquals(id, employeeFromDb.getId());
         assertEquals(username, employeeFromDb.getUsername());
         assertEquals(email, employeeFromDb.getEmail());
@@ -114,8 +116,7 @@ public class AppUserTests {
         employeeFromDb = appUserRepository.findAppUserByEmail(email).orElse(null);
         assertNotNull(employeeFromDb);
 
-        assert((employee.getIsActive() == employeeFromDb.getIsActive()) == true);
-        assertEquals(id, employeeFromDb.getId());
+        assertTrue(employeeFromDb.getIsActive());        assertEquals(id, employeeFromDb.getId());
         assertEquals(username, employeeFromDb.getUsername());
         assertEquals(email, employeeFromDb.getEmail());
         assertEquals(password, employeeFromDb.getPassword());
@@ -130,6 +131,7 @@ public class AppUserTests {
 
         client = appUserRepository.save(client);
         assertNotNull(client);
+        assertTrue(client.isIsActive());
 
         int id = client.getId();
         String username = client.getUsername();
@@ -140,7 +142,7 @@ public class AppUserTests {
         AppUser clientFromDb = appUserRepository.findAppUserById(id).orElse(null);
         assertNotNull(clientFromDb);
 
-        assert((client.getIsActive() == clientFromDb.getIsActive()) == true);
+        assertTrue(clientFromDb.getIsActive());
         assertEquals(id, clientFromDb.getId());
         assertEquals(username, clientFromDb.getUsername());
         assertEquals(email, clientFromDb.getEmail());
@@ -150,7 +152,7 @@ public class AppUserTests {
         clientFromDb = appUserRepository.findAppUserByUsername(username).orElse(null);
         assertNotNull(clientFromDb);
 
-        assert((client.getIsActive() == clientFromDb.getIsActive()) == true);
+        assertTrue(clientFromDb.getIsActive());
         assertEquals(id, clientFromDb.getId());
         assertEquals(username, clientFromDb.getUsername());
         assertEquals(email, clientFromDb.getEmail());
@@ -160,7 +162,7 @@ public class AppUserTests {
         clientFromDb = appUserRepository.findAppUserByEmail(email).orElse(null);
         assertNotNull(clientFromDb);
 
-        assert((client.getIsActive() == clientFromDb.getIsActive()) == true);
+        assertTrue(clientFromDb.getIsActive());
         assertEquals(id, clientFromDb.getId());
         assertEquals(username, clientFromDb.getUsername());
         assertEquals(email, clientFromDb.getEmail());
