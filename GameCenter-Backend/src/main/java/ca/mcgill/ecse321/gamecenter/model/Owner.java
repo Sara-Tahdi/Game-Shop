@@ -35,9 +35,4 @@ public class Owner extends Staff
   // INTERFACE
   //------------------------
 
-  public void delete()
-  {
-    super.delete();
-  }
-
 }

@@ -33,9 +33,4 @@ public abstract class Staff extends AppUser
   // INTERFACE
   //------------------------
 
-  public void delete()
-  {
-    super.delete();
-  }
-
 }

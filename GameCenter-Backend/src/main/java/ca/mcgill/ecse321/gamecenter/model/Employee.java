@@ -35,9 +35,5 @@ public class Employee extends Staff
   // INTERFACE
   //------------------------
 
-  public void delete()
-  {
-    super.delete();
-  }
 
 }

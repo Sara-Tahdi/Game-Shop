@@ -18,10 +18,6 @@ public abstract class AppUser
   // STATIC VARIABLES
   //------------------------
 
-  private static Map<Integer, AppUser> appusersById = new HashMap<Integer, AppUser>();
-  private static Map<String, AppUser> appusersByEmail = new HashMap<String, AppUser>();
-  private static Map<String, AppUser> appusersByUsername = new HashMap<String, AppUser>();
-
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -44,77 +40,29 @@ public abstract class AppUser
   }
   public AppUser(String aEmail, String aUsername, String aPassword)
   {
+    email = aEmail;
+    username = aUsername;
     password = aPassword;
     isActive = true;
-    if (!setEmail(aEmail))
-    {
-      throw new RuntimeException("Cannot create due to duplicate email. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
-    if (!setUsername(aUsername))
-    {
-      throw new RuntimeException("Cannot create due to duplicate username. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setId(int aId)
+  public void setId(int aId)
   {
-    boolean wasSet = false;
-    Integer anOldId = getId();
-    if (anOldId != null && anOldId.equals(aId)) {
-      return true;
-    }
-    if (hasWithId(aId)) {
-      return wasSet;
-    }
     id = aId;
-    wasSet = true;
-    if (anOldId != null) {
-      appusersById.remove(anOldId);
-    }
-    appusersById.put(aId, this);
-    return wasSet;
   }
 
-  public boolean setEmail(String aEmail)
+  public void setEmail(String aEmail)
   {
-    boolean wasSet = false;
-    String anOldEmail = getEmail();
-    if (anOldEmail != null && anOldEmail.equals(aEmail)) {
-      return true;
-    }
-    if (hasWithEmail(aEmail)) {
-      return wasSet;
-    }
     email = aEmail;
-    wasSet = true;
-    if (anOldEmail != null) {
-      appusersByEmail.remove(anOldEmail);
-    }
-    appusersByEmail.put(aEmail, this);
-    return wasSet;
   }
 
-  public boolean setUsername(String aUsername)
+  public void setUsername(String aUsername)
   {
-    boolean wasSet = false;
-    String anOldUsername = getUsername();
-    if (anOldUsername != null && anOldUsername.equals(aUsername)) {
-      return true;
-    }
-    if (hasWithUsername(aUsername)) {
-      return wasSet;
-    }
     username = aUsername;
-    wasSet = true;
-    if (anOldUsername != null) {
-      appusersByUsername.remove(anOldUsername);
-    }
-    appusersByUsername.put(aUsername, this);
-    return wasSet;
   }
 
   public boolean setPassword(String aPassword)
@@ -137,45 +85,15 @@ public abstract class AppUser
   {
     return id;
   }
-  /* Code from template attribute_GetUnique */
-  public static AppUser getWithId(int aId)
-  {
-    return appusersById.get(aId);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithId(int aId)
-  {
-    return getWithId(aId) != null;
-  }
 
   public String getEmail()
   {
     return email;
   }
-  /* Code from template attribute_GetUnique */
-  public static AppUser getWithEmail(String aEmail)
-  {
-    return appusersByEmail.get(aEmail);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithEmail(String aEmail)
-  {
-    return getWithEmail(aEmail) != null;
-  }
 
   public String getUsername()
   {
     return username;
-  }
-  /* Code from template attribute_GetUnique */
-  public static AppUser getWithUsername(String aUsername)
-  {
-    return appusersByUsername.get(aUsername);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithUsername(String aUsername)
-  {
-    return getWithUsername(aUsername) != null;
   }
 
   public String getPassword()
@@ -192,14 +110,6 @@ public abstract class AppUser
   {
     return isActive;
   }
-
-  public void delete()
-  {
-    appusersById.remove(getId());
-    appusersByEmail.remove(getEmail());
-    appusersByUsername.remove(getUsername());
-  }
-
 
   public String toString()
   {

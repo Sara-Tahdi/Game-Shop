@@ -649,7 +649,6 @@ public class Client extends AppUser
     paymentInformations.clear();
     thumbsUp.clear();
     thumbsDown.clear();
-    super.delete();
   }
 
 

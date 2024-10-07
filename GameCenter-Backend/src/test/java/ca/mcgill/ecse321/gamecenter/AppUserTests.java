@@ -24,8 +24,8 @@ public class AppUserTests {
 
     @BeforeEach
     @AfterEach
+    @Transactional
     public void clear() {
-        appUserRepository.deleteAll();
         appUserRepository.deleteAll();
     }
 
@@ -180,7 +180,7 @@ public class AppUserTests {
 
         String username = owner.getUsername();
 
-        appUserRepository.deleteByUsername(username);
+        appUserRepository.updateByUsername(username);
         AppUser ownerFromDb = appUserRepository.findAppUserByUsername(username).orElse(null);
         assertNotNull(ownerFromDb);
 
@@ -200,7 +200,7 @@ public class AppUserTests {
 
         String username = employee.getUsername();
 
-        appUserRepository.deleteByUsername(username);
+        appUserRepository.updateByUsername(username);
         AppUser employeeFromDb = appUserRepository.findAppUserByUsername(username).orElse(null);
         assertNotNull(employeeFromDb);
 
@@ -220,7 +220,7 @@ public class AppUserTests {
 
         String username = client.getUsername();
 
-        appUserRepository.deleteByUsername(username);
+        appUserRepository.updateByUsername(username);
         AppUser clientFromDb = appUserRepository.findAppUserByUsername(username).orElse(null);
         assertNotNull(clientFromDb);
 
