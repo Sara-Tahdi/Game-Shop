@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.repository.ClientRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
+import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ public class ClientTests {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private PurchaseRepository purchaseRepository;
     
     @BeforeEach
     @AfterEach
@@ -129,20 +133,136 @@ public class ClientTests {
         client.setPassword("JustinJus");
         client.setUsername("IamJustin");
 
+        Client client2 = new Client();
+        client2.setEmail("hhaaha@ahaha.ca");
+        client2.setPassword("secure");
+        client2.setUsername("LOL");
+        
         Game game = new Game();
         game.setTitle("Super Mario Bros");
         game.setIsOffered(true);
-        client.addWishlist(game);
+        game = gameRepository.save(game);
+
+        Game game2 = new Game();
+        game2.setTitle("Mari Kart");
+        game2.setIsOffered(true);
+        game2 = gameRepository.save(game2);
 
         client = clientRepository.save(client);
+        client2 = clientRepository.save(client2);
+
+        client.addWishlist(game);
+        client2.addWishlist(game2);
+
+        client = clientRepository.save(client);
+        client2 = clientRepository.save(client2);
 
         Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
-
         List<Game> wishlist = clientFromDb.getWishlist();
 
         assertNotNull(wishlist);
         assertEquals(1, wishlist.size());
         assertEquals(game.getId(), wishlist.get(0).getId());
         assertEquals(game.getTitle(), wishlist.get(0).getTitle());
+
+        Client clientFromDb2 = clientRepository.findClientById(client2.getId()).orElse(null);
+        List<Game> wishlist2 = clientFromDb2.getWishlist();
+
+        assertNotNull(wishlist2);
+        assertEquals(1, wishlist2.size());
+        assertEquals(game2.getId(), wishlist2.get(0).getId());
+        assertEquals(game2.getTitle(), wishlist2.get(0).getTitle());
+
+        assertNotEquals(wishlist.get(0).getId(), wishlist2.get(0).getId());
+    }
+
+    @Test
+    public void testAddGameToCart() {
+        Client client = new Client();
+        client.setEmail("justin@mail.mail");
+        client.setPassword("JustinJus");
+        client.setUsername("IamJustin");
+
+        Client client2 = new Client();
+        client2.setEmail("hhaaha@ahaha.ca");
+        client2.setPassword("secure");
+        client2.setUsername("LOL");
+
+        Game game = new Game();
+        game.setTitle("Super Mario Bros");
+        game.setIsOffered(true);
+        game = gameRepository.save(game);
+
+        Game game2 = new Game();
+        game2.setTitle("Mari Kart");
+        game2.setIsOffered(true);
+        game2 = gameRepository.save(game2);
+
+        client = clientRepository.save(client);
+        client2 = clientRepository.save(client2);
+
+        client.addCart(game);
+        client2.addCart(game2);
+
+        client = clientRepository.save(client);
+        client2 = clientRepository.save(client2);
+
+        Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
+        List<Game> cart = clientFromDb.getCart();
+
+        assertNotNull(cart);
+        assertEquals(1, cart.size());
+        assertEquals(game.getId(), cart.get(0).getId());
+        assertEquals(game.getTitle(), cart.get(0).getTitle());
+
+        Client clientFromDb2 = clientRepository.findClientById(client2.getId()).orElse(null);
+        List<Game> cart2 = clientFromDb2.getCart();
+
+        assertNotNull(cart2);
+        assertEquals(1, cart2.size());
+        assertEquals(game2.getId(), cart2.get(0).getId());
+        assertEquals(game2.getTitle(), cart2.get(0).getTitle());
+
+        assertNotEquals(cart.get(0).getId(), cart2.get(0).getId());
+    }
+
+    public void testPurchaseHistory() {
+        Game game1 = new Game();
+        game1.setIsOffered(true);
+        game1.setTitle("Super Mario Bros");
+        game1 = gameRepository.save(game1);
+
+        Game game2 = new Game();
+        game2.setIsOffered(true);
+        game2.setTitle("Mario Kart");
+        game2 = gameRepository.save(game2);
+
+        Purchase purchase = new Purchase();
+        purchase.setAssociatedGames(game1, game2);
+        purchase = purchaseRepository.save(purchase);
+
+        Client client = new Client();
+        client.setEmail("progamer@hai.ca");
+        client.setPassword("mariobros");
+        client.setUsername("Bowser");
+
+        client.addPurchaseHistory(purchase);
+        client = clientRepository.save(client);
+
+        Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
+        assertNotNull(clientFromDb);
+
+        List<Purchase> purchaseFromClient = clientFromDb.getPurchaseHistory();
+        assertNotNull(purchaseFromClient);
+
+        assertEquals(1, purchaseFromClient.size());
+        assertEquals(purchase.getId(), purchaseFromClient.get(0).getId());
+
+        List<Game> gameInPurchaseFromClient = purchaseFromClient.get(0).getAssociatedGames();
+        assertNotNull(gameInPurchaseFromClient);
+
+        assertEquals(2, gameInPurchaseFromClient.size());
+        assertEquals(game1.getId(), gameInPurchaseFromClient.get(0).getId());
+        assertEquals(game2.getId(), gameInPurchaseFromClient.get(0).getId());
     }
 }

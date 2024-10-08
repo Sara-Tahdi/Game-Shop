@@ -45,16 +45,12 @@ public class Purchase
 
   public Purchase() {}
 
-  public Purchase(int aId, float aTotalPrice, int aTrackingCode, Date aPurchaseDate, String aRefundReason, Game... allAssociatedGames)
+  public Purchase(float aTotalPrice, int aTrackingCode, Date aPurchaseDate, String aRefundReason, Game... allAssociatedGames)
   {
     totalPrice = aTotalPrice;
     trackingCode = aTrackingCode;
     purchaseDate = aPurchaseDate;
     refundReason = aRefundReason;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
     associatedGames = new ArrayList<Game>();
     boolean didAddAssociatedGames = setAssociatedGames(allAssociatedGames);
     if (!didAddAssociatedGames)
