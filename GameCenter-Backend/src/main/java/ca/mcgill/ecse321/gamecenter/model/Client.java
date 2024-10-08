@@ -21,37 +21,37 @@ public class Client extends AppUser
   //Client Associations
   @OneToMany(
     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   private List<Purchase> purchaseHistory;
 
   @ManyToMany(
     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   private List<Game> wishlist;
 
   @ManyToMany(
     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   private List<Game> cart;
 
   @OneToMany(
     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   private List<PaymentInfo> paymentInformations;
 
   @ManyToMany(
     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   private List<Review> thumbsUp;
 
   @ManyToMany(
           cascade = CascadeType.ALL,
-          fetch = FetchType.LAZY
+          fetch = FetchType.EAGER
   )
   private List<Review> thumbsDown;
 
@@ -60,6 +60,12 @@ public class Client extends AppUser
   //------------------------
   public Client() {
     super();
+    purchaseHistory = new ArrayList<Purchase>();
+    wishlist = new ArrayList<Game>();
+    cart = new ArrayList<Game>();
+    paymentInformations = new ArrayList<PaymentInfo>();
+    thumbsUp = new ArrayList<Review>();
+    thumbsDown = new ArrayList<Review>();
   }
 
   public Client(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)

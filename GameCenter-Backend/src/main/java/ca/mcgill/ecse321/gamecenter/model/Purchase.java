@@ -33,9 +33,9 @@ public class Purchase
 
   //Purchase Associations
 
-  @OneToMany(
+  @ManyToMany(
           cascade = CascadeType.ALL,
-          fetch = FetchType.LAZY
+          fetch = FetchType.EAGER
   )
   private List<Game> associatedGames;
 

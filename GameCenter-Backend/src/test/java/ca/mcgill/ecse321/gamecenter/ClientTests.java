@@ -2,8 +2,8 @@ package ca.mcgill.ecse321.gamecenter;
 
 import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.repository.ClientRepository;
+import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ClientTests {
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private GameRepository gameRepository;
     
     @BeforeEach
     @AfterEach
     public void clear() {
         clientRepository.deleteAll();
+        gameRepository.deleteAll();
     }
 
     @Test
@@ -86,7 +90,7 @@ public class ClientTests {
 
         String username = client.getUsername();
 
-        clientRepository.updateByUsername(username);
+        clientRepository.updateClientByUsername(username);
         Client clientFromDb = clientRepository.findClientByUsername(username).orElse(null);
         assertNotNull(clientFromDb);
 
@@ -116,5 +120,29 @@ public class ClientTests {
         for (Client user: client_list) {
             assertTrue(user instanceof Client);
         }
+    }
+
+    @Test
+    public void testAddGameToWishlist() {
+        Client client = new Client();
+        client.setEmail("justin@mail.mail");
+        client.setPassword("JustinJus");
+        client.setUsername("IamJustin");
+
+        Game game = new Game();
+        game.setTitle("Super Mario Bros");
+        game.setIsOffered(true);
+        client.addWishlist(game);
+
+        client = clientRepository.save(client);
+
+        Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
+
+        List<Game> wishlist = clientFromDb.getWishlist();
+
+        assertNotNull(wishlist);
+        assertEquals(1, wishlist.size());
+        assertEquals(game.getId(), wishlist.get(0).getId());
+        assertEquals(game.getTitle(), wishlist.get(0).getTitle());
     }
 }
