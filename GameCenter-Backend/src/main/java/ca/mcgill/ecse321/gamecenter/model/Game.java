@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.*;
 
-// line 54 "../../../../../../GameCenter.ump"
+// line 50 "../../../../../../GameCenter.ump"
 @Entity
 public class Game
 {
@@ -16,12 +16,6 @@ public class Game
   //------------------------
 
   public enum GeneralFeeling { VERYPOSITIVE, POSITIVE, NEUTRAL, NEGATIVE, VERYNEGATIVE }
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static Map<Integer, Game> gamesById = new HashMap<Integer, Game>();
 
   //------------------------
   // MEMBER VARIABLES
@@ -41,22 +35,17 @@ public class Game
 
   //Game Associations
   @OneToMany(
-    cascade = CascadeType.ALL,
-    fetch = FetchType.EAGER
+          cascade = CascadeType.ALL,
+          fetch = FetchType.EAGER
   )
   private List<Review> reviews;
-
   @OneToMany(
           cascade = CascadeType.ALL,
           fetch = FetchType.EAGER
   )
   private List<Promotion> promotions;
-
-  @OneToMany(
-          cascade = CascadeType.ALL,
-          fetch = FetchType.EAGER
-  )
-  private List<GameCategory> categories;
+  @ManyToOne
+  private GameCategory categories;
 
   //------------------------
   // CONSTRUCTOR
@@ -64,22 +53,20 @@ public class Game
 
   public Game() {}
 
-  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, GeneralFeeling aPublicOpinion, GameCategory... allCategories)
+  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory aCategories)
   {
     title = aTitle;
     price = aPrice;
     description = aDescription;
     rating = aRating;
     remainingQuantity = aRemainingQuantity;
+    isOffered = aIsOffered;
     publicOpinion = aPublicOpinion;
-    isOffered = false;
     reviews = new ArrayList<Review>();
     promotions = new ArrayList<Promotion>();
-    categories = new ArrayList<GameCategory>();
-    boolean didAddCategories = setCategories(allCategories);
-    if (!didAddCategories)
+    if (!setCategories(aCategories))
     {
-      throw new RuntimeException("Unable to create Game, must have at least 1 categories. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Game due to aCategories. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
@@ -90,19 +77,8 @@ public class Game
   public boolean setId(int aId)
   {
     boolean wasSet = false;
-    Integer anOldId = getId();
-    if (anOldId != null && anOldId.equals(aId)) {
-      return true;
-    }
-    if (hasWithId(aId)) {
-      return wasSet;
-    }
     id = aId;
     wasSet = true;
-    if (anOldId != null) {
-      gamesById.remove(anOldId);
-    }
-    gamesById.put(aId, this);
     return wasSet;
   }
 
@@ -165,16 +141,6 @@ public class Game
   public int getId()
   {
     return id;
-  }
-  /* Code from template attribute_GetUnique */
-  public static Game getWithId(int aId)
-  {
-    return gamesById.get(aId);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithId(int aId)
-  {
-    return getWithId(aId) != null;
   }
 
   public String getTitle()
@@ -276,35 +242,10 @@ public class Game
     int index = promotions.indexOf(aPromotion);
     return index;
   }
-  /* Code from template association_GetMany */
-  public GameCategory getCategory(int index)
+  /* Code from template association_GetOne */
+  public GameCategory getCategories()
   {
-    GameCategory aCategory = categories.get(index);
-    return aCategory;
-  }
-
-  public List<GameCategory> getCategories()
-  {
-    List<GameCategory> newCategories = Collections.unmodifiableList(categories);
-    return newCategories;
-  }
-
-  public int numberOfCategories()
-  {
-    int number = categories.size();
-    return number;
-  }
-
-  public boolean hasCategories()
-  {
-    boolean has = categories.size() > 0;
-    return has;
-  }
-
-  public int indexOfCategory(GameCategory aCategory)
-  {
-    int index = categories.indexOf(aCategory);
-    return index;
+    return categories;
   }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfReviews()
@@ -333,7 +274,7 @@ public class Game
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addReviewAt(Review aReview, int index)
-  {  
+  {
     boolean wasAdded = false;
     if(addReview(aReview))
     {
@@ -356,8 +297,8 @@ public class Game
       reviews.remove(aReview);
       reviews.add(index, aReview);
       wasAdded = true;
-    } 
-    else 
+    }
+    else
     {
       wasAdded = addReviewAt(aReview, index);
     }
@@ -390,7 +331,7 @@ public class Game
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addPromotionAt(Promotion aPromotion, int index)
-  {  
+  {
     boolean wasAdded = false;
     if(addPromotion(aPromotion))
     {
@@ -413,108 +354,30 @@ public class Game
       promotions.remove(aPromotion);
       promotions.add(index, aPromotion);
       wasAdded = true;
-    } 
-    else 
+    }
+    else
     {
       wasAdded = addPromotionAt(aPromotion, index);
     }
     return wasAdded;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfCategories()
-  {
-    return 1;
-  }
-  /* Code from template association_AddUnidirectionalMStar */
-  public boolean addCategory(GameCategory aCategory)
-  {
-    boolean wasAdded = false;
-    if (categories.contains(aCategory)) { return false; }
-    categories.add(aCategory);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeCategory(GameCategory aCategory)
-  {
-    boolean wasRemoved = false;
-    if (!categories.contains(aCategory))
-    {
-      return wasRemoved;
-    }
-
-    if (numberOfCategories() <= minimumNumberOfCategories())
-    {
-      return wasRemoved;
-    }
-
-    categories.remove(aCategory);
-    wasRemoved = true;
-    return wasRemoved;
-  }
-  /* Code from template association_SetUnidirectionalMStar */
-  public boolean setCategories(GameCategory... newCategories)
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setCategories(GameCategory aNewCategories)
   {
     boolean wasSet = false;
-    ArrayList<GameCategory> verifiedCategories = new ArrayList<GameCategory>();
-    for (GameCategory aCategory : newCategories)
+    if (aNewCategories != null)
     {
-      if (verifiedCategories.contains(aCategory))
-      {
-        continue;
-      }
-      verifiedCategories.add(aCategory);
+      categories = aNewCategories;
+      wasSet = true;
     }
-
-    if (verifiedCategories.size() != newCategories.length || verifiedCategories.size() < minimumNumberOfCategories())
-    {
-      return wasSet;
-    }
-
-    categories.clear();
-    categories.addAll(verifiedCategories);
-    wasSet = true;
     return wasSet;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addCategoryAt(GameCategory aCategory, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCategory(aCategory))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCategories()) { index = numberOfCategories() - 1; }
-      categories.remove(aCategory);
-      categories.add(index, aCategory);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveCategoryAt(GameCategory aCategory, int index)
-  {
-    boolean wasAdded = false;
-    if(categories.contains(aCategory))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCategories()) { index = numberOfCategories() - 1; }
-      categories.remove(aCategory);
-      categories.add(index, aCategory);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCategoryAt(aCategory, index);
-    }
-    return wasAdded;
   }
 
   public void delete()
   {
-    gamesById.remove(getId());
     reviews.clear();
     promotions.clear();
-    categories.clear();
+    categories = null;
   }
 
 
@@ -528,6 +391,7 @@ public class Game
             "rating" + ":" + getRating()+ "," +
             "remainingQuantity" + ":" + getRemainingQuantity()+ "," +
             "isOffered" + ":" + getIsOffered()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "publicOpinion" + "=" + (getPublicOpinion() != null ? !getPublicOpinion().equals(this)  ? getPublicOpinion().toString().replaceAll("  ","    ") : "this" : "null");
+            "  " + "publicOpinion" + "=" + (getPublicOpinion() != null ? !getPublicOpinion().equals(this)  ? getPublicOpinion().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "categories = "+(getCategories()!=null?Integer.toHexString(System.identityHashCode(getCategories())):"null");
   }
 }

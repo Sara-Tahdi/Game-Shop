@@ -23,11 +23,11 @@ public abstract class Request
   //Request Attributes
   @Id
   @GeneratedValue
-  private int id;         // TODO: Check for not includes function as id was added manually
-  private Status status;  // TODO: Change to ENUM
+  private int id;
+  private Status status;
 
   //Request Associations
-  @OneToOne // TODO Check other attributes
+  @OneToOne
   private Staff createdRequest;
 
   //------------------------
@@ -48,12 +48,25 @@ public abstract class Request
   // INTERFACE
   //------------------------
 
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setStatus(Status aStatus)
   {
     boolean wasSet = false;
     status = aStatus;
     wasSet = true;
     return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
   }
 
   public Status getStatus()
