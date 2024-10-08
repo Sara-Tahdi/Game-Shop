@@ -42,19 +42,19 @@ public class Game
   //Game Associations
   @OneToMany(
     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   private List<Review> reviews;
 
   @OneToMany(
           cascade = CascadeType.ALL,
-          fetch = FetchType.LAZY
+          fetch = FetchType.EAGER
   )
   private List<Promotion> promotions;
 
   @OneToMany(
           cascade = CascadeType.ALL,
-          fetch = FetchType.LAZY
+          fetch = FetchType.EAGER
   )
   private List<GameCategory> categories;
 
@@ -64,19 +64,15 @@ public class Game
 
   public Game() {}
 
-  public Game(int aId, String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory... allCategories)
+  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, GeneralFeeling aPublicOpinion, GameCategory... allCategories)
   {
     title = aTitle;
     price = aPrice;
     description = aDescription;
     rating = aRating;
     remainingQuantity = aRemainingQuantity;
-    isOffered = aIsOffered;
     publicOpinion = aPublicOpinion;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
+    isOffered = false;
     reviews = new ArrayList<Review>();
     promotions = new ArrayList<Promotion>();
     categories = new ArrayList<GameCategory>();

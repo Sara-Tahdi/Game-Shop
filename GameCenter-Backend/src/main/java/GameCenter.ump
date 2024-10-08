@@ -103,7 +103,7 @@ class Purchase {
   Date purchaseDate;
   refundReason;
 
-  0..1 -> 1..* Game associatedGames;
+  * -> 1..* Game associatedGames;
 }
 
 class Review {
