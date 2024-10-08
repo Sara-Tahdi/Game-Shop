@@ -21,12 +21,6 @@ public class Review
   public enum Rating { ONE, TWO, THREE, FOUR, FIVE }
 
   //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static Map<Integer, Review> reviewsById = new HashMap<Integer, Review>();
-
-  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -47,7 +41,7 @@ public class Review
 
   public Review() {}
 
-  public Review(int aId, String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown)
+  public Review(String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown)
   {
     author = aAuthor;
     review = aReview;
@@ -55,10 +49,6 @@ public class Review
     stars = aStars;
     thumbsUp = aThumbsUp;
     thumbsDown = aThumbsDown;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
   }
 
   //------------------------
@@ -72,15 +62,8 @@ public class Review
     if (anOldId != null && anOldId.equals(aId)) {
       return true;
     }
-    if (hasWithId(aId)) {
-      return wasSet;
-    }
     id = aId;
     wasSet = true;
-    if (anOldId != null) {
-      reviewsById.remove(anOldId);
-    }
-    reviewsById.put(aId, this);
     return wasSet;
   }
 
@@ -136,16 +119,6 @@ public class Review
   {
     return id;
   }
-  /* Code from template attribute_GetUnique */
-  public static Review getWithId(int aId)
-  {
-    return reviewsById.get(aId);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithId(int aId)
-  {
-    return getWithId(aId) != null;
-  }
 
   public String getAuthor()
   {
@@ -176,12 +149,6 @@ public class Review
   {
     return thumbsDown;
   }
-
-  public void delete()
-  {
-    reviewsById.remove(getId());
-  }
-
 
   public String toString()
   {
