@@ -20,7 +20,7 @@ public class PaymentInfo
   @Id
   @GeneratedValue
   private int id;
-  private int cardNumber;
+  private String cardNumber;
   private int cvv;
   private int expiryMonth;
   private int expiryYear;
@@ -31,7 +31,7 @@ public class PaymentInfo
 
   public PaymentInfo() {}
 
-  public PaymentInfo(int aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear)
+  public PaymentInfo(String aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear)
   {
     cardNumber = aCardNumber;
     cvv = aCvv;
@@ -51,7 +51,7 @@ public class PaymentInfo
     return wasSet;
   }
 
-  public boolean setCardNumber(int aCardNumber)
+  public boolean setCardNumber(String aCardNumber)
   {
     boolean wasSet = false;
     cardNumber = aCardNumber;
@@ -88,7 +88,7 @@ public class PaymentInfo
     return id;
   }
 
-  public int getCardNumber()
+  public String getCardNumber()
   {
     return cardNumber;
   }
