@@ -101,6 +101,7 @@ public class Promotion
 
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+

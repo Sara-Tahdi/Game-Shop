@@ -381,6 +381,7 @@ public class Game
   }
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+
