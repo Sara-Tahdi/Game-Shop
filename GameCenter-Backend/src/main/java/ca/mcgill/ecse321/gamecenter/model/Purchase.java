@@ -4,7 +4,6 @@
 package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.*;
 
-import java.util.*;
 import java.sql.Date;
 
 // line 99 "../../../../../../GameCenter.ump"

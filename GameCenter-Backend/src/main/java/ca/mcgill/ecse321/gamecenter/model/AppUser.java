@@ -4,8 +4,6 @@
 package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.*;
 
-import java.util.*;
-
 // line 10 "../../../../../../GameCenter.ump"
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-import java.util.*;
-
 // line 71 "../../../../../../GameCenter.ump"
 @Entity
 public class GameCategory

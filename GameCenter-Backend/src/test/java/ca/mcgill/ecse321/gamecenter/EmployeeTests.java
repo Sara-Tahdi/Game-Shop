@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.gamecenter;
 
 import ca.mcgill.ecse321.gamecenter.model.AppUser;
 import ca.mcgill.ecse321.gamecenter.model.Employee;
-import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.repository.EmployeeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

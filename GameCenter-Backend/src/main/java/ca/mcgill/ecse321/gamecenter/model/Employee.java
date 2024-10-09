@@ -5,8 +5,6 @@ package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
-import java.util.*;
-
 // line 24 "../../../../../../GameCenter.ump"
 
 @Entity

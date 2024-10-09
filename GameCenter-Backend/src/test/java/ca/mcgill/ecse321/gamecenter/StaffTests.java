@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.gamecenter;
 
 import ca.mcgill.ecse321.gamecenter.model.Staff;
-import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Employee;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.repository.StaffRepository;

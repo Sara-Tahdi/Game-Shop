@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.repository;
 
-import ca.mcgill.ecse321.gamecenter.model.AppUser;
-import ca.mcgill.ecse321.gamecenter.model.Employee;
 import ca.mcgill.ecse321.gamecenter.model.Employee;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;

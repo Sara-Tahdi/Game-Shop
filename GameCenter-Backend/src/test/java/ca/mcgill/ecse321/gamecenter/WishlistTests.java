@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamecenter;
 
-import ca.mcgill.ecse321.gamecenter.model.Cart;
 import ca.mcgill.ecse321.gamecenter.model.Wishlist;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
