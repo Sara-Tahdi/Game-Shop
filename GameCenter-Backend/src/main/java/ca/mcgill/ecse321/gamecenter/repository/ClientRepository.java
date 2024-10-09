@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.repository;
 
 import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.model.Game;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

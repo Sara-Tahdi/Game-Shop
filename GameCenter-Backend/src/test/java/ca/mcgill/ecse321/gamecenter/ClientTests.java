@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.repository.ClientRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
+import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +28,9 @@ public class ClientTests {
     private GameRepository gameRepository;
 
     @Autowired
+    private PaymentInfoRepository paymentInfoRepository;
+
+    @Autowired
     private PurchaseRepository purchaseRepository;
     
     @BeforeEach
@@ -32,6 +38,8 @@ public class ClientTests {
     public void clear() {
         clientRepository.deleteAll();
         gameRepository.deleteAll();
+        paymentInfoRepository.deleteAll();
+        purchaseRepository.deleteAll();
     }
 
     @Test
@@ -126,4 +134,86 @@ public class ClientTests {
         }
     }
 
+    @Test
+    public void testAddAndGetPaymentInfo() {
+        Client client = new Client();
+        client.setEmail("progamer@hai.ca");
+        client.setPassword("mariobros");
+        client.setUsername("Bowser");
+        client = clientRepository.save(client);
+        assertNotNull(client);
+
+        PaymentInfo masterCard = new PaymentInfo();
+        masterCard.setCardNumber("1622249210243832");
+        masterCard.setCvv(942);
+        masterCard.setExpiryMonth(11);
+        masterCard.setExpiryYear(2026);
+        masterCard = paymentInfoRepository.save(masterCard);
+        assertNotNull(masterCard);
+
+        PaymentInfo visa = new PaymentInfo();
+        visa.setCardNumber("7295710471937431");
+        visa.setCvv(135);
+        visa.setExpiryMonth(4);
+        visa.setExpiryYear(2027);
+        visa = paymentInfoRepository.save(visa);
+        assertNotNull(visa);
+
+        client.addPaymentInformation(masterCard);
+
+        client = clientRepository.save(client);
+
+        Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
+        List<PaymentInfo> infos = clientFromDb.getPaymentInformations();
+        assertNotNull(infos);
+
+        assertEquals(masterCard.getId(), infos.get(0).getId());
+        assertNotEquals(visa.getId(), infos.get(0).getId());
+    }
+
+    @Test
+    public void testAddAndGetPurchaseHistory() {
+        Client client = new Client();
+        client.setEmail("progamer@hai.ca");
+        client.setPassword("mariobros");
+        client.setUsername("Bowser");
+        client = clientRepository.save(client);
+        assertNotNull(client);
+
+        Game game = new Game();
+        game.setPrice(Float.valueOf("13.99"));
+        game.setRemainingQuantity(10);
+        game = gameRepository.save(game);
+        assertNotNull(game);
+
+        Purchase purchase = new Purchase();
+        purchase.setTotalPrice(game.getPrice());
+        purchase.setCopies(1);
+        purchase.setPurchaseDate(Date.valueOf(LocalDate.now()));
+        purchase.setTrackingCode(3513531);
+        purchase = purchaseRepository.save(purchase);
+        assertNotNull(purchase);
+
+        purchase.setGame(game);
+
+        purchase = purchaseRepository.save(purchase);
+        assertNotNull(purchase);
+
+        client.addPurchaseHistory(purchase);
+
+        client = clientRepository.save(client);
+        assertNotNull(client);
+
+        Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
+        assertNotNull(clientFromDb);
+
+        List<Purchase> purchaseFromClientFromDb = clientFromDb.getPurchaseHistory();
+
+        assertEquals(1, purchaseFromClientFromDb.size());
+        assertEquals(purchase.getId(), purchaseFromClientFromDb.get(0).getId());
+
+        Game gameFromPurchaseFromClientFromDb = purchaseFromClientFromDb.get(0).getGame();
+
+        assertEquals(game.getId(), gameFromPurchaseFromClientFromDb.getId());
+    }
 }

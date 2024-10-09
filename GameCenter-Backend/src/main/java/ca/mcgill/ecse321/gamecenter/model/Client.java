@@ -19,16 +19,25 @@ public class Client extends AppUser
   private int numberOfFlags;
 
   //Client Associations
-  @OneToMany
+  @OneToMany(
+          cascade = CascadeType.ALL,
+          fetch = FetchType.EAGER
+  )
   private List<Purchase> purchaseHistory;
-  @OneToMany
+  @OneToMany(
+          cascade = CascadeType.ALL,
+          fetch = FetchType.EAGER
+  )
   private List<PaymentInfo> paymentInformations;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Client() {}
+  public Client() {
+    purchaseHistory = new ArrayList<Purchase>();
+    paymentInformations = new ArrayList<PaymentInfo>();
+  }
 
   public Client(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
   {

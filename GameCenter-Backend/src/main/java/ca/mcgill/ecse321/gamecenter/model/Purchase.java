@@ -36,13 +36,12 @@ public class Purchase
 
   public Purchase() {}
 
-  public Purchase(float aTotalPrice, int aCopies, int aTrackingCode, Date aPurchaseDate, String aRefundReason, Game aGame)
+  public Purchase(float aTotalPrice, int aCopies, int aTrackingCode, Date aPurchaseDate, Game aGame)
   {
     totalPrice = aTotalPrice;
     copies = aCopies;
     trackingCode = aTrackingCode;
     purchaseDate = aPurchaseDate;
-    refundReason = aRefundReason;
     if (!setGame(aGame))
     {
       throw new RuntimeException("Unable to create Purchase due to aGame. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
