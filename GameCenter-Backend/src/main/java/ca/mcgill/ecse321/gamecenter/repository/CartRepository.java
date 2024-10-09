@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.repository;
 
 import ca.mcgill.ecse321.gamecenter.model.Cart;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
