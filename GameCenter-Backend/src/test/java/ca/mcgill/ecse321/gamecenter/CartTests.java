@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class CartTest {
+public class CartTests {
     @Autowired
     private CartRepository cartRepository;
 
@@ -37,7 +37,7 @@ public class CartTest {
     }
 
     @Test
-    public void testPersistandLoadCart() {
+    public void testPersistAndLoadCart() {
         Cart cart = new Cart();
         cart = cartRepository.save(cart);
         assertNotNull(cart);

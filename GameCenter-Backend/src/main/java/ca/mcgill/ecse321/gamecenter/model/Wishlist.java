@@ -48,6 +48,7 @@ public class Wishlist
     // INTERFACE
     //------------------------
     /* Code from template association_GetOne */
+    public int getId() { return id; }
     public Game getGame()
     {
         return game;
@@ -58,6 +59,11 @@ public class Wishlist
         return client;
     }
     /* Code from template association_SetUnidirectionalOne */
+    public boolean setId(int aId)
+    {
+        id = aId;
+        return true;
+    }
     public boolean setGame(Game aNewGame)
     {
         boolean wasSet = false;
