@@ -32,8 +32,6 @@ public class Review
   private String review;
   private String managerReply;
   private Rating stars;
-  private int thumbsUp;
-  private int thumbsDown;
 
   //------------------------
   // CONSTRUCTOR
@@ -47,8 +45,6 @@ public class Review
     review = aReview;
     managerReply = aManagerReply;
     stars = aStars;
-    thumbsUp = aThumbsUp;
-    thumbsDown = aThumbsDown;
   }
 
   //------------------------
@@ -99,22 +95,6 @@ public class Review
     return wasSet;
   }
 
-  public boolean setThumbsUp(int aThumbsUp)
-  {
-    boolean wasSet = false;
-    thumbsUp = aThumbsUp;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setThumbsDown(int aThumbsDown)
-  {
-    boolean wasSet = false;
-    thumbsDown = aThumbsDown;
-    wasSet = true;
-    return wasSet;
-  }
-
   public int getId()
   {
     return id;
@@ -140,15 +120,6 @@ public class Review
     return stars;
   }
 
-  public int getThumbsUp()
-  {
-    return thumbsUp;
-  }
-
-  public int getThumbsDown()
-  {
-    return thumbsDown;
-  }
 
   public String toString()
   {
@@ -156,9 +127,8 @@ public class Review
             "id" + ":" + getId()+ "," +
             "author" + ":" + getAuthor()+ "," +
             "review" + ":" + getReview()+ "," +
-            "managerReply" + ":" + getManagerReply()+ "," +
-            "thumbsUp" + ":" + getThumbsUp()+ "," +
-            "thumbsDown" + ":" + getThumbsDown()+ "]" + System.getProperties().getProperty("line.separator") +
+            "managerReply" + ":" + getManagerReply()+ "]" +
+            System.getProperties().getProperty("line.separator") +
             "  " + "stars" + "=" + (getStars() != null ? !getStars().equals(this)  ? getStars().toString().replaceAll("  ","    ") : "this" : "null");
   }
 }
