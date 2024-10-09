@@ -9,9 +9,9 @@ class GameCenter {
 
 class AppUser {
   abstract;
-  unique Integer id;
-  unique email;
-  unique username;
+  Integer id;
+  email;
+  username;
   password;
   Boolean isActive;
 }
@@ -37,15 +37,11 @@ class Client {
 
 
   0..1 -> * Purchase purchaseHistory;
-  * -> * Game wishlist;
-  * -> * Game cart;
   0..1 -> * PaymentInfo paymentInformations;
-  * -> * Review thumbsUp;
-  * -> * Review thumbsDown;
 }
 
 class Promotion {
-  unique Integer id;
+  Integer id;
   Float newPrice;
   Date startDate;
   Date endDate;
@@ -54,7 +50,7 @@ class Promotion {
 class Game {
   enum GeneralFeeling {VERYPOSITIVE, POSITIVE ,NEUTRAL, NEGATIVE, VERYNEGATIVE};
 
-  unique Integer id;
+  Integer id;
   title;
   Float price;
   description;
@@ -65,20 +61,21 @@ class Game {
 
   0..1 -> * Review reviews;
   0..1 -> * Promotion promotions;
-  0..1 -> 1..* GameCategory categories;
+  * -> 1 GameCategory categories;
 }
 
 class GameCategory {
-  unique Integer id;
-  unique category;
+  Integer id;
+  category;
 }
 
 class Request {
   abstract;
+  Integer id;
   enum Status {PENDING, APPROVED, DENIED};
   Status status;
 
-  0..1 -> 1 Staff createdRequest;
+  * -> 1 Staff createdRequest;
 }
 
 class GameRequest {
@@ -97,13 +94,14 @@ class UserRequest {
 }
 
 class Purchase {
-  unique Integer id;
+  Integer id;
   Float totalPrice;
+  Integer copies;
   Integer trackingCode;
   Date purchaseDate;
   refundReason;
 
-  * -> 1..* Game associatedGames;
+  * -> 1 Game game;
 }
 
 class Review {
@@ -113,14 +111,22 @@ class Review {
   review;
   managerReply;
   Rating stars;
-  Integer thumbsUp;
-  Integer thumbsDown;
-}
+  }
 
 class PaymentInfo {
-  unique Integer id;
-  Integer cardNumber;
+  Integer id;
+  cardNumber;
   Integer cvv;
   Integer expiryMonth;
   Integer expiryYear;
+}
+
+class Cart {
+  * -> 1 Game game;
+  * -> 1 Client client;
+}
+
+class Wishlist {
+  * -> 1 Game game;
+  * -> 1 Client client;
 }
