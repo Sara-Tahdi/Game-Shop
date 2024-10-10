@@ -28,9 +28,9 @@ public class UserRequestTests {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+        UserRequestRepo.deleteAll();
         ClientRepo.deleteAll();
         EmployeeRepo.deleteAll();
-        UserRequestRepo.deleteAll();
     }
 
     @Test
