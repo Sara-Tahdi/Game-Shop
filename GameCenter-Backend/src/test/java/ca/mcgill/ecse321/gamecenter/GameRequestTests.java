@@ -79,12 +79,14 @@ public class GameRequestTests {
 
         // Validate the associated Employee (Staff) of the UserRequest
         assertNotNull(gameRequestFromDb.getCreatedRequest());
+        assertEquals(createdRequest.getId(), gameRequestFromDb.getCreatedRequest().getId());
         assertEquals(createdRequest.getEmail(), gameRequestFromDb.getCreatedRequest().getEmail());
         assertEquals(createdRequest.getUsername(), gameRequestFromDb.getCreatedRequest().getUsername());
         assertEquals(createdRequest.getPassword(), gameRequestFromDb.getCreatedRequest().getPassword());
 
         // Validate the associated Game of the GameRequest
         assertNotNull(gameRequestFromDb.getGame());
+        assertEquals(game.getId(), gameRequestFromDb.getGame().getId());
         assertEquals(game.getTitle(), gameRequestFromDb.getGame().getTitle());
         assertEquals(game.getPrice(), gameRequestFromDb.getGame().getPrice());
         assertEquals(game.getDescription(), gameRequestFromDb.getGame().getDescription());
@@ -95,6 +97,7 @@ public class GameRequestTests {
 
         // Validate the associated GameCategory of the GameRequest
         assertNotNull(gameRequestFromDb.getGame().getCategories());
+        assertEquals(gameCategory.getId(), gameRequestFromDb.getGame().getCategories().getId());
         assertEquals(gameCategory.getCategory(), gameRequestFromDb.getGame().getCategories().getCategory());
     }
 }

@@ -66,12 +66,14 @@ public class UserRequestTests {
         
         // Validate the associated Employee (Staff) of the UserRequest
         assertNotNull(userRequestFromDb.getCreatedRequest());
+        assertEquals(createdRequest.getId(), userRequestFromDb.getCreatedRequest().getId());
         assertEquals(createdRequest.getEmail(), userRequestFromDb.getCreatedRequest().getEmail());
         assertEquals(createdRequest.getUsername(), userRequestFromDb.getCreatedRequest().getUsername());
         assertEquals(createdRequest.getPassword(), userRequestFromDb.getCreatedRequest().getPassword());
 
         // Validate the associated Client of the UserRequest
         assertNotNull(userRequestFromDb.getUserFacingJudgement());
+        assertEquals(userFacingJudgement.getId(), userRequestFromDb.getUserFacingJudgement().getId());
         assertEquals(userFacingJudgement.getEmail(), userRequestFromDb.getUserFacingJudgement().getEmail());
         assertEquals(userFacingJudgement.getUsername(), userRequestFromDb.getUserFacingJudgement().getUsername());
         assertEquals(userFacingJudgement.getPhoneNumber(), userRequestFromDb.getUserFacingJudgement().getPhoneNumber());
