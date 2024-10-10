@@ -30,12 +30,12 @@ public class PurchaseTests {
     }
 
     @Test
-    void testPersistAndLoadGame() {
+    void testPersistAndLoadPurchase() {
         Purchase purchase = new Purchase();
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
 
-        Purchase purchaseFromDb = purchaseRepository.findById(purchase.getId()).orElse(null);
+        Purchase purchaseFromDb = purchaseRepository.findPurchaseById(purchase.getId()).orElse(null);
         assertNotNull(purchaseFromDb);
 
         assertEquals(purchase.getId(), purchaseFromDb.getId());
