@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,6 +30,8 @@ public class PurchaseTests {
     @BeforeEach
     @AfterEach
     public void clear() {
+        clientRepository.deleteAll();
+        gameRepository.deleteAll();
         purchaseRepository.deleteAll();
     }
 
@@ -46,6 +47,7 @@ public class PurchaseTests {
         assertEquals(purchase.getId(), purchaseFromDb.getId());
     }
 
+    @Test
     void testUserPurchasesGame() {
         Client client = new Client();
         client.setEmail("progamer@hai.ca");
