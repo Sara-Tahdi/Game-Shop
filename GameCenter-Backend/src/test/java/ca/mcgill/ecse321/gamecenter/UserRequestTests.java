@@ -35,7 +35,7 @@ public class UserRequestTests {
 
     @Test
     public void testCreateAndReadUserRequestAsRequest() {
-        // Create an Employee object with actual values
+        // Create an employee
         Employee createdRequest = new Employee(
             "employee@example.com", 
             "employeeuser",         
@@ -59,12 +59,9 @@ public class UserRequestTests {
         UserRequest userRequest = new UserRequest(status, createdRequest, userFacingJudgement);
         userRequest = UserRequestRepo.save(userRequest);
 
+        // Retrieve the UserRequest, check that it was successfully retrieved, validate the attributes.
         UserRequest userRequestFromDb = UserRequestRepo.findUserRequestById(userRequest.getId());
-
-        // Check that the UserRequest was successfully retrieved
         assertNotNull(userRequestFromDb);
-        
-        // Validate the status of the UserRequest
         assertEquals(status, userRequestFromDb.getStatus());
         
         // Validate the associated Employee (Staff) of the UserRequest
