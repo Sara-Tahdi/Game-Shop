@@ -45,7 +45,7 @@ public class Game
   )
   private List<Promotion> promotions;
   @ManyToOne
-  private GameCategory categories;
+  private GameCategory category;
 
   //------------------------
   // CONSTRUCTOR
@@ -53,7 +53,7 @@ public class Game
 
   public Game() {}
 
-  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory aCategories)
+  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory aCategory)
   {
     title = aTitle;
     price = aPrice;
@@ -64,7 +64,7 @@ public class Game
     publicOpinion = aPublicOpinion;
     reviews = new ArrayList<Review>();
     promotions = new ArrayList<Promotion>();
-    if (!setCategories(aCategories))
+    if (!setCategory(aCategory))
     {
       throw new RuntimeException("Unable to create Game due to aCategories. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
@@ -243,9 +243,9 @@ public class Game
     return index;
   }
   /* Code from template association_GetOne */
-  public GameCategory getCategories()
+  public GameCategory getCategory()
   {
-    return categories;
+    return category;
   }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfReviews()
@@ -362,12 +362,12 @@ public class Game
     return wasAdded;
   }
   /* Code from template association_SetUnidirectionalOne */
-  public boolean setCategories(GameCategory aNewCategories)
+  public boolean setCategory(GameCategory aNewCategory)
   {
     boolean wasSet = false;
-    if (aNewCategories != null)
+    if (aNewCategory != null)
     {
-      categories = aNewCategories;
+      category = aNewCategory;
       wasSet = true;
     }
     return wasSet;
@@ -377,7 +377,7 @@ public class Game
   {
     reviews.clear();
     promotions.clear();
-    categories = null;
+    category = null;
   }
 
 
@@ -393,6 +393,6 @@ public class Game
             "remainingQuantity" + ":" + getRemainingQuantity()+ "," +
             "isOffered" + ":" + getIsOffered()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "publicOpinion" + "=" + (getPublicOpinion() != null ? !getPublicOpinion().equals(this)  ? getPublicOpinion().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "categories = "+(getCategories()!=null?Integer.toHexString(System.identityHashCode(getCategories())):"null");
+            "  " + "categories = "+(getCategory()!=null?Integer.toHexString(System.identityHashCode(getCategory())):"null");
   }
 }
