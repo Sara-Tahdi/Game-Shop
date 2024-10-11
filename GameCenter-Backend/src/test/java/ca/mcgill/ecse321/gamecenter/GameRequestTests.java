@@ -96,8 +96,8 @@ public class GameRequestTests {
         assertEquals(game.getPublicOpinion(), gameRequestFromDb.getGame().getPublicOpinion());
 
         // Validate the associated GameCategory of the GameRequest
-        assertNotNull(gameRequestFromDb.getGame().getCategories());
-        assertEquals(gameCategory.getId(), gameRequestFromDb.getGame().getCategories().getId());
-        assertEquals(gameCategory.getCategory(), gameRequestFromDb.getGame().getCategories().getCategory());
+        assertNotNull(gameRequestFromDb.getGame().getCategory());
+        assertEquals(gameCategory.getId(), gameRequestFromDb.getGame().getCategory().getId());
+        assertEquals(gameCategory.getCategory(), gameRequestFromDb.getGame().getCategory().getCategory());
     }
 }
