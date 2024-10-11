@@ -58,7 +58,7 @@ public class CartTests {
         assertNotNull(client);
 
         Game game = new Game();
-        game.setPrice(Float.valueOf("13.99"));
+        game.setPrice(Float.parseFloat("13.99"));
         game.setRemainingQuantity(10);
         game = gameRepository.save(game);
         assertNotNull(game);
@@ -83,13 +83,13 @@ public class CartTests {
     @Test
     public void testLoadAndFetchCartsByClient() {
         Game game1 = new Game();
-        game1.setPrice(Float.valueOf("13.99"));
+        game1.setPrice(Float.parseFloat("13.99"));
         game1.setRemainingQuantity(10);
         game1 = gameRepository.save(game1);
         assertNotNull(game1);
 
         Game game2 = new Game();
-        game2.setPrice(Float.valueOf("13.99"));
+        game2.setPrice(Float.parseFloat("13.99"));
         game2.setRemainingQuantity(10);
         game2 = gameRepository.save(game2);
         assertNotNull(game2);
@@ -128,20 +128,20 @@ public class CartTests {
         assertEquals(client1.getId(), cartsClient1.get(1).getClient().getId());
 
         assertEquals(1, cartsClient2.size());
-        assertEquals(cart3.getId(), cartsClient2.get(0).getId());
-        assertEquals(client2.getId(), cartsClient2.get(0).getClient().getId());
+        assertEquals(cart3.getId(), cartsClient2.getFirst().getId());
+        assertEquals(client2.getId(), cartsClient2.getFirst().getClient().getId());
     }
 
     @Test
     public void testLoadAndFetchCartsByGame() {
         Game game1 = new Game();
-        game1.setPrice(Float.valueOf("13.99"));
+        game1.setPrice(Float.parseFloat("13.99"));
         game1.setRemainingQuantity(10);
         game1 = gameRepository.save(game1);
         assertNotNull(game1);
 
         Game game2 = new Game();
-        game2.setPrice(Float.valueOf("13.99"));
+        game2.setPrice(Float.parseFloat("13.99"));
         game2.setRemainingQuantity(10);
         game2 = gameRepository.save(game2);
         assertNotNull(game2);
@@ -180,7 +180,7 @@ public class CartTests {
         assertEquals(game1.getId(), cartsGame1.get(1).getGame().getId());
 
         assertEquals(1, cartsGame2.size());
-        assertEquals(cart2.getId(), cartsGame2.get(0).getId());
-        assertEquals(game2.getId(), cartsGame2.get(0).getGame().getId());
+        assertEquals(cart2.getId(), cartsGame2.getFirst().getId());
+        assertEquals(game2.getId(), cartsGame2.getFirst().getGame().getId());
     }
 }

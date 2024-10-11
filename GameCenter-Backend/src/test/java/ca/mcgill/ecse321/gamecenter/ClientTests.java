@@ -130,7 +130,7 @@ public class ClientTests {
         assertEquals(2, client_list.size());
 
         for (Client user: client_list) {
-            assertTrue(user instanceof Client);
+            assertInstanceOf(Client.class, user);
         }
     }
 
@@ -164,11 +164,12 @@ public class ClientTests {
         client = clientRepository.save(client);
 
         Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
+        assertNotNull(clientFromDb);
         List<PaymentInfo> infos = clientFromDb.getPaymentInformations();
         assertNotNull(infos);
 
-        assertEquals(masterCard.getId(), infos.get(0).getId());
-        assertNotEquals(visa.getId(), infos.get(0).getId());
+        assertEquals(masterCard.getId(), infos.getFirst().getId());
+        assertNotEquals(visa.getId(), infos.getFirst().getId());
     }
 
     @Test
@@ -181,7 +182,7 @@ public class ClientTests {
         assertNotNull(client);
 
         Game game = new Game();
-        game.setPrice(Float.valueOf("13.99"));
+        game.setPrice(Float.parseFloat("13.99"));
         game.setRemainingQuantity(10);
         game = gameRepository.save(game);
         assertNotNull(game);
@@ -210,9 +211,9 @@ public class ClientTests {
         List<Purchase> purchaseFromClientFromDb = clientFromDb.getPurchaseHistory();
 
         assertEquals(1, purchaseFromClientFromDb.size());
-        assertEquals(purchase.getId(), purchaseFromClientFromDb.get(0).getId());
+        assertEquals(purchase.getId(), purchaseFromClientFromDb.getFirst().getId());
 
-        Game gameFromPurchaseFromClientFromDb = purchaseFromClientFromDb.get(0).getGame();
+        Game gameFromPurchaseFromClientFromDb = purchaseFromClientFromDb.getFirst().getGame();
 
         assertEquals(game.getId(), gameFromPurchaseFromClientFromDb.getId());
     }

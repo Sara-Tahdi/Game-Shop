@@ -185,7 +185,7 @@ public class StaffTests {
         assertEquals(1, owner_list.size());
 
         for (Staff user: owner_list) {
-            assertTrue(user instanceof Owner);
+            assertInstanceOf(Owner.class, user);
         }
 
         List<Staff> employee_list = staffRepository.findStaffByUserType(Employee.class).orElse(null);
@@ -193,7 +193,7 @@ public class StaffTests {
         assertEquals(2, employee_list.size());
 
         for (Staff user: employee_list) {
-            assertTrue(user instanceof Employee);
+            assertInstanceOf(Employee.class, user);
         }
     }
 }

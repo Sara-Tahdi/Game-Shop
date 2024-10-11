@@ -1,7 +1,11 @@
 package ca.mcgill.ecse321.gamecenter.model;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.sql.Time;
 
 // line 3 "../../../../../../GameCenter.ump"
+@Entity
 public class GameCenter
 {
 
@@ -10,6 +14,8 @@ public class GameCenter
   //------------------------
 
   //GameCenter Attributes
+
+  @Id
   private String name;
   private Time open;
   private Time close;
@@ -18,6 +24,8 @@ public class GameCenter
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public GameCenter() {}
 
   public GameCenter(String aName, Time aOpen, Time aClose, String aStorePolicy)
   {

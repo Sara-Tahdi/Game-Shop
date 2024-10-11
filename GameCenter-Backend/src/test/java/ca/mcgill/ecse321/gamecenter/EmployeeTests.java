@@ -111,7 +111,7 @@ public class EmployeeTests {
         assertEquals(2, employee_list.size());
 
         for (Employee user: employee_list) {
-            assertTrue(user instanceof Employee);
+            assertInstanceOf(Employee.class, user);
         }
     }
 }
