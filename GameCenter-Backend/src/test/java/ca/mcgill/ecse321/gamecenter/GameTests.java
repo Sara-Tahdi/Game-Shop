@@ -151,7 +151,7 @@ public class GameTests {
 
         Game marioBros = new Game();
         marioBros.setTitle("Super Mario Bros");
-        marioBros.setCategories(platformer);
+        marioBros.setCategory(platformer);
         marioBros.setIsOffered(true);
         marioBros.setPublicOpinion(Game.GeneralFeeling.POSITIVE);
         marioBros = gameRepository.save(marioBros);
@@ -160,7 +160,7 @@ public class GameTests {
 
         Game rayman = new Game();
         rayman.setTitle("Rayman Legends");
-        rayman.setCategories(platformer);
+        rayman.setCategory(platformer);
         rayman.setIsOffered(true);
         rayman.setPublicOpinion(Game.GeneralFeeling.POSITIVE);
         rayman = gameRepository.save(rayman);
@@ -169,7 +169,7 @@ public class GameTests {
 
         Game finalFantasy = new Game();
         finalFantasy.setTitle("Final Fantasy VII");
-        finalFantasy.setCategories(jrpg);
+        finalFantasy.setCategory(jrpg);
         finalFantasy.setIsOffered(true);
         finalFantasy.setPublicOpinion(Game.GeneralFeeling.POSITIVE);
         finalFantasy = gameRepository.save(finalFantasy);

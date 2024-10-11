@@ -15,7 +15,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
     Optional<Game> findGameByTitle(String title);
     Optional<Game> findGameByDescription(String description);
 
-    @Query("SELECT g FROM Game g WHERE g.categories.id = :categoryId")
+    @Query("SELECT g FROM Game g WHERE g.category.id = :categoryId")
     Optional<List<Game>> findGamesByGameCategoryId(int categoryId);
 
     @Modifying
