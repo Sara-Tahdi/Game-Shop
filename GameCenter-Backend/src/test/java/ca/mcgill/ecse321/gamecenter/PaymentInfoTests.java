@@ -24,14 +24,13 @@ public class PaymentInfoTests {
 
     @Test
     public void testPersistAndLoadPaymentInfo() {
-        // Use setters to create PaymentInfo instance
+        // Create the payment information
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
         paymentInfo.setCvv(123);
         paymentInfo.setExpiryMonth(12);
         paymentInfo.setExpiryYear(2025);
 
-        // Persist the PaymentInfo object
         paymentInfo = paymentInfoRepository.save(paymentInfo);
         assertNotNull(paymentInfo);
         assertEquals("1234567890123456", paymentInfo.getCardNumber());
@@ -39,7 +38,7 @@ public class PaymentInfoTests {
         assertEquals(12, paymentInfo.getExpiryMonth());
         assertEquals(2025, paymentInfo.getExpiryYear());
 
-        // Get by ID tests
+        // Get by ID
         int id = paymentInfo.getId();
         PaymentInfo paymentInfoFromDb = paymentInfoRepository.findById(id).orElse(null);
         assertNotNull(paymentInfoFromDb);
@@ -53,21 +52,21 @@ public class PaymentInfoTests {
 
     @Test
     public void testUpdatePaymentInfo() {
-        // Create and save PaymentInfo instance using setters
+        // Create the payment information
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
         paymentInfo.setCvv(123);
         paymentInfo.setExpiryMonth(12);
         paymentInfo.setExpiryYear(2025);
+
+        //Save
         paymentInfo = paymentInfoRepository.save(paymentInfo);
 
-        // Update the PaymentInfo attributes using setters
+        // Update the info and save again
         paymentInfo.setCardNumber("6543210987654321");
         paymentInfo.setCvv(321);
         paymentInfo.setExpiryMonth(6);
         paymentInfo.setExpiryYear(2024);
-
-        // Save the updated PaymentInfo object
         paymentInfo = paymentInfoRepository.save(paymentInfo);
         assertNotNull(paymentInfo);
         assertEquals("6543210987654321", paymentInfo.getCardNumber());
@@ -75,7 +74,7 @@ public class PaymentInfoTests {
         assertEquals(6, paymentInfo.getExpiryMonth());
         assertEquals(2024, paymentInfo.getExpiryYear());
 
-        // Retrieve the updated PaymentInfo by ID
+        //Get by id, double check info is updated correctly
         PaymentInfo paymentInfoFromDb = paymentInfoRepository.findById(paymentInfo.getId()).orElse(null);
         assertNotNull(paymentInfoFromDb);
 
@@ -87,7 +86,7 @@ public class PaymentInfoTests {
 
     @Test
     public void testDeletePaymentInfo() {
-        // Create and save PaymentInfo instance using setters
+        // Create payment info and save
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
         paymentInfo.setCvv(123);
@@ -96,17 +95,17 @@ public class PaymentInfoTests {
         paymentInfo = paymentInfoRepository.save(paymentInfo);
         assertNotNull(paymentInfo);
 
-        // Delete the PaymentInfo
+        // Delete the info
         paymentInfoRepository.deleteById(paymentInfo.getId());
 
-        // Verify it's deleted
+        //Double check it deleted
         PaymentInfo deletedPaymentInfo = paymentInfoRepository.findById(paymentInfo.getId()).orElse(null);
         assertNull(deletedPaymentInfo);
     }
 
     @Test
     public void testGetPaymentInfoByCardNumber() {
-        // Create and save PaymentInfo instance using setters
+        // Create payment inforfamtion and save
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
         paymentInfo.setCvv(123);
@@ -114,7 +113,7 @@ public class PaymentInfoTests {
         paymentInfo.setExpiryYear(2025);
         paymentInfo = paymentInfoRepository.save(paymentInfo);
 
-        // Retrieve by card number using repository method
+        //Get by card #
         PaymentInfo paymentInfoFromDb = paymentInfoRepository.findByCardNumber("1234567890123456").orElse(null);
         assertNotNull(paymentInfoFromDb);
         assertEquals(paymentInfo.getId(), paymentInfoFromDb.getId());
@@ -123,7 +122,7 @@ public class PaymentInfoTests {
 
     @Test
     public void testGetPaymentInfoByExpiryMonth() {
-        // Create and save PaymentInfo instance using setters
+        // Create payment information and save
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
         paymentInfo.setCvv(123);
@@ -131,7 +130,7 @@ public class PaymentInfoTests {
         paymentInfo.setExpiryYear(2025);
         paymentInfo = paymentInfoRepository.save(paymentInfo);
 
-        // Retrieve by expiry month using repository method
+        // Get by expiry month
         PaymentInfo paymentInfoFromDb = paymentInfoRepository.findByExpiryMonth(12).orElse(null);
         assertNotNull(paymentInfoFromDb);
         assertEquals(paymentInfo.getId(), paymentInfoFromDb.getId());
