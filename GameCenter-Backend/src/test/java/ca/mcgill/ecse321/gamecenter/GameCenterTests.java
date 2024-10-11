@@ -1,19 +1,17 @@
 package ca.mcgill.ecse321.gamecenter;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-import java.sql.Time;
-import java.util.List;
-
+import ca.mcgill.ecse321.gamecenter.model.GameCenter;
+import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.gamecenter.model.GameCenter;
-import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
+import java.sql.Time;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest

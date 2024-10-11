@@ -1,18 +1,16 @@
 package ca.mcgill.ecse321.gamecenter;
 
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
-
+import ca.mcgill.ecse321.gamecenter.model.Review;
+import ca.mcgill.ecse321.gamecenter.model.Review.Rating;
+import ca.mcgill.ecse321.gamecenter.repository.ReviewRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse321.gamecenter.model.Review;
-import ca.mcgill.ecse321.gamecenter.model.Review.Rating;
-import ca.mcgill.ecse321.gamecenter.repository.ReviewRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class ReviewTests {

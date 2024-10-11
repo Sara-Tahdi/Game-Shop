@@ -55,7 +55,7 @@ public class GameCategoryTests {
 
         Game game = new Game();
         game.setTitle("GTA 6");
-        game.setCategories(gameCategory);
+        game.setCategory(gameCategory);
         game = gameRepository.save(game);
 
         GameCategory gameCategoryFromDb = gameCategoryRepository.findGameCategoryByCategory(gameCategory.getCategory()).orElse(null);

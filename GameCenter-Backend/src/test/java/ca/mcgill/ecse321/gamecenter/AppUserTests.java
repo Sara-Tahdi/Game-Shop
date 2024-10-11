@@ -268,7 +268,7 @@ public class AppUserTests {
         assertEquals(1, owner_list.size());
 
         for (AppUser user: owner_list) {
-            assertTrue(user instanceof Owner);
+            assertInstanceOf(Owner.class, user);
         }
 
         List<AppUser> employee_list = appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
@@ -276,7 +276,7 @@ public class AppUserTests {
         assertEquals(2, employee_list.size());
 
         for (AppUser user: employee_list) {
-            assertTrue(user instanceof Employee);
+            assertInstanceOf(Employee.class, user);
         }
 
         List<AppUser> client_list = appUserRepository.findAppUserByUserType(Client.class).orElse(null);
@@ -284,7 +284,7 @@ public class AppUserTests {
         assertEquals(2, client_list.size());
 
         for (AppUser user: client_list) {
-            assertTrue(user instanceof Client);
+            assertInstanceOf(Client.class, user);
         }
     }
 }

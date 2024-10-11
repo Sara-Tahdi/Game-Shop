@@ -84,7 +84,7 @@ public class OwnerTests {
         assertEquals(1, owner_list.size());
 
         for (Owner user: owner_list) {
-            assertTrue(user instanceof Owner);
+            assertInstanceOf(Owner.class, user);
         }
     }
 }

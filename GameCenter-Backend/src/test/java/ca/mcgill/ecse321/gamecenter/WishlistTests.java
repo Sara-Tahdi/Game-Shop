@@ -58,7 +58,7 @@ public class WishlistTests {
         assertNotNull(client);
 
         Game game = new Game();
-        game.setPrice(Float.valueOf("13.99"));
+        game.setPrice(Float.parseFloat("13.99"));
         game.setRemainingQuantity(10);
         game = gameRepository.save(game);
         assertNotNull(game);
@@ -83,13 +83,13 @@ public class WishlistTests {
     @Test
     public void testLoadAndFetchWishlistsByClient() {
         Game game1 = new Game();
-        game1.setPrice(Float.valueOf("13.99"));
+        game1.setPrice(Float.parseFloat("13.99"));
         game1.setRemainingQuantity(10);
         game1 = gameRepository.save(game1);
         assertNotNull(game1);
 
         Game game2 = new Game();
-        game2.setPrice(Float.valueOf("13.99"));
+        game2.setPrice(Float.parseFloat("13.99"));
         game2.setRemainingQuantity(10);
         game2 = gameRepository.save(game2);
         assertNotNull(game2);
@@ -128,20 +128,20 @@ public class WishlistTests {
         assertEquals(client1.getId(), wishlistsClient1.get(1).getClient().getId());
 
         assertEquals(1, wishlistsClient2.size());
-        assertEquals(wishlist3.getId(), wishlistsClient2.get(0).getId());
-        assertEquals(client2.getId(), wishlistsClient2.get(0).getClient().getId());
+        assertEquals(wishlist3.getId(), wishlistsClient2.getFirst().getId());
+        assertEquals(client2.getId(), wishlistsClient2.getFirst().getClient().getId());
     }
 
     @Test
     public void testLoadAndFetchWishlistsByGame() {
         Game game1 = new Game();
-        game1.setPrice(Float.valueOf("13.99"));
+        game1.setPrice(Float.parseFloat("13.99"));
         game1.setRemainingQuantity(10);
         game1 = gameRepository.save(game1);
         assertNotNull(game1);
 
         Game game2 = new Game();
-        game2.setPrice(Float.valueOf("13.99"));
+        game2.setPrice(Float.parseFloat("13.99"));
         game2.setRemainingQuantity(10);
         game2 = gameRepository.save(game2);
         assertNotNull(game2);
@@ -180,7 +180,7 @@ public class WishlistTests {
         assertEquals(game1.getId(), wishlistsGame1.get(1).getGame().getId());
 
         assertEquals(1, wishlistsGame2.size());
-        assertEquals(wishlist2.getId(), wishlistsGame2.get(0).getId());
-        assertEquals(game2.getId(), wishlistsGame2.get(0).getGame().getId());
+        assertEquals(wishlist2.getId(), wishlistsGame2.getFirst().getId());
+        assertEquals(game2.getId(), wishlistsGame2.getFirst().getGame().getId());
     }
 }
