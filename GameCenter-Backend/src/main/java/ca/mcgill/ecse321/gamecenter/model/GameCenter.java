@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.sql.Time;
