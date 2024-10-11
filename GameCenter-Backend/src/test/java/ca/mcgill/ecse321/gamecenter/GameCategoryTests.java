@@ -1,19 +1,17 @@
 package ca.mcgill.ecse321.gamecenter;
 
-import org.springframework.boot.test.context.SpringBootTest;
-
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class GameCategoryTests {
@@ -27,8 +25,8 @@ public class GameCategoryTests {
     @BeforeEach
     @AfterEach
     public void clear() {
-        gameCategoryRepository.deleteAll();
         gameRepository.deleteAll();
+        gameCategoryRepository.deleteAll();
     }
 
 
@@ -49,7 +47,7 @@ public class GameCategoryTests {
     }
 
     @Test
-    void testLoadAndFetchGameCategoryByGame() {
+    void testLoadAndFetchGameCategoryByCategory() {
         GameCategory gameCategory = new GameCategory();
         gameCategory.setCategory("Action");
         gameCategory = gameCategoryRepository.save(gameCategory);
@@ -60,7 +58,7 @@ public class GameCategoryTests {
         game.setCategories(gameCategory);
         game = gameRepository.save(game);
 
-        GameCategory gameCategoryFromDb = gameCategoryRepository.findGameCategoryByGame(game).orElse(null);
+        GameCategory gameCategoryFromDb = gameCategoryRepository.findGameCategoryByCategory(gameCategory.getCategory()).orElse(null);
         assertNotNull(gameCategoryFromDb);
 
         assertEquals(gameCategory.getId(), gameCategoryFromDb.getId());

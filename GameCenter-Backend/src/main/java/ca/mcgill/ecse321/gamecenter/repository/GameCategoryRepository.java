@@ -10,5 +10,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface GameCategoryRepository extends CrudRepository<GameCategory, Integer> {
     Optional<GameCategory> findGameCategoryById(int id);
-    Optional<GameCategory> findGameCategoryByGame(Game game);
+    Optional<GameCategory> findGameCategoryByCategory(String category);
 }
