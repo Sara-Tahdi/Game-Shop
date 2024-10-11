@@ -37,18 +37,6 @@ public class PurchaseTests {
 
     @Test
     void testPersistAndLoadPurchase() {
-        Purchase purchase = new Purchase();
-        purchase = purchaseRepository.save(purchase);
-        assertNotNull(purchase);
-
-        Purchase purchaseFromDb = purchaseRepository.findPurchaseById(purchase.getId()).orElse(null);
-        assertNotNull(purchaseFromDb);
-
-        assertEquals(purchase.getId(), purchaseFromDb.getId());
-    }
-
-    @Test
-    void testUserPurchasesGame() {
         Client client = new Client();
         client.setEmail("progamer@hai.ca");
         client.setPassword("mariobros");
@@ -84,8 +72,12 @@ public class PurchaseTests {
         assertNotNull(purchaseFromDb);
 
         assertEquals(purchase.getId(), purchaseFromDb.getId());
+        assertEquals(purchase.getPurchaseDate(), purchaseFromDb.getPurchaseDate());
+        assertEquals(purchase.getTrackingCode(), purchaseFromDb.getTrackingCode());
+        assertEquals(purchase.getTotalPrice(), purchaseFromDb.getTotalPrice());
+        assertEquals(purchase.getCopies(), purchaseFromDb.getCopies());
 
         Game gameFromPurchaseFromDb = purchaseFromDb.getGame();
-        assertEquals(game.getId(), gameFromPurchaseFromDb .getId());
+        assertEquals(game.getId(), gameFromPurchaseFromDb.getId());
     }
 }
