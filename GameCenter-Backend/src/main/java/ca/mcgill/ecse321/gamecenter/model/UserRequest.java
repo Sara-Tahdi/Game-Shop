@@ -11,7 +11,7 @@ public class UserRequest extends Request {
     // ------------------------
 
     // UserRequest Associations
-    @OneToOne // TODO Check other attributes
+    @OneToOne
     private Client userFacingJudgement;
 
     // ------------------------

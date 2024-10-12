@@ -21,7 +21,7 @@ public class GameRequest extends Request
   private Type type;
 
   //GameRequest Associations
-  @OneToOne // TODO Check other attributes
+  @OneToOne 
   private Game game;
 
   //------------------------
