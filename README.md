@@ -1,5 +1,5 @@
 # project-group-7
-To see our thought process behind our design, please go to the (wiki)[https://github.com/McGill-ECSE321-Fall2024/project-group-7/wiki]
+To see our thought process behind our design, please go to the [wiki](https://github.com/McGill-ECSE321-Fall2024/project-group-7/wiki)
 
 ## Scope
 Our application GameCenter will be a Full Stack application which is built upon the following prompt:
