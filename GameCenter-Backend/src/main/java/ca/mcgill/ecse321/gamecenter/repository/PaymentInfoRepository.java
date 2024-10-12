@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface PaymentInfoRepository extends CrudRepository<PaymentInfo, Integer> {
 
-    Optional<PaymentInfo> findByCardNumber(String aCardNumber);
+    Optional<PaymentInfo> findPaymentInfoById(int id);
 
-
+    Optional<PaymentInfo> findPaymentInfoByCardNumber(String aCardNumber);
 }
