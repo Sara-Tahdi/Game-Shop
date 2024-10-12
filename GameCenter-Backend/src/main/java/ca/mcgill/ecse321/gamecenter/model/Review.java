@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-import java.util.*;
-
 // line 109 "../../../../../../GameCenter.ump"\
 
 @Entity
@@ -21,12 +19,6 @@ public class Review
   public enum Rating { ONE, TWO, THREE, FOUR, FIVE }
 
   //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static Map<Integer, Review> reviewsById = new HashMap<Integer, Review>();
-
-  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -38,8 +30,6 @@ public class Review
   private String review;
   private String managerReply;
   private Rating stars;
-  private int thumbsUp;
-  private int thumbsDown;
 
   //------------------------
   // CONSTRUCTOR
@@ -47,18 +37,12 @@ public class Review
 
   public Review() {}
 
-  public Review(int aId, String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown)
+  public Review(String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown)
   {
     author = aAuthor;
     review = aReview;
     managerReply = aManagerReply;
     stars = aStars;
-    thumbsUp = aThumbsUp;
-    thumbsDown = aThumbsDown;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
   }
 
   //------------------------
@@ -72,15 +56,8 @@ public class Review
     if (anOldId != null && anOldId.equals(aId)) {
       return true;
     }
-    if (hasWithId(aId)) {
-      return wasSet;
-    }
     id = aId;
     wasSet = true;
-    if (anOldId != null) {
-      reviewsById.remove(anOldId);
-    }
-    reviewsById.put(aId, this);
     return wasSet;
   }
 
@@ -116,35 +93,9 @@ public class Review
     return wasSet;
   }
 
-  public boolean setThumbsUp(int aThumbsUp)
-  {
-    boolean wasSet = false;
-    thumbsUp = aThumbsUp;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setThumbsDown(int aThumbsDown)
-  {
-    boolean wasSet = false;
-    thumbsDown = aThumbsDown;
-    wasSet = true;
-    return wasSet;
-  }
-
   public int getId()
   {
     return id;
-  }
-  /* Code from template attribute_GetUnique */
-  public static Review getWithId(int aId)
-  {
-    return reviewsById.get(aId);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithId(int aId)
-  {
-    return getWithId(aId) != null;
   }
 
   public String getAuthor()
@@ -167,31 +118,16 @@ public class Review
     return stars;
   }
 
-  public int getThumbsUp()
-  {
-    return thumbsUp;
-  }
 
-  public int getThumbsDown()
-  {
-    return thumbsDown;
-  }
-
-  public void delete()
-  {
-    reviewsById.remove(getId());
-  }
-
-
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "author" + ":" + getAuthor()+ "," +
             "review" + ":" + getReview()+ "," +
-            "managerReply" + ":" + getManagerReply()+ "," +
-            "thumbsUp" + ":" + getThumbsUp()+ "," +
-            "thumbsDown" + ":" + getThumbsDown()+ "]" + System.getProperties().getProperty("line.separator") +
+            "managerReply" + ":" + getManagerReply()+ "]" +
+            System.getProperties().getProperty("line.separator") +
             "  " + "stars" + "=" + (getStars() != null ? !getStars().equals(this)  ? getStars().toString().replaceAll("  ","    ") : "this" : "null");
   }
 }

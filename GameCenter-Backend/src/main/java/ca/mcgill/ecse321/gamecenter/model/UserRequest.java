@@ -1,10 +1,9 @@
 package ca.mcgill.ecse321.gamecenter.model;
-import java.util.*;
 import jakarta.persistence.*;
 
 // line 93 "../../../../../../GameCenter.ump"
 @Entity
-@DiscrinimatorValue("USER_REQUEST")
+@DiscriminatorValue("USER_REQUEST")
 public class UserRequest extends Request {
 
     // ------------------------

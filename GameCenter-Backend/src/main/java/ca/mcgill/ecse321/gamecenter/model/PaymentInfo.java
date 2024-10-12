@@ -2,23 +2,15 @@
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 package ca.mcgill.ecse321.gamecenter.model;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-import java.util.*;
-
-// line 120 "../../../../../../GameCenter.ump"
-
+// line 116 "../../../../../../GameCenter.ump"
 @Entity
 public class PaymentInfo
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static Map<Integer, PaymentInfo> paymentinfosById = new HashMap<Integer, PaymentInfo>();
 
   //------------------------
   // MEMBER VARIABLES
@@ -28,7 +20,7 @@ public class PaymentInfo
   @Id
   @GeneratedValue
   private int id;
-  private int cardNumber;
+  private String cardNumber;
   private int cvv;
   private int expiryMonth;
   private int expiryYear;
@@ -39,16 +31,12 @@ public class PaymentInfo
 
   public PaymentInfo() {}
 
-  public PaymentInfo(int aId, int aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear)
+  public PaymentInfo(String aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear)
   {
     cardNumber = aCardNumber;
     cvv = aCvv;
     expiryMonth = aExpiryMonth;
     expiryYear = aExpiryYear;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
   }
 
   //------------------------
@@ -58,23 +46,12 @@ public class PaymentInfo
   public boolean setId(int aId)
   {
     boolean wasSet = false;
-    Integer anOldId = getId();
-    if (anOldId != null && anOldId.equals(aId)) {
-      return true;
-    }
-    if (hasWithId(aId)) {
-      return wasSet;
-    }
     id = aId;
     wasSet = true;
-    if (anOldId != null) {
-      paymentinfosById.remove(anOldId);
-    }
-    paymentinfosById.put(aId, this);
     return wasSet;
   }
 
-  public boolean setCardNumber(int aCardNumber)
+  public boolean setCardNumber(String aCardNumber)
   {
     boolean wasSet = false;
     cardNumber = aCardNumber;
@@ -110,18 +87,8 @@ public class PaymentInfo
   {
     return id;
   }
-  /* Code from template attribute_GetUnique */
-  public static PaymentInfo getWithId(int aId)
-  {
-    return paymentinfosById.get(aId);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithId(int aId)
-  {
-    return getWithId(aId) != null;
-  }
 
-  public int getCardNumber()
+  public String getCardNumber()
   {
     return cardNumber;
   }
@@ -142,9 +109,7 @@ public class PaymentInfo
   }
 
   public void delete()
-  {
-    paymentinfosById.remove(getId());
-  }
+  {}
 
 
   public String toString()

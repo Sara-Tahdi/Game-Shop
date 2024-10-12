@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-import java.util.*;
 import java.sql.Date;
 
 // line 47 "../../../../../../GameCenter.ump"
@@ -14,12 +13,7 @@ import java.sql.Date;
 public class Promotion
 {
 
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static Map<Integer, Promotion> promotionsById = new HashMap<Integer, Promotion>();
-
+  //----------------
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -36,20 +30,14 @@ public class Promotion
   // CONSTRUCTOR
   //------------------------
 
-  public Promotion(int aId, float aNewPrice, Date aStartDate, Date aEndDate)
+  public Promotion(float aNewPrice, Date aStartDate, Date aEndDate)
   {
     newPrice = aNewPrice;
     startDate = aStartDate;
     endDate = aEndDate;
-    if (!setId(aId))
-    {
-      throw new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
   }
 
-  public Promotion() {
-    // TODO
-  }
+  public Promotion() {}
 
   //------------------------
   // INTERFACE
@@ -62,15 +50,8 @@ public class Promotion
     if (anOldId != null && anOldId.equals(aId)) {
       return true;
     }
-    if (hasWithId(aId)) {
-      return wasSet;
-    }
     id = aId;
     wasSet = true;
-    if (anOldId != null) {
-      promotionsById.remove(anOldId);
-    }
-    promotionsById.put(aId, this);
     return wasSet;
   }
 
@@ -102,16 +83,6 @@ public class Promotion
   {
     return id;
   }
-  /* Code from template attribute_GetUnique */
-  public static Promotion getWithId(int aId)
-  {
-    return promotionsById.get(aId);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithId(int aId)
-  {
-    return getWithId(aId) != null;
-  }
 
   public float getNewPrice()
   {
@@ -128,12 +99,9 @@ public class Promotion
     return endDate;
   }
 
-  public void delete()
-  {
-    promotionsById.remove(getId());
-  }
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+

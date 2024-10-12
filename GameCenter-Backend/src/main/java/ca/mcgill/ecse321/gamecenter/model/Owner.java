@@ -5,8 +5,6 @@ package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
-import java.util.*;
-
 // line 28 "../../../../../../GameCenter.ump"
 
 @Entity
@@ -26,18 +24,13 @@ public class Owner extends Staff
     super();
   }
 
-  public Owner(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive)
+  public Owner(String aEmail, String aUsername, String aPassword)
   {
-    super(aId, aEmail, aUsername, aPassword, aIsActive);
+    super(aEmail, aUsername, aPassword);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public void delete()
-  {
-    super.delete();
-  }
 
 }

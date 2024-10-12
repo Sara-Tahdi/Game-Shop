@@ -5,8 +5,6 @@ package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
-import java.util.*;
-
 // line 19 "../../../../../../GameCenter.ump"
 @Entity
 @DiscriminatorValue("STAFF")
@@ -24,18 +22,13 @@ public abstract class Staff extends AppUser
     super();
   }
 
-  public Staff(int aId, String aEmail, String aUsername, String aPassword, boolean aIsActive)
+  public Staff(String aEmail, String aUsername, String aPassword)
   {
-    super(aId, aEmail, aUsername, aPassword, aIsActive);
+    super(aEmail, aUsername, aPassword);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public void delete()
-  {
-    super.delete();
-  }
 
 }

@@ -1,10 +1,9 @@
 package ca.mcgill.ecse321.gamecenter.model;
-import java.util.*;
 import jakarta.persistence.*;
 
 // line 84 "../../../../../../GameCenter.ump"
 @Entity
-@DiscrinimatorValue("USER_REQUEST")
+@DiscriminatorValue("GAME_REQUEST")
 public class GameRequest extends Request
 {
 
@@ -83,6 +82,7 @@ public class GameRequest extends Request
   }
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
