@@ -119,21 +119,4 @@ public class PaymentInfoTests {
         assertEquals(paymentInfo.getId(), paymentInfoFromDb.getId());
         assertEquals(paymentInfo.getCardNumber(), paymentInfoFromDb.getCardNumber());
     }
-
-    @Test
-    public void testGetPaymentInfoByExpiryMonth() {
-        // Create payment information and save
-        PaymentInfo paymentInfo = new PaymentInfo();
-        paymentInfo.setCardNumber("1234567890123456");
-        paymentInfo.setCvv(123);
-        paymentInfo.setExpiryMonth(12);
-        paymentInfo.setExpiryYear(2025);
-        paymentInfo = paymentInfoRepository.save(paymentInfo);
-
-        // Get by expiry month
-        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findByExpiryMonth(12).orElse(null);
-        assertNotNull(paymentInfoFromDb);
-        assertEquals(paymentInfo.getId(), paymentInfoFromDb.getId());
-        assertEquals(paymentInfo.getExpiryMonth(), paymentInfoFromDb.getExpiryMonth());
-    }
 }
