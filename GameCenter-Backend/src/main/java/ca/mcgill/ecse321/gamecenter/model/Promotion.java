@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 import java.sql.Date;
 
@@ -26,15 +27,23 @@ public class Promotion
   private Date startDate;
   private Date endDate;
 
+  //Promotion Associations
+  @ManyToOne
+  private Game game;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Promotion(float aNewPrice, Date aStartDate, Date aEndDate)
+  public Promotion(float aNewPrice, Date aStartDate, Date aEndDate, Game aGame)
   {
     newPrice = aNewPrice;
     startDate = aStartDate;
     endDate = aEndDate;
+    if (!setGame(aGame))
+    {
+      throw new RuntimeException("Unable to create Promotion due to aGame. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   public Promotion() {}
@@ -99,7 +108,27 @@ public class Promotion
     return endDate;
   }
 
+  /* Code from template association_GetOne */
+  public Game getGame()
+  {
+    return game;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setGame(Game aNewGame)
+  {
+    boolean wasSet = false;
+    if (aNewGame != null)
+    {
+      game = aNewGame;
+      wasSet = true;
+    }
+    return wasSet;
+  }
 
+  public void delete()
+  {
+    game = null;
+  }
 
   @SuppressWarnings("unlikely-arg-type")
   public String toString()
@@ -108,6 +137,7 @@ public class Promotion
             "id" + ":" + getId()+ "," +
             "newPrice" + ":" + getNewPrice()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "startDate" + "=" + (getStartDate() != null ? !getStartDate().equals(this)  ? getStartDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "endDate" + "=" + (getEndDate() != null ? !getEndDate().equals(this)  ? getEndDate().toString().replaceAll("  ","    ") : "this" : "null");
+            "  " + "endDate" + "=" + (getEndDate() != null ? !getEndDate().equals(this)  ? getEndDate().toString().replaceAll("  ","    ") : "this" : "null")  + System.getProperties().getProperty("line.separator") +
+            "  " + "game = "+(getGame()!=null?Integer.toHexString(System.identityHashCode(getGame())):"null");
   }
 }

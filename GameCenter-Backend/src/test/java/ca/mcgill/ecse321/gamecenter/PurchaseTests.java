@@ -30,9 +30,9 @@ public class PurchaseTests {
     @BeforeEach
     @AfterEach
     public void clear() {
+        purchaseRepository.deleteAll();
         clientRepository.deleteAll();
         gameRepository.deleteAll();
-        purchaseRepository.deleteAll();
     }
 
     @Test
@@ -62,8 +62,7 @@ public class PurchaseTests {
 
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
-
-        client.addPurchaseHistory(purchase);
+        purchase.setClient(client);
 
         client = clientRepository.save(client);
         assertNotNull(client);
