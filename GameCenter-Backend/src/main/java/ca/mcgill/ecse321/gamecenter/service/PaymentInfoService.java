@@ -25,6 +25,11 @@ public class PaymentInfoService {
         Integer expiryYear)
     {
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear);
+
+        PaymentInfo paymentInfoFromRepo = paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber).orElse(null);
+        if (paymentInfoFromRepo != null) {
+            throw new IllegalArgumentException("A payment info with card number"+cardNumber+"already exists in the system.");
+        }
         return paymentInfoRepository.save(paymentInfo);
     }
 
