@@ -75,24 +75,26 @@ public class AppUserService {
 
     @Transactional
     public Client updateClientAccount(String oldUsername, String newEmail, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
-        if (c == null) {
+        AppUser a = appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
+        if (a == null) {
             throw new IllegalArgumentException("There is no User with username: " + oldUsername);
         }
 
-        Client testEmail = (Client) appUserRepository.findAppUserByEmail(newEmail).orElse(null);
-        if (testEmail != null && testEmail.getId() != c.getId()) {
+        AppUser testEmail = appUserRepository.findAppUserByEmail(newEmail).orElse(null);
+        if (testEmail != null && testEmail.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with email: " + newEmail);
         }
 
-        Client testUsername = (Client) appUserRepository.findAppUserByUsername(newUsername).orElse(null);
-        if (testUsername != null && testUsername.getId() != c.getId()) {
+        AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
+        if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
         }
 
         if (newPassword == null || newPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
+
+        Client c = (Client) a;
 
         c.setEmail(newEmail);
         c.setUsername(newUsername);
@@ -114,54 +116,13 @@ public class AppUserService {
     }
 
     @Transactional
-    public PaymentInfo addClientPaymentInfo(String clientUsername, int paymentInfoId) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(clientUsername).orElse(null);
+    public Client flagClientByUsername(String username) {
+        Client c = (Client) appUserRepository.findAppUserByUsername(username).orElse(null);
         if (c == null) {
-            throw new IllegalArgumentException("There is no Client with username: " + clientUsername);
+            throw new IllegalArgumentException("There is no Client with username: " + username);
         }
-
-        PaymentInfo p = paymentInfoRepository.findPaymentInfoById(paymentInfoId).orElse(null);
-        if (p == null) {
-            throw new IllegalArgumentException("There is no PaymentInfo with ID: " + paymentInfoId);
-        }
-
-        p.setClient(c);
-        return paymentInfoRepository.save(p);
-    }
-
-    @Transactional
-    public void removeClientPaymentInfo(String clientUsername, int paymentInfoId) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(clientUsername).orElse(null);
-        if (c == null) {
-            throw new IllegalArgumentException("There is no Client with username: " + clientUsername);
-        }
-
-        PaymentInfo p = paymentInfoRepository.findPaymentInfoById(paymentInfoId).orElse(null);
-        if (p == null) {
-            throw new IllegalArgumentException("There is no PaymentInfo with ID: " + paymentInfoId);
-        }
-
-        if (p.getClient().getId() != c.getId()) {
-            throw new IllegalArgumentException("Client " + c.getUsername() + " does not have payment info with ID: " + p.getId());
-        }
-
-        paymentInfoRepository.deleteById(paymentInfoId);
-    }
-
-    @Transactional
-    public Purchase addClientPurchaseHistory(String clientUsername, int purchaseId) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(clientUsername).orElse(null);
-        if (c == null) {
-            throw new IllegalArgumentException("There is no Client with username: " + clientUsername);
-        }
-
-        Purchase p = purchaseRepository.findPurchaseById(purchaseId).orElse(null);
-        if (p == null) {
-            throw new IllegalArgumentException("There is no Purchase with id: " + purchaseId);
-        }
-
-        p.setClient(c);
-        return purchaseRepository.save(p);
+        c.setNumberOfFlags(c.getNumberOfFlags() + 1);
+        return appUserRepository.save(c);
     }
 
     public List<AppUser> findAllClients() {
@@ -235,18 +196,18 @@ public class AppUserService {
 
     @Transactional
     public Employee updateEmployeeAccount(String oldUsername, String newEmail, String newUsername, String newPassword) {
-        Employee e = (Employee) appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
-        if (e == null) {
+        AppUser a = appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
+        if (a == null) {
             throw new IllegalArgumentException("There is no User with username: " + oldUsername);
         }
 
-        Employee testEmail = (Employee) appUserRepository.findAppUserByEmail(newEmail).orElse(null);
-        if (testEmail != null && testEmail.getId() != e.getId()) {
+        AppUser testEmail = appUserRepository.findAppUserByEmail(newEmail).orElse(null);
+        if (testEmail != null && testEmail.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with email: " + newEmail);
         }
 
-        Employee testUsername = (Employee) appUserRepository.findAppUserByUsername(newUsername).orElse(null);
-        if (testUsername != null && testUsername.getId() != e.getId()) {
+        AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
+        if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
         }
 
@@ -254,6 +215,7 @@ public class AppUserService {
             throw new IllegalArgumentException("Password too short");
         }
 
+        Employee e = (Employee) a;
         e.setEmail(newEmail);
         e.setUsername(newUsername);
         e.setPassword(newPassword);
@@ -264,7 +226,7 @@ public class AppUserService {
     public Employee deactivateEmployeeAccount(String username) {
         Employee e = (Employee) appUserRepository.findAppUserByUsername(username).orElse(null);
         if (e == null) {
-            throw new IllegalArgumentException("There is no User with username: " + username);
+            throw new IllegalArgumentException("There is no Employee with username: " + username);
         }
         e.setIsActive(false);
         return appUserRepository.save(e);
