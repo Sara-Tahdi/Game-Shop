@@ -125,6 +125,7 @@ public class AppUserService {
         return appUserRepository.save(c);
     }
 
+    // TODO: Shouldn't this method be with the others at the top of the file?
     public List<AppUser> findAllClients() {
         return appUserRepository.findAppUserByUserType(Client.class).orElse(null);
     }
