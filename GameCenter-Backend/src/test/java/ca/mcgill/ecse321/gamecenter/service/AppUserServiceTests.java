@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
-import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
