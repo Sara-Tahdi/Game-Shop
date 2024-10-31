@@ -27,7 +27,7 @@ public class RequestService {
     @Autowired
     private GameRepository gameRepository;
     
-    public List<Request> getAllRequest() {
+    public List<Request> getAllRequests() {
         List<Request> a = requestRepository.findRequestsByRequestType(Request.class).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests");
@@ -43,7 +43,7 @@ public class RequestService {
         return a;
     }
 
-    public List<Request> getRequestByCreatedRequestId(int createdRequestId) {
+    public List<Request> getRequestsByCreatedRequestId(int createdRequestId) {
         List<Request> a = requestRepository.findRequestsByCreatedRequestId(createdRequestId).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests with createdRequestId: " + createdRequestId);
@@ -51,7 +51,15 @@ public class RequestService {
         return a;
     }
 
-    public List<Request> getRequestByStatus(Request.Status status) {
+    public List<Request> getRequestsByCreatedRequestsUsername(String createdRequestsUsername) {
+        List<Request> a = requestRepository.findRequestsByCreatedRequestUsername(createdRequestsUsername).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with createdRequestsUsername: " + createdRequestsUsername);
+        }
+        return a;
+    }
+
+    public List<Request> getRequestsByStatus(Request.Status status) {
         List<Request> a = requestRepository.findRequestsByStatus(status).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests with status: " + status);
