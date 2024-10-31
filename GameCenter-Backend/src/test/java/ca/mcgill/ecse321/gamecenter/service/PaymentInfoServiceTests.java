@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.model.PaymentInfo;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
@@ -11,7 +10,7 @@ import org.mockito.Mock;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -45,10 +44,106 @@ public class PaymentInfoServiceTests {
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
         when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+
         PaymentInfo savedPaymentInfo = paymentInfoService.savePaymentInfo(
             cardNumber, cvv, expiryMonth, expiryYear, createdClient
         );
-
+        assertNotNull(savedPaymentInfo);
         assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
+    }
+
+    @Test
+    public void testAddDuplicatePaymentInfo() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        c.setId(21);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
+        Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        String cardNumber = "12830142";
+        Integer cvv = 111;
+        Integer expiryMonth = 12;
+        Integer expiryYear = 2029;
+        PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
+        when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+
+        PaymentInfo savedPaymentInfo = paymentInfoService.savePaymentInfo(
+                cardNumber, cvv, expiryMonth, expiryYear, createdClient
+        );
+        assertNotNull(savedPaymentInfo);
+        assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
+
+        IllegalArgumentException e =
+            assertThrows(IllegalArgumentException.class, () -> paymentInfoService.savePaymentInfo(
+                cardNumber, cvv, expiryMonth, expiryYear, createdClient
+            ));
+
+        assertEquals(e.getMessage(), "A payment info with card number "+cardNumber+" already exists in the system.");
+    }
+
+    @Test
+    public void testDeleteExistingPaymentInfo() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        c.setId(21);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
+        Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        String cardNumber = "12830142";
+        Integer cvv = 111;
+        Integer expiryMonth = 12;
+        Integer expiryYear = 2029;
+        PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
+        when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+
+        PaymentInfo savedPaymentInfo = paymentInfoService.savePaymentInfo(
+                cardNumber, cvv, expiryMonth, expiryYear, createdClient
+        );
+        assertNotNull(savedPaymentInfo);
+        assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
+
+        paymentInfoService.deletePaymentInfo(cardNumber);
+
+        PaymentInfo deletedPaymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfo.getId()).orElse(null);
+        assertNull(deletedPaymentInfo);
+    }
+
+    @Test
+    public void testDeleteNonexistingPaymentInfo() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        c.setId(21);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
+        Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        String cardNumber = "12830142";
+        Integer cvv = 111;
+        Integer expiryMonth = 12;
+        Integer expiryYear = 2029;
+        PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
+        when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+
+        PaymentInfo savedPaymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfo.getId()).orElse(null);
+        assertNull(savedPaymentInfo);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
+          paymentInfoService.deletePaymentInfo(cardNumber);
+        });
+        assertEquals(e.getMessage(), "No payment info with card number: " + cardNumber);
     }
 }
