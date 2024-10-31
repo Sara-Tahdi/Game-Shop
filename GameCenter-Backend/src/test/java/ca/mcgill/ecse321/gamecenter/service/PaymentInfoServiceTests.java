@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.Client;
+import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.model.PaymentInfo;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
@@ -42,6 +43,8 @@ public class PaymentInfoServiceTests {
         Integer cvv = 111;
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
+        PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
+        when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
         PaymentInfo savedPaymentInfo = paymentInfoService.savePaymentInfo(
             cardNumber, cvv, expiryMonth, expiryYear, createdClient
         );
