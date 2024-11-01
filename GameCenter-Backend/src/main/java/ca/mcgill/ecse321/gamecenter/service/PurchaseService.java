@@ -71,7 +71,7 @@ public class PurchaseService {
 
         // check if refund request is within valid time
         if (p.getPurchaseDate().toLocalDate().isBefore(LocalDate.now().minusDays(7))) {
-            throw new IllegalArgumentException("Refund request DENIED!! Refund period is over");
+            throw new IllegalArgumentException("Refund request DENIED!! Refund period is over.");
         }
 
         p.setRefundReason(refundReason);
@@ -85,18 +85,16 @@ public class PurchaseService {
         }
 
         List<Purchase> purchases = purchaseRepository.findPurchasesByClientId(clientId).orElse(null);
-        if (purchases != null) {
-            purchases.sort(Comparator.comparing(Purchase::getPurchaseDate));
+        if (purchases == null) {
+            throw new IllegalArgumentException("Client with id " + clientId + " has no purchases");
         }
         return purchases;
     }
 
     public List<Purchase> getClientPurchaseHistory90Days(int clientId) {
         List<Purchase> purchases = getClientPurchaseHistory(clientId);
-        if (purchases == null) {
-            throw new IllegalArgumentException("There are no Purchase associated to clientId: " + clientId);
-        }
-
+        // checking if purchases == null is useless
+        // because it is already checked in the full history
         List<Purchase> filteredPurchases = purchases.stream()
                 .filter(purchase -> purchase.getPurchaseDate().toLocalDate().isAfter(LocalDate.now().minusDays(90)))
                 .collect(Collectors.toList());

@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface PurchaseRepository extends CrudRepository<Purchase, Integer> {
     Optional<Purchase> findPurchaseById(int id);
 
-    @Query("select p from Purchase p where p.client.id = :clientId")
+    @Query("SELECT p FROM Purchase p WHERE p.client.id = :clientId ORDER BY p.purchaseDate DESC")
     Optional<List<Purchase>> findPurchasesByClientId(@Param("clientId") int clientId);
 }
