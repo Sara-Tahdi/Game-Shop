@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Encryption;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class AppUserService {
         if (a == null) {
             throw new IllegalArgumentException("There is no User with id: " + id);
         }
+        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return a;
     }
 
@@ -42,6 +44,7 @@ public class AppUserService {
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
         }
+        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return a;
     }
 
@@ -50,6 +53,7 @@ public class AppUserService {
         if (a == null) {
             throw new IllegalArgumentException("There is no User with username: " + username);
         }
+        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return a;
     }
 
@@ -69,7 +73,7 @@ public class AppUserService {
             throw new IllegalArgumentException("Password too short");
         }
 
-        Client c = new Client(aEmail, aUsername, aPassword, aPhoneNumber, aDeliveryAddress, 0);
+        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress, 0);
         return appUserRepository.save(c);
     }
 
@@ -98,7 +102,7 @@ public class AppUserService {
 
         c.setEmail(newEmail);
         c.setUsername(newUsername);
-        c.setPassword(newPassword);
+        c.setPassword(Encryption.encryptDecrypt(newPassword));
         c.setPhoneNumber(newPhoneNumber);
         c.setDeliveryAddress(newDeliveryAddress);
 
@@ -139,7 +143,7 @@ public class AppUserService {
         if (aPassword == null || aPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
-        Owner o = new Owner(aEmail, aUsername, aPassword);
+        Owner o = new Owner(aEmail, aUsername, Encryption.encryptDecrypt(aPassword));
         return appUserRepository.save(o);
     }
 
@@ -167,7 +171,7 @@ public class AppUserService {
         Owner o = (Owner) a;
         o.setEmail(newEmail);
         o.setUsername(newUsername);
-        o.setPassword(newPassword);
+        o.setPassword(Encryption.encryptDecrypt(newPassword));
         return appUserRepository.save(o);
     }
 
@@ -190,7 +194,7 @@ public class AppUserService {
         if (aPassword == null || aPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
-        Employee e = new Employee(aEmail, aUsername, aPassword);
+        Employee e = new Employee(aEmail, aUsername, Encryption.encryptDecrypt(aPassword));
         return appUserRepository.save(e);
     }
 
@@ -218,7 +222,7 @@ public class AppUserService {
         Employee e = (Employee) a;
         e.setEmail(newEmail);
         e.setUsername(newUsername);
-        e.setPassword(newPassword);
+        e.setPassword(Encryption.encryptDecrypt(newPassword));
         return appUserRepository.save(e);
     }
 

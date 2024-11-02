@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Encryption;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -69,6 +70,7 @@ public class AppUserServiceTests {
         String password = "GameCenter!!";
         Owner o = new Owner(email, username, password);
         o.setId(23);
+        o.setPassword(Encryption.encryptDecrypt(o.getPassword()));
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
         appUserService.createOwnerAccount(email, username, password);
 
@@ -96,6 +98,7 @@ public class AppUserServiceTests {
         String password = "GameCenter!!";
         Owner o = new Owner(email, username, password);
         o.setId(23);
+        o.setPassword(Encryption.encryptDecrypt(o.getPassword()));
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
         appUserService.createOwnerAccount(email, username, password);
 
@@ -123,6 +126,7 @@ public class AppUserServiceTests {
         String password = "GameCenter!!";
         Owner o = new Owner(email, username, password);
         o.setId(23);
+        o.setPassword(Encryption.encryptDecrypt(o.getPassword()));
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
         appUserService.createOwnerAccount(email, username, password);
 
