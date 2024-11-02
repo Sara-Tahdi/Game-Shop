@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 // line 109 "../../../../../../GameCenter.ump"\
 
@@ -31,18 +32,26 @@ public class Review
   private String managerReply;
   private Rating stars;
 
+  //Review Associations
+  @ManyToOne
+  private Game game;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Review() {}
 
-  public Review(String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown)
+  public Review(String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown, Game aGame)
   {
     author = aAuthor;
     review = aReview;
     managerReply = aManagerReply;
     stars = aStars;
+    if (!setGame(aGame))
+    {
+      throw new RuntimeException("Unable to create Review due to aGame. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
@@ -116,6 +125,28 @@ public class Review
   public Rating getStars()
   {
     return stars;
+  }
+  /* Code from template association_GetOne */
+  public Game getGame()
+  {
+    return game;
+  }
+
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setGame(Game aNewGame)
+  {
+    boolean wasSet = false;
+    if (aNewGame != null)
+    {
+      game = aNewGame;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    game = null;
   }
 
 

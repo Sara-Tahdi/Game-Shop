@@ -34,10 +34,6 @@ class Client {
   phoneNumber;
   deliveryAddress;
   Integer numberOfFlags;
-
-
-  0..1 -> * Purchase purchaseHistory;
-  0..1 -> * PaymentInfo paymentInformations;
 }
 
 class Promotion {
@@ -45,6 +41,8 @@ class Promotion {
   Float newPrice;
   Date startDate;
   Date endDate;
+
+  * -> 1 Game game;
 }
 
 class Game {
@@ -59,8 +57,6 @@ class Game {
   Boolean isOffered;
   GeneralFeeling publicOpinion;
 
-  0..1 -> * Review reviews;
-  0..1 -> * Promotion promotions;
   * -> 1 GameCategory categories;
 }
 
@@ -102,6 +98,7 @@ class Purchase {
   refundReason;
 
   * -> 1 Game game;
+  * -> 1 Client client;
 }
 
 class Review {
@@ -111,6 +108,8 @@ class Review {
   review;
   managerReply;
   Rating stars;
+
+  * -> 1 Game game;
   }
 
 class PaymentInfo {
@@ -119,6 +118,8 @@ class PaymentInfo {
   Integer cvv;
   Integer expiryMonth;
   Integer expiryYear;
+
+  * -> 1 Client client;
 }
 
 class Cart {

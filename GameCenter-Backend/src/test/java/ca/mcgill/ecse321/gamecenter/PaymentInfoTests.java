@@ -40,7 +40,7 @@ public class PaymentInfoTests {
 
         // Get by ID
         int id = paymentInfo.getId();
-        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findById(id).orElse(null);
+        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findPaymentInfoById(id).orElse(null);
         assertNotNull(paymentInfoFromDb);
 
         assertEquals(id, paymentInfoFromDb.getId());
@@ -75,7 +75,7 @@ public class PaymentInfoTests {
         assertEquals(2024, paymentInfo.getExpiryYear());
 
         //Get by id, double check info is updated correctly
-        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findById(paymentInfo.getId()).orElse(null);
+        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findPaymentInfoById(paymentInfo.getId()).orElse(null);
         assertNotNull(paymentInfoFromDb);
 
         assertEquals("6543210987654321", paymentInfoFromDb.getCardNumber());
@@ -99,7 +99,7 @@ public class PaymentInfoTests {
         paymentInfoRepository.deleteById(paymentInfo.getId());
 
         //Double check it deleted
-        PaymentInfo deletedPaymentInfo = paymentInfoRepository.findById(paymentInfo.getId()).orElse(null);
+        PaymentInfo deletedPaymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfo.getId()).orElse(null);
         assertNull(deletedPaymentInfo);
     }
 
@@ -114,7 +114,7 @@ public class PaymentInfoTests {
         paymentInfo = paymentInfoRepository.save(paymentInfo);
 
         //Get by card #
-        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findByCardNumber("1234567890123456").orElse(null);
+        PaymentInfo paymentInfoFromDb = paymentInfoRepository.findPaymentInfoByCardNumber("1234567890123456").orElse(null);
         assertNotNull(paymentInfoFromDb);
         assertEquals(paymentInfo.getId(), paymentInfoFromDb.getId());
         assertEquals(paymentInfo.getCardNumber(), paymentInfoFromDb.getCardNumber());

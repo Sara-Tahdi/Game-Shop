@@ -26,7 +26,7 @@ public abstract class Request
   private Status status;
 
   //Request Associations
-  @OneToOne
+  @ManyToOne
   private Staff createdRequest;
 
   //------------------------

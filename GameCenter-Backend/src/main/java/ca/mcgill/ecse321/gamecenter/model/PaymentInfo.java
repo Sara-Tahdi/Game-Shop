@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 // line 116 "../../../../../../GameCenter.ump"
 @Entity
@@ -25,18 +26,26 @@ public class PaymentInfo
   private int expiryMonth;
   private int expiryYear;
 
+  //PaymentInfo Associations
+  @ManyToOne
+  private Client client;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public PaymentInfo() {}
 
-  public PaymentInfo(String aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear)
+  public PaymentInfo(String aCardNumber, int aCvv, int aExpiryMonth, int aExpiryYear, Client aClient)
   {
     cardNumber = aCardNumber;
     cvv = aCvv;
     expiryMonth = aExpiryMonth;
     expiryYear = aExpiryYear;
+    if (!setClient(aClient))
+    {
+      throw new RuntimeException("Unable to create PaymentInfo due to aClient. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
@@ -108,8 +117,26 @@ public class PaymentInfo
     return expiryYear;
   }
 
+  /* Code from template association_GetOne */
+  public Client getClient()
+  {
+    return client;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setClient(Client aNewClient)
+  {
+    boolean wasSet = false;
+    if (aNewClient != null)
+    {
+      client = aNewClient;
+      wasSet = true;
+    }
+    return wasSet;
+  }
   public void delete()
-  {}
+  {
+    client = null;
+  }
 
 
   public String toString()
@@ -119,6 +146,7 @@ public class PaymentInfo
             "cardNumber" + ":" + getCardNumber()+ "," +
             "cvv" + ":" + getCvv()+ "," +
             "expiryMonth" + ":" + getExpiryMonth()+ "," +
-            "expiryYear" + ":" + getExpiryYear()+ "]";
+            "expiryYear" + ":" + getExpiryYear()+ "]" + System.getProperties().getProperty("line.separator") +
+    "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null");
   }
 }

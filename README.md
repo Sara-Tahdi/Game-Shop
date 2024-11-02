@@ -1,5 +1,5 @@
 # project-group-7
-To see our thought process behind our design, please go to the (wiki)[https://github.com/McGill-ECSE321-Fall2024/project-group-7/wiki]
+To see our thought process behind our design, please go to the [wiki](https://github.com/McGill-ECSE321-Fall2024/project-group-7/wiki)
 
 ## Scope
 Our application GameCenter will be a Full Stack application which is built upon the following prompt:
@@ -19,9 +19,13 @@ Our application GameCenter will be a Full Stack application which is built upon 
 Here are all the tasks and logged hours for our team in Deliverable 1
 | Name | Tasks | Time Logged |
 | :--- |:---|:---:|
-|Naji El Khouri | <ul><li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Wrote JPA Annotations<li>Wrote tests for Game Persistence<li>Wrote tests for GameCategory Persistence</ul>| |
-|Laurier Gauvin| <ul><li>Write meeting minutes<li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Created issues<li>Wrote JPA Annotations<li>Wrote tests for GameRequest Persistence<li>Wrote tests for UserRequest Persistence</ul>| |
+|Naji El Khouri | <ul><li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Wrote JPA Annotations<li>Wrote tests for Game Persistence<li>Wrote tests for GameCategory Persistence</ul>| 22|
+|Laurier Gauvin| <ul><li>Write meeting minutes<li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Created issues<li>Wrote JPA Annotations<li>Wrote tests for GameRequest Persistence<li>Wrote tests for UserRequest Persistence</ul>| 25|
 |Manuel Hanna| <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Wrote JPA Annotations<li>Wrote tests for Owner Persistence<li>Wrote tests for Promotion Persistence<li>Wrote tests for Purchase Persistence</ul>| 22|
+<<<<<<< HEAD
 |Arjun Sharma | <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Created Use Case Diagram<li>Wrote JPA Annotations<li>Wrote tests for GameCenter Persistence<li>Wrote tests for Review Persistence</ul>| |
+=======
+|Arjun Sharma | <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Created Use Case Diagram<li>Wrote JPA Annotations<li>Wrote tests for GameCenter Persistence<li>Wrote tests for Review Persistence</ul>| 25|
+>>>>>>> origin/deliverable-2
 |Sara Tahdi | <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Created Use Case Diagram<li>Created issues<li>Created Milestones<li>Wrote JPA Annotations<li>Wrote tests for PaymentInfo Persistence<li>Wrote tests for Request Persistence</ul>| 18|
 |Justin Tremellen| <ul><li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Created Issue Boards<li>Wrote JPA Annotations<li>Wrote tests for AppUser Persistence<li>Wrote tests for Staff Persistence<li>Wrote tests for Employee Persistence<li>Wrote tests for Client Persistence<li>Wrote tests for Cart Persistence<li>Wrote tests for Wishlist Persistence</ul>| 35|
