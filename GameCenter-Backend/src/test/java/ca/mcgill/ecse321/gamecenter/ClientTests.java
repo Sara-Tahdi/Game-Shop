@@ -36,10 +36,10 @@ public class ClientTests {
     @BeforeEach
     @AfterEach
     public void clear() {
+        purchaseRepository.deleteAll();
+        paymentInfoRepository.deleteAll();
         clientRepository.deleteAll();
         gameRepository.deleteAll();
-        paymentInfoRepository.deleteAll();
-        purchaseRepository.deleteAll();
     }
 
     @Test
@@ -159,13 +159,13 @@ public class ClientTests {
         visa = paymentInfoRepository.save(visa);
         assertNotNull(visa);
 
-        client.addPaymentInformation(masterCard);
+        masterCard.setClient(client);
 
-        client = clientRepository.save(client);
+        masterCard = paymentInfoRepository.save(masterCard);
 
         Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
         assertNotNull(clientFromDb);
-        List<PaymentInfo> infos = clientFromDb.getPaymentInformations();
+        List<PaymentInfo> infos = paymentInfoRepository.findPaymentInfosByClientId(clientFromDb.getId()).orElse(null);
         assertNotNull(infos);
 
         assertEquals(masterCard.getId(), infos.getFirst().getId());
@@ -200,15 +200,15 @@ public class ClientTests {
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
 
-        client.addPurchaseHistory(purchase);
+        purchase.setClient(client);
 
-        client = clientRepository.save(client);
+        purchase = purchaseRepository.save(purchase);
         assertNotNull(client);
 
         Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
         assertNotNull(clientFromDb);
 
-        List<Purchase> purchaseFromClientFromDb = clientFromDb.getPurchaseHistory();
+        List<Purchase> purchaseFromClientFromDb = purchaseRepository.findPurchasesByClientId(clientFromDb.getId()).orElse(null);
 
         assertEquals(1, purchaseFromClientFromDb.size());
         assertEquals(purchase.getId(), purchaseFromClientFromDb.getFirst().getId());
