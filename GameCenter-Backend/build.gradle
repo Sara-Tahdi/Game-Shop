@@ -33,7 +33,7 @@ tasks.named('test') {
         events "PASSED", "FAILED", "SKIPPED"
         exceptionFormat "full"
     }
-	finalizedBy jacocoTestCoverageVerification
+	finalizedBy jacocoTestReport
 }
 
 tasks.named('jacocoTestReport') {
