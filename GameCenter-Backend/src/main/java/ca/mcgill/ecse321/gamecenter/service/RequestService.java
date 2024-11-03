@@ -12,20 +12,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Arrays;
 
 @Service
 public class RequestService {
     @Autowired
     private RequestRepository requestRepository;
-
     @Autowired
     private StaffRepository staffRepository;
-
     @Autowired
     private ClientRepository clientRepository;
-
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private AppUserService appUserService;
+    @Autowired
+    private GameService gameService;
+
     
     public List<Request> getAllRequests() {
         List<Request> a = requestRepository.findRequestsByRequestType(Request.class).orElse(null);
@@ -59,6 +63,24 @@ public class RequestService {
         return a;
     }
 
+    public List<Request> getRequestsByCreatedRequestEmail(String createdRequestEmail) {
+        List<Request> a = requestRepository.findRequestsByCreatedRequestEmail(createdRequestEmail).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with createdRequestEmail: " + createdRequestEmail);
+        }
+        return a;
+    }
+
+    public List<Request> getRequestsByGameTitle()
+
+    public List<Request> getRequestsByRequestType(Class<?> type) {
+        List<Request> a = requestRepository.findRequestsByRequestType(type).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with type: " + type);
+        }
+        return a;
+    }
+
     public List<Request> getRequestsByStatus(Request.Status status) {
         List<Request> a = requestRepository.findRequestsByStatus(status).orElse(null);
         if (a == null) {
@@ -70,7 +92,7 @@ public class RequestService {
     @Transactional
     public UserRequest flagUser(String aStaffUsername, String aClientUsername) {
         Staff staff = (Staff) staffRepository.findStaffByUsername(aStaffUsername).orElse(null);
-        if (staff == null) {
+        if (staff == null || !staff.isIsActive()) {
             throw new IllegalArgumentException("There is no Staff with username: " + aStaffUsername);
         }
         Client client = (Client) clientRepository.findClientByUsername(aClientUsername).orElse(null);
@@ -101,7 +123,7 @@ public class RequestService {
 
     private GameRequest createGameRequest(String aStaffUsername, String aGameTitle, GameRequest.Type requestType) {
         Staff staff = (Staff) staffRepository.findStaffByUsername(aStaffUsername).orElse(null);
-        if (staff == null) {
+        if (staff == null  || !staff.isIsActive()) {
             throw new IllegalArgumentException("There is no Staff with username: " + aStaffUsername);
         }
     
@@ -130,9 +152,28 @@ public class RequestService {
             throw new IllegalArgumentException("There is no Request with id: " + requestId);
         }
         Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
-
         request.setStatus(newStatus);
+
+        if (!approval) {
+            return requestRepository.save(request);
+        }
+        else if (approval) {
+            // If the request is a UserRequest, we need to update the User's status
+            if (request instanceof UserRequest) {
+                appUserService.deactivateClientAccountByUsername(((UserRequest) request).
+                getUserFacingJudgement().getUsername());
+            }
+            // If the request is a GameRequest, we need to update the Game's status
+            else if (request instanceof GameRequest) {
+                GameRequest gameRequest = (GameRequest) request;
+                if (gameRequest.getType() == GameRequest.Type.ADD) {
+                    gameService.setActive(gameRequest.getGame().getTitle());
+                }
+                else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
+                    gameService.setUnavailable(gameRequest.getGame().getTitle());
+                }
+            }
+        }
         return requestRepository.save(request);
     }
-
 }

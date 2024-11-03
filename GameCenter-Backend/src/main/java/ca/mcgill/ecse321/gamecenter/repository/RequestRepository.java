@@ -18,6 +18,7 @@ public interface RequestRepository extends CrudRepository<Request, Integer> {
 
     Optional<List<Request>> findRequestsByCreatedRequestUsername(String username);
 
+    Optional<List<Request>> findRequestsByCreatedRequestEmail(String email);
 
     Optional<List<Request>> findRequestsByStatus(Request.Status status);
 }
