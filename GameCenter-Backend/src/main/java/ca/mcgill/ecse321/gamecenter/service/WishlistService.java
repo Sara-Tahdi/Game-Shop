@@ -40,11 +40,11 @@ public class WishlistService {
 
             //Aren't we supposed to add something like HttpStatus.NOT_FOUND,String.format
 
-            throw new IllegalArgumentException("There is no wishlist with ID %d.");
+            throw new IllegalArgumentException("There is no wishlist with ID: " + wishlistId);
         }
 
         //There is no way for me to know that the returned wishlist is the right one fetched with the provided ID
-        return wishlistRepository.save(wishlist);
+        return wishlist;
     }
 
     public List<Wishlist> findWishlistsByClientId(int clientId) {

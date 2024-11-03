@@ -70,6 +70,7 @@ public class WishlistServiceTests {
     public void testFindWishlistByValidId() {
         // Arrange
         Wishlist wishlist = new Wishlist();
+        wishlist.setId(VALID_WISHLIST_ID);
         when(mockWishlistRepo.findById(VALID_WISHLIST_ID)).thenReturn(Optional.of(wishlist));
 
         // Act
@@ -93,12 +94,12 @@ public class WishlistServiceTests {
     public void testAddGameToWishlistForInvalidClient() {
         // Arrange
         Game game = new Game();
-        when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.of(game));
+        game.setId(VALID_GAME_ID);
         when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
         IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> service.addGameToWishlist(VALID_CLIENT_ID, VALID_GAME_ID));
-        assertEquals("No client found with id: " +  VALID_WISHLIST_ID, error.getMessage());
+        assertEquals("No client found with id: " +  VALID_CLIENT_ID, error.getMessage());
     }
 
     @Test
