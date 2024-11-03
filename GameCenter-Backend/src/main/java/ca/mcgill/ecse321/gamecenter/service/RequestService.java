@@ -71,20 +71,36 @@ public class RequestService {
         return a;
     }
 
-    public List<Request> getRequestsByGameTitle(String gameTitle) {
-        List<Request> a = requestRepository.findRequestsByGameTitle(gameTitle).orElse(null);
+    public GameRequest getRequestByGameTitle(String gameTitle) {
+        GameRequest a = requestRepository.findRequestByGameTitle(gameTitle).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests with gameTitle: " + gameTitle);
         }
         return a;
     }
 
-    public List<Request> getRequestsByRequestType(Class<?> type) {
-        List<Request> a = requestRepository.findRequestsByRequestType(type).orElse(null);
+    public GameRequest getRequestByGameId(int gameId) {
+        GameRequest a = requestRepository.findRequestByGameId(gameId).orElse(null);
         if (a == null) {
-            throw new IllegalArgumentException("There are no Requests with type: " + type);
+            throw new IllegalArgumentException("There are no Requests with gameId: " + gameId);
         }
         return a;
+    }
+
+    public List<GameRequest> getAllGameRequests() {
+        List<Request> a = requestRepository.findRequestsByRequestType(GameRequest.class).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no GameRequests");
+        }
+        return Arrays.asList(a.toArray(new GameRequest[a.size()]));
+    }
+
+    public List<UserRequest> getAllUserRequests() {
+        List<Request> a = requestRepository.findRequestsByRequestType(UserRequest.class).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no UserRequests");
+        }
+        return Arrays.asList(a.toArray(new UserRequest[a.size()]));
     }
 
     public List<Request> getRequestsByStatus(Request.Status status) {
@@ -135,7 +151,7 @@ public class RequestService {
     
         Game game = (Game) gameRepository.findGameByTitle(aGameTitle).orElse(null);
         if (game == null) {
-            throw new IllegalArgumentException("There is no Game with name: " + aGameTitle);
+            throw new IllegalArgumentException("There is no Game with title: " + aGameTitle);
         }
     
         List<Request> staffRequests = requestRepository.findRequestsByCreatedRequestUsername(aStaffUsername).orElse(null);
@@ -152,35 +168,35 @@ public class RequestService {
     }
 
     // TODO: Implement this method once the UserRequest and GameRequest services are implemented
-    // @Transactional
-    // public Request handleRequestApproval(int requestId, boolean approval) {
-    //     Request request = requestRepository.findRequestById(requestId).orElse(null);
-    //     if (request == null) {
-    //         throw new IllegalArgumentException("There is no Request with id: " + requestId);
-    //     }
-    //     Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
-    //     request.setStatus(newStatus);
+    @Transactional
+    public Request handleRequestApproval(int requestId, boolean approval) {
+        Request request = requestRepository.findRequestById(requestId).orElse(null);
+        if (request == null) {
+            throw new IllegalArgumentException("There is no Request with id: " + requestId);
+        }
+        Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
+        request.setStatus(newStatus);
 
-    //     if (!approval) {
-    //         return requestRepository.save(request);
-    //     }
-    //     else if (approval) {
-    //         // If the request is a UserRequest, we need to update the User's status
-    //         if (request instanceof UserRequest) {
-    //             appUserService.deactivateClientAccountByUsername(((UserRequest) request).
-    //             getUserFacingJudgement().getUsername());
-    //         }
-    //         // If the request is a GameRequest, we need to update the Game's status
-    //         else if (request instanceof GameRequest) {
-    //             GameRequest gameRequest = (GameRequest) request;
-    //             if (gameRequest.getType() == GameRequest.Type.ADD) {
-    //                 gameService.setActive(gameRequest.getGame().getTitle());
-    //             }
-    //             else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
-    //                 gameService.setUnavailable(gameRequest.getGame().getTitle());
-    //             }
-    //         }
-    //         return requestRepository.save(request);
-    //     }
-    // }
+        if (!approval) {
+            return requestRepository.save(request);
+        }
+        else if (approval) {
+            // If the request is a UserRequest, we need to update the User's status
+            if (request instanceof UserRequest) {
+                appUserService.deactivateClientAccountByUsername(((UserRequest) request).
+                getUserFacingJudgement().getUsername());
+            }
+            // If the request is a GameRequest, we need to update the Game's status
+            else if (request instanceof GameRequest) {
+                GameRequest gameRequest = (GameRequest) request;
+                if (gameRequest.getType() == GameRequest.Type.ADD) {
+                    gameService.setActive(gameRequest.getGame().getTitle());
+                }
+                else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
+                    gameService.setUnavailable(gameRequest.getGame().getTitle());
+                }
+            }
+            return requestRepository.save(request);
+        }
+    }
 }
