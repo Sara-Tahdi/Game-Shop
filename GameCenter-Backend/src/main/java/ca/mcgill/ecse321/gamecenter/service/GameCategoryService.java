@@ -17,11 +17,23 @@ public class GameCategoryService {
     private GameCategoryRepository gameCategoryRepository;
 
     public GameCategory createGameCategory(String category) {
+        // Validate category input
+        if (category == null || category.trim().isEmpty()) {
+            throw new IllegalArgumentException("Category name cannot be null or empty.");
+        }
+        
+        
         GameCategory gameCategory = new GameCategory(category);
         return gameCategoryRepository.save(gameCategory);
     }
 
     public GameCategory updateGameCategory(int id, String category) {
+        // Validate category input
+        if (category == null || category.trim().isEmpty()) {
+            throw new IllegalArgumentException("Category name cannot be null or empty.");
+        }
+        
+        
         Optional<GameCategory> existingCategory = gameCategoryRepository.findById(id);
         
         if (existingCategory.isPresent()) {
