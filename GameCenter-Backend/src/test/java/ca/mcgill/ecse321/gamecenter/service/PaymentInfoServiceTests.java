@@ -138,12 +138,67 @@ public class PaymentInfoServiceTests {
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
         when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
 
-        PaymentInfo savedPaymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfo.getId()).orElse(null);
-        assertNull(savedPaymentInfo);
-
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
           paymentInfoService.deletePaymentInfo(cardNumber);
         });
         assertEquals(e.getMessage(), "No payment info with card number: " + cardNumber);
+    }
+
+    @Test
+    public void testFindExistingPaymentInfo() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        c.setId(21);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
+        Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        String cardNumber = "12830142";
+        Integer cvv = 111;
+        Integer expiryMonth = 12;
+        Integer expiryYear = 2029;
+        PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
+        when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+
+        PaymentInfo savedPaymentInfo = paymentInfoService.savePaymentInfo(
+                cardNumber, cvv, expiryMonth, expiryYear, createdClient
+        );
+        assertNotNull(savedPaymentInfo);
+        assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
+
+        PaymentInfo foundPaymentInfo = paymentInfoService.findPaymentInfoById(paymentInfo.getId());
+        assertNotNull(foundPaymentInfo);
+        assertEquals(foundPaymentInfo.getClient().getId(), createdClient.getId());
+    }
+
+    @Test
+    public void testFindNonexistingPaymentInfo() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        c.setId(21);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
+        Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        String cardNumber = "12830142";
+        Integer cvv = 111;
+        Integer expiryMonth = 12;
+        Integer expiryYear = 2029;
+        PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
+        when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
+            paymentInfoService.findPaymentInfoById(paymentInfo.getId());
+        });
+        assertEquals(e.getMessage(), "No payment info with id: " + cardNumber);
     }
 }
