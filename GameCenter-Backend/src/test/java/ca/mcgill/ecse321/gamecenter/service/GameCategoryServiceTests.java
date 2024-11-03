@@ -1,4 +1,8 @@
+package ca.mcgill.ecse321.gamecenter.service;
+
 import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
@@ -16,10 +20,10 @@ import java.util.Optional;
 @SpringBootTest
 class GameCategoryServiceTest {
 
-    @MockBean
+    @Mock
     private GameCategoryRepository gameCategoryRepository;
 
-    @Autowired
+    @InjectMocks
     private GameCategoryService gameCategoryService;
 
     @Test
@@ -114,13 +118,13 @@ class GameCategoryServiceTest {
         GameCategory category1 = new GameCategory("Arcade");
         GameCategory category2 = new GameCategory("Puzzle");
 
-        when(gameCategoryRepository.findAll()).thenReturn(Arrays.asList(category1, category2));
+        when(gameCategoryRepository.getAll()).thenReturn(Optional.of(List.of(category1, category2)));
 
         List<GameCategory> allCategories = gameCategoryService.getAllGameCategories();
 
         assertEquals(2, allCategories.size());
         assertEquals("Arcade", allCategories.get(0).getCategory());
         assertEquals("Puzzle", allCategories.get(1).getCategory());
-        verify(gameCategoryRepository, times(1)).findAll();
+        verify(gameCategoryRepository, times(1)).getAll();
     }
 }
