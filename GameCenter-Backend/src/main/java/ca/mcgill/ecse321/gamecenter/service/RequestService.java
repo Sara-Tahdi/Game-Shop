@@ -70,7 +70,7 @@ public class RequestService {
         }
         return a;
     }
-
+    // TODO: Must be multiple requests returned
     public GameRequest getRequestByGameTitle(String gameTitle) {
         GameRequest a = requestRepository.findRequestByGameTitle(gameTitle).orElse(null);
         if (a == null) {
@@ -176,26 +176,7 @@ public class RequestService {
         Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
         request.setStatus(newStatus);
 
-        if (!approval) {
-            return requestRepository.save(request);
-        }
-        else if (approval) {
-            // If the request is a UserRequest, we need to update the User's status
-            if (request instanceof UserRequest) {
-                appUserService.deactivateClientAccountByUsername(((UserRequest) request).
-                getUserFacingJudgement().getUsername());
-            }
-            // If the request is a GameRequest, we need to update the Game's status
-            else if (request instanceof GameRequest) {
-                GameRequest gameRequest = (GameRequest) request;
-                if (gameRequest.getType() == GameRequest.Type.ADD) {
-                    gameService.makeGameOffered(gameRequest.getGame().getId());
-                }
-                else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
-                    gameService.makeGameNotOffered(gameRequest.getGame().getId());
-                }
-            }
-        }
+        // TODO: Handle banning users and removing/adding games
         return requestRepository.save(request);
     }
 }

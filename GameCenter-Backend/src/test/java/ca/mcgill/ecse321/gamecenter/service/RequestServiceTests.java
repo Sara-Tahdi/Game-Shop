@@ -91,10 +91,16 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdOwner, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username2, username3);
 
         when(requestRepository.findRequestsByRequestType(Request.class)).thenReturn(Optional.of(List.of(
@@ -134,7 +140,10 @@ public class RequestServiceTests {
         Status status = Status.PENDING;
         UserRequest ur = new UserRequest(status, createdOwner, createdClient);
         ur.setId(23);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         requestService.flagUser(username2, username3);
 
         when(requestRepository.findRequestById(ur.getId())).thenReturn(Optional.of(ur));
@@ -203,10 +212,16 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
         when(requestRepository.findRequestsByCreatedRequestId(e.getId())).thenReturn(Optional.of(List.of(
@@ -222,7 +237,7 @@ public class RequestServiceTests {
     public void testGetRequestsByCreatedRequestIdFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 requestService.getRequestsByCreatedRequestId(2));
-        assertEquals("There are no Requests with createdRequestsId: " + 2, e.getMessage());
+        assertEquals("There are no Requests with createdRequestId: " + 2, e.getMessage());
     }
 
     @Test
@@ -325,10 +340,17 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest))); 
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
         when(requestRepository.findRequestsByCreatedRequestEmail(e.getEmail())).thenReturn(Optional.of(List.of(
@@ -439,7 +461,10 @@ public class RequestServiceTests {
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame); 
         gr.setId(23);  
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
+        requestService.addGameRequest(username, gameTitle);
 
         when(requestRepository.findRequestByGameId(gr.getGame().getId())).thenReturn(Optional.of(gr));
         GameRequest r = requestService.getRequestByGameId(gr.getGame().getId());
@@ -516,10 +541,16 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdOwner, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         requestService.flagUser(username2, username3);
 
         when(requestRepository.findRequestsByRequestType(GameRequest.class)).thenReturn(Optional.of(List.of(
@@ -528,7 +559,7 @@ public class RequestServiceTests {
         List<GameRequest> requests = requestService.getAllGameRequests();
 
         assertNotNull(requests);
-        assertEquals(2, requests.size());
+        assertEquals(1, requests.size());
     }
 
     @Test
@@ -583,10 +614,16 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdOwner, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username2, username3);
 
         when(requestRepository.findRequestsByRequestType(UserRequest.class)).thenReturn(Optional.of(List.of(
@@ -595,7 +632,7 @@ public class RequestServiceTests {
         List<UserRequest> requests = requestService.getAllUserRequests();
 
         assertNotNull(requests);
-        assertEquals(2, requests.size());
+        assertEquals(1, requests.size());
     }
 
     @Test
@@ -692,6 +729,9 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
         UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
@@ -717,6 +757,8 @@ public class RequestServiceTests {
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
         Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
 
+
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.flagUser("JohnDoe", "BobSmith"));
         assertEquals("There is no Client with username: " + "BobSmith", err.getMessage());
@@ -779,6 +821,9 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         assertNotNull(createdGameRequest);
@@ -802,8 +847,9 @@ public class RequestServiceTests {
         String password = "password";
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.addGameRequest("JohnDoe", "Call of Duty 3"));
         assertEquals("There is no Game with title: " + "Call of Duty 3", err.getMessage());
@@ -872,7 +918,10 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.REMOVE;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle);
 
@@ -897,15 +946,16 @@ public class RequestServiceTests {
         String password = "password";
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.removeGameRequest("JohnDoe", "Call of Duty 3"));
         assertEquals("There is no Game with title: " + "Call of Duty 3", err.getMessage());
     }
 
     @Test
-    public void testRemoveameRequestFailAlreadyRequested() {
+    public void testRemoveGameRequestFailAlreadyRequested() {
         String categoryName = "Action";
         GameCategory gameCategory = new GameCategory(categoryName);
         when(gameCategoryRepository.save(any(GameCategory.class))).thenReturn(gameCategory);
@@ -931,9 +981,14 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.REMOVE;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame); 
+
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
-        GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
+        requestService.removeGameRequest(username, gameTitle);
+
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.removeGameRequest("JohnDoe", "Call of Duty 3"));
@@ -941,7 +996,7 @@ public class RequestServiceTests {
     }
 
     @Test
-    public void testHandleRequestApprovalUserRequestApproved() {
+    public void testHandleRequestApprovalApproved() {
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
         String password = "password";
@@ -960,50 +1015,19 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty()); 
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
+        when(requestRepository.findRequestById(createdUserRequest.getId())).thenReturn(Optional.of(createdUserRequest));
+        createdUserRequest.setStatus(Status.APPROVED);
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(createdUserRequest);
         Request updatedUserRequest = requestService.handleRequestApproval(createdUserRequest.getId(), true);
 
         assertInstanceOf(UserRequest.class, updatedUserRequest);
         assertEquals(Status.APPROVED, updatedUserRequest.getStatus());
-    }
-
-    @Test
-    public void testHandleRequestApprovalGameRequestApproved() {
-        String categoryName = "Action";
-        GameCategory gameCategory = new GameCategory(categoryName);
-        when(gameCategoryRepository.save(any(GameCategory.class))).thenReturn(gameCategory);
-        GameCategory createdGameCategory = gameCategoryService.createGameCategory(categoryName);
-
-        String gameTitle = "Call of Duty 3";
-        float gamePrice = 59.99f;
-        String gameDescription = "Call of Duty 3 is a first-person shooter video game developed by Treyarch and published by Activision.";
-        float rating = 4.5f;
-        int remainingCopies = 10;
-        boolean isOffered = false;
-        GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
-        when(gameRepository.save(any(Game.class))).thenReturn(game);
-        Game createdGame = gameService.createGame(gameTitle, gamePrice, gameDescription, generalFeeling, createdGameCategory);
-
-        String email = "John.Doe@gmail.com";
-        String username = "JohnDoe";
-        String password = "password";
-        Employee e = new Employee(email, username, password);
-        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
-
-        Status status = Status.PENDING;
-        Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
-        when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
-
-        Request updatedGameRequest = requestService.handleRequestApproval(createdGameRequest.getId(), true);
-
-        assertInstanceOf(GameRequest.class, updatedGameRequest);
-        assertEquals(Status.APPROVED, updatedGameRequest.getStatus());
     }
 
     @Test
@@ -1026,9 +1050,16 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
         UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
+        createdUserRequest.setStatus(Status.DENIED);
+        when(requestRepository.findRequestById(createdUserRequest.getId())).thenReturn(Optional.of(createdUserRequest));
+        createdUserRequest.setStatus(Status.DENIED);
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(createdUserRequest);
         Request updatedUserRequest = requestService.handleRequestApproval(createdUserRequest.getId(), false);
 
         assertInstanceOf(UserRequest.class, updatedUserRequest);
