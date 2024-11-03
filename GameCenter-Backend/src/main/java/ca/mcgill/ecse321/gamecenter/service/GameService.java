@@ -181,6 +181,40 @@ public class GameService {
         return gameRepository.save(g);
     }
 
+    @Transactional
+    public Game makeGameOffered(int gameId) {
+        Game game = gameRepository.findGameById(gameId).orElse(null);
+        if (game == null) {
+            throw new IllegalArgumentException("There is no Game with id: " + gameId);
+        }
+
+        if (game.getIsOffered()) {
+            throw new IllegalArgumentException("Game is already offered");
+        }
+
+        if (game.getRemainingQuantity() <= 0) {
+            throw new IllegalArgumentException("Cannot offer game with no remaining quantity");
+        }
+
+        game.setIsOffered(true);
+        return gameRepository.save(game);
+    }
+
+    @Transactional
+    public Game makeGameNotOffered(int gameId) {
+        Game game = gameRepository.findGameById(gameId).orElse(null);
+        if (game == null) {
+            throw new IllegalArgumentException("There is no Game with id: " + gameId);
+        }
+
+        if (!game.getIsOffered()) {
+            throw new IllegalArgumentException("Game is already not offered");
+        }
+
+        game.setIsOffered(false);
+        return gameRepository.save(game);
+    }
+
     //helper method
     public static Game findGameByTitle(List<Game> games, String aTitle) {
         if (games == null || aTitle == null) {

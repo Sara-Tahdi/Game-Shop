@@ -700,4 +700,107 @@ public class GameServiceTests {
         assertEquals("Remaining Quantity is not valid", e.getMessage());
     }
 
+    @Test
+    void testMakeGameOfferedSuccess() {
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        int remainingQuantity = 20;
+        boolean isOffered = false;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        Game game = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        game.setId(23);
+
+        when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Game updatedGame = gameService.makeGameOffered(23);
+
+        assertNotNull(updatedGame);
+        assertTrue(updatedGame.getIsOffered());
+    }
+
+    @Test
+    void testMakeGameOfferedAlreadyOffered() {
+        Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+        game.setId(23);
+
+        when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeGameOffered(23));
+        assertEquals("Game is already offered", e.getMessage());
+    }
+
+    @Test
+    void testMakeGameOfferedNoQuantity() {
+        Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 0, false,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+        game.setId(23);
+
+        when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeGameOffered(23));
+        assertEquals("Cannot offer game with no remaining quantity", e.getMessage());
+    }
+
+    @Test
+    void testMakeGameOfferedNonExistent() {
+        when(gameRepository.findGameById(999)).thenReturn(Optional.empty());
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeGameOffered(999));
+        assertEquals("There is no Game with id: 999", e.getMessage());
+    }
+
+    @Test
+    void testMakeGameNotOfferedSuccess() {
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        int remainingQuantity = 20;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        Game game = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        game.setId(23);
+
+        when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Game updatedGame = gameService.makeGameNotOffered(23);
+
+        assertNotNull(updatedGame);
+        assertFalse(updatedGame.getIsOffered());
+    }
+
+    @Test
+    void testMakeGameNotOfferedAlreadyNotOffered() {
+        Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, false,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+        game.setId(23);
+
+        when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeGameNotOffered(23));
+        assertEquals("Game is already not offered", e.getMessage());
+    }
+
+    @Test
+    void testMakeGameNotOfferedNonExistent() {
+        when(gameRepository.findGameById(999)).thenReturn(Optional.empty());
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.makeGameNotOffered(999));
+        assertEquals("There is no Game with id: 999", e.getMessage());
+    }
+
 }
