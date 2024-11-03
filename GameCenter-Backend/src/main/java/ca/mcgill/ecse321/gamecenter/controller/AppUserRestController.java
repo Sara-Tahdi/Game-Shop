@@ -92,7 +92,7 @@ public class AppUserRestController {
                 clientToUpdate.getUsername(),
                 clientToUpdate.getPassword(),
                 clientToUpdate.getPhoneNumber(),
-                clientToUpdate.getDeliveryAddress(),
+                clientToUpdate.getDeliveryAddress()
         );
         return new ClientResponseDTO(c);
     }
