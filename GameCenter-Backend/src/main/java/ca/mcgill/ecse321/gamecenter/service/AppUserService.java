@@ -84,7 +84,7 @@ public class AppUserService {
             throw new IllegalArgumentException("Password too short");
         }
 
-        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress, 0);
+        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress);
         return appUserRepository.save(c);
     }
 
@@ -121,16 +121,6 @@ public class AppUserService {
             throw new IllegalArgumentException("There is no Client with username: " + username);
         }
         c.setIsActive(false);
-        return appUserRepository.save(c);
-    }
-
-    @Transactional
-    public Client flagClientByUsername(String username) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(username).orElse(null);
-        if (c == null) {
-            throw new IllegalArgumentException("There is no Client with username: " + username);
-        }
-        c.setNumberOfFlags(c.getNumberOfFlags() + 1);
         return appUserRepository.save(c);
     }
 

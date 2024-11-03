@@ -57,7 +57,7 @@ public class RequestTests {
         game = gameRepository.save(game);
 
         // Create a new game request
-        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, (Employee) employee, GameRequest.Type.ADD, game);
+        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, (Employee) employee, GameRequest.Type.ADD, "", game);
         gameRequest = requestRepository.save(gameRequest);
         assertNotNull(gameRequest);
         assertEquals(GameRequest.Status.PENDING, gameRequest.getStatus());
@@ -135,7 +135,7 @@ public class RequestTests {
         game = gameRepository.save(game);
 
         // Create a game request
-        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, (Employee) employee, GameRequest.Type.ADD, game);
+        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, (Employee) employee, GameRequest.Type.ADD, "", game);
         gameRequest = requestRepository.save(gameRequest);
 
         // Approve the request
@@ -201,7 +201,7 @@ public class RequestTests {
         game = gameRepository.save(game);
 
         // Create a game request
-        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, employee, GameRequest.Type.ADD, game);
+        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, employee, GameRequest.Type.ADD, "", game);
         gameRequest = requestRepository.save(gameRequest);
 
         List<Request> userRequestsFromDb = requestRepository.findRequestsByRequestType(UserRequest.class).orElse(null);
@@ -243,7 +243,7 @@ public class RequestTests {
         game = gameRepository.save(game);
 
         // Create a game request
-        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, employee, GameRequest.Type.ADD, game);
+        GameRequest gameRequest = new GameRequest(GameRequest.Status.PENDING, employee, GameRequest.Type.ADD, "", game);
         gameRequest = requestRepository.save(gameRequest);
 
         // Create a dummy second staff
@@ -256,7 +256,7 @@ public class RequestTests {
         dummyGame.setTitle("Best Game Ever 2");
         dummyGame = gameRepository.save(dummyGame);
 
-        GameRequest dummyGameRequest = new GameRequest(Request.Status.PENDING, dummyEmployee, GameRequest.Type.ADD, dummyGame);
+        GameRequest dummyGameRequest = new GameRequest(Request.Status.PENDING, dummyEmployee, GameRequest.Type.ADD, "", dummyGame);
         dummyGameRequest = requestRepository.save(dummyGameRequest);
 
         List<Request> requestsFromDb = requestRepository.findRequestsByCreatedRequestId(employee.getId()).orElse(null);

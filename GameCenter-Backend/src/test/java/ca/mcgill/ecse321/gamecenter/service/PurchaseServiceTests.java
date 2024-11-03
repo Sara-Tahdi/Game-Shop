@@ -49,7 +49,7 @@ public class PurchaseServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         c.setId(21);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));

@@ -49,8 +49,7 @@ public class UserRequestTests {
         "testuser",            
         "password123",        
         "123-456-7890",       
-        "123 Main St",           
-        0                        
+        "123 Main St"
         );
         userFacingJudgement = ClientRepo.save(userFacingJudgement);
 
@@ -78,6 +77,5 @@ public class UserRequestTests {
         assertEquals(userFacingJudgement.getUsername(), userRequestFromDb.getUserFacingJudgement().getUsername());
         assertEquals(userFacingJudgement.getPhoneNumber(), userRequestFromDb.getUserFacingJudgement().getPhoneNumber());
         assertEquals(userFacingJudgement.getDeliveryAddress(), userRequestFromDb.getUserFacingJudgement().getDeliveryAddress());
-        assertEquals(userFacingJudgement.getNumberOfFlags(), userRequestFromDb.getUserFacingJudgement().getNumberOfFlags());
     }
 }
