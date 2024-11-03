@@ -55,7 +55,7 @@ public class RequestService {
         return a;
     }
 
-    public List<Request> getRequestsByCreatedRequestsUsername(String createdRequestsUsername) {
+    public List<Request> getRequestsByCreatedRequestUsername(String createdRequestsUsername) {
         List<Request> a = requestRepository.findRequestsByCreatedRequestUsername(createdRequestsUsername).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests with createdRequestsUsername: " + createdRequestsUsername);
@@ -71,7 +71,13 @@ public class RequestService {
         return a;
     }
 
-    public List<Request> getRequestsByGameTitle()
+    public List<Request> getRequestsByGameTitle(String gameTitle) {
+        List<Request> a = requestRepository.findRequestsByGameTitle(gameTitle).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with gameTitle: " + gameTitle);
+        }
+        return a;
+    }
 
     public List<Request> getRequestsByRequestType(Class<?> type) {
         List<Request> a = requestRepository.findRequestsByRequestType(type).orElse(null);
@@ -145,35 +151,36 @@ public class RequestService {
         return requestRepository.save(gameRequest);
     }
 
-    @Transactional
-    public Request handleRequestApproval(int requestId, boolean approval) {
-        Request request = requestRepository.findRequestById(requestId).orElse(null);
-        if (request == null) {
-            throw new IllegalArgumentException("There is no Request with id: " + requestId);
-        }
-        Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
-        request.setStatus(newStatus);
+    // TODO: Implement this method once the UserRequest and GameRequest services are implemented
+    // @Transactional
+    // public Request handleRequestApproval(int requestId, boolean approval) {
+    //     Request request = requestRepository.findRequestById(requestId).orElse(null);
+    //     if (request == null) {
+    //         throw new IllegalArgumentException("There is no Request with id: " + requestId);
+    //     }
+    //     Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
+    //     request.setStatus(newStatus);
 
-        if (!approval) {
-            return requestRepository.save(request);
-        }
-        else if (approval) {
-            // If the request is a UserRequest, we need to update the User's status
-            if (request instanceof UserRequest) {
-                appUserService.deactivateClientAccountByUsername(((UserRequest) request).
-                getUserFacingJudgement().getUsername());
-            }
-            // If the request is a GameRequest, we need to update the Game's status
-            else if (request instanceof GameRequest) {
-                GameRequest gameRequest = (GameRequest) request;
-                if (gameRequest.getType() == GameRequest.Type.ADD) {
-                    gameService.setActive(gameRequest.getGame().getTitle());
-                }
-                else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
-                    gameService.setUnavailable(gameRequest.getGame().getTitle());
-                }
-            }
-        }
-        return requestRepository.save(request);
-    }
+    //     if (!approval) {
+    //         return requestRepository.save(request);
+    //     }
+    //     else if (approval) {
+    //         // If the request is a UserRequest, we need to update the User's status
+    //         if (request instanceof UserRequest) {
+    //             appUserService.deactivateClientAccountByUsername(((UserRequest) request).
+    //             getUserFacingJudgement().getUsername());
+    //         }
+    //         // If the request is a GameRequest, we need to update the Game's status
+    //         else if (request instanceof GameRequest) {
+    //             GameRequest gameRequest = (GameRequest) request;
+    //             if (gameRequest.getType() == GameRequest.Type.ADD) {
+    //                 gameService.setActive(gameRequest.getGame().getTitle());
+    //             }
+    //             else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
+    //                 gameService.setUnavailable(gameRequest.getGame().getTitle());
+    //             }
+    //         }
+    //         return requestRepository.save(request);
+    //     }
+    // }
 }

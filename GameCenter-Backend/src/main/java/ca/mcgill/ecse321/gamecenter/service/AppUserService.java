@@ -174,7 +174,7 @@ public class AppUserService {
         o.setPassword(Encryption.encryptDecrypt(newPassword));
         return appUserRepository.save(o);
     }
-
+    // TODO: Shouldn't this method be with the others at the top of the file?
     public List<AppUser> findAllOwners() {
         return appUserRepository.findAppUserByUserType(Owner.class).orElse(null);
     }
