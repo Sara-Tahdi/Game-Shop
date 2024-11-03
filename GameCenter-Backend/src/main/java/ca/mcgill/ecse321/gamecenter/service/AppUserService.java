@@ -2,8 +2,6 @@ package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
-import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
-import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
 import ca.mcgill.ecse321.gamecenter.utilities.Encryption;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,45 +14,58 @@ public class AppUserService {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    @Autowired
-    private PaymentInfoRepository paymentInfoRepository;
-
-    @Autowired
-    private PurchaseRepository purchaseRepository;
-
-    public List<AppUser> getAllAppUser() {
-        List<AppUser> a = appUserRepository.findAppUserByUserType(AppUser.class).orElse(null);
-        if (a == null) {
-            throw new IllegalArgumentException("There are no Users");
-        }
-        return a;
-    }
-
-    public AppUser getAppUserById(int id) {
+    public Client getClientById(int id) {
         AppUser a = appUserRepository.findAppUserById(id).orElse(null);
-        if (a == null) {
-            throw new IllegalArgumentException("There is no User with id: " + id);
+        if (!(a instanceof Client)) {
+            throw new IllegalArgumentException("There is no Client with id: " + id);
         }
         a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
-        return a;
+        return (Client) a;
     }
 
-    public AppUser getAppUserByEmail(String email) {
+    public Employee getEmployeeById(int id) {
+        AppUser a = appUserRepository.findAppUserById(id).orElse(null);
+        if (!(a instanceof Employee)) {
+            throw new IllegalArgumentException("There is no Employee with id: " + id);
+        }
+        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
+        return (Employee) a;
+    }
+
+    public Client getClientByEmail(String email) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
-        if (a == null) {
-            throw new IllegalArgumentException("There is no User with email: " + email);
+        if (!(a instanceof Client)) {
+            throw new IllegalArgumentException("There is no Client with email: " + email);
         }
         a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
-        return a;
+        return (Client) a;
     }
 
-    public AppUser getAppUserByUsername(String username) {
-        AppUser a = appUserRepository.findAppUserByUsername(username).orElse(null);
-        if (a == null) {
-            throw new IllegalArgumentException("There is no User with username: " + username);
+    public Employee getEmployeeByEmail(String email) {
+        AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
+        if (!(a instanceof Employee)) {
+            throw new IllegalArgumentException("There is no Employee with email: " + email);
         }
         a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
-        return a;
+        return (Employee) a;
+    }
+
+    public Client getClientByUsername(String username) {
+        AppUser a = appUserRepository.findAppUserByUsername(username).orElse(null);
+        if (!(a instanceof Client)) {
+            throw new IllegalArgumentException("There is no Client with username: " + username);
+        }
+        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
+        return (Client) a;
+    }
+
+    public Employee getEmployeeByUsername(String username) {
+        AppUser a = appUserRepository.findAppUserByUsername(username).orElse(null);
+        if (!(a instanceof Employee)) {
+            throw new IllegalArgumentException("There is no Employee with username: " + username);
+        }
+        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
+        return (Employee) a;
     }
 
     @Transactional
@@ -69,7 +80,7 @@ public class AppUserService {
             throw new IllegalArgumentException("User already exists with email: " + aEmail);
         }
 
-        if (aPassword == null || aPassword.length() < 8) {
+        if (aPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
 
@@ -78,29 +89,23 @@ public class AppUserService {
     }
 
     @Transactional
-    public Client updateClientAccount(String oldUsername, String newEmail, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress) {
-        AppUser a = appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
+    public Client updateClientAccount(String email, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress) {
+        AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
-            throw new IllegalArgumentException("There is no User with username: " + oldUsername);
+            throw new IllegalArgumentException("There is no User with email: " + email);
         }
 
-        AppUser testEmail = appUserRepository.findAppUserByEmail(newEmail).orElse(null);
+        AppUser testEmail = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testEmail != null && testEmail.getId() != a.getId()) {
-            throw new IllegalArgumentException("There already exists a User with email: " + newEmail);
-        }
-
-        AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
-        if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
         }
 
-        if (newPassword == null || newPassword.length() < 8) {
+        if (newPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
 
         Client c = (Client) a;
 
-        c.setEmail(newEmail);
         c.setUsername(newUsername);
         c.setPassword(Encryption.encryptDecrypt(newPassword));
         c.setPhoneNumber(newPhoneNumber);
@@ -140,7 +145,7 @@ public class AppUserService {
             throw new IllegalArgumentException("Only 1 Owner account permitted");
         }
 
-        if (aPassword == null || aPassword.length() < 8) {
+        if (aPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
         Owner o = new Owner(aEmail, aUsername, Encryption.encryptDecrypt(aPassword));
@@ -148,15 +153,10 @@ public class AppUserService {
     }
 
     @Transactional
-    public Owner updateOwnerAccount(String oldUsername, String newEmail, String newUsername, String newPassword) {
-        AppUser a = appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
+    public Owner updateOwnerAccount(String email, String newUsername, String newPassword) {
+        AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
-            throw new IllegalArgumentException("There is no User with username: " + oldUsername);
-        }
-
-        AppUser testEmail = appUserRepository.findAppUserByEmail(newEmail).orElse(null);
-        if (testEmail != null && testEmail.getId() != a.getId()) {
-            throw new IllegalArgumentException("There already exists a User with email: " + newEmail);
+            throw new IllegalArgumentException("There is no User with email: " + email);
         }
 
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
@@ -164,12 +164,11 @@ public class AppUserService {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
         }
 
-        if (newPassword == null || newPassword.length() < 8) {
+        if (newPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
 
         Owner o = (Owner) a;
-        o.setEmail(newEmail);
         o.setUsername(newUsername);
         o.setPassword(Encryption.encryptDecrypt(newPassword));
         return appUserRepository.save(o);
@@ -191,7 +190,7 @@ public class AppUserService {
             throw new IllegalArgumentException("User already exists with email: " + aEmail);
         }
 
-        if (aPassword == null || aPassword.length() < 8) {
+        if (aPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
         Employee e = new Employee(aEmail, aUsername, Encryption.encryptDecrypt(aPassword));
@@ -199,15 +198,10 @@ public class AppUserService {
     }
 
     @Transactional
-    public Employee updateEmployeeAccount(String oldUsername, String newEmail, String newUsername, String newPassword) {
-        AppUser a = appUserRepository.findAppUserByUsername(oldUsername).orElse(null);
+    public Employee updateEmployeeAccount(String email, String newUsername, String newPassword) {
+        AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
-            throw new IllegalArgumentException("There is no User with username: " + oldUsername);
-        }
-
-        AppUser testEmail = appUserRepository.findAppUserByEmail(newEmail).orElse(null);
-        if (testEmail != null && testEmail.getId() != a.getId()) {
-            throw new IllegalArgumentException("There already exists a User with email: " + newEmail);
+            throw new IllegalArgumentException("There is no User with email: " + email);
         }
 
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
@@ -215,12 +209,11 @@ public class AppUserService {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
         }
 
-        if (newPassword == null || newPassword.length() < 8) {
+        if (newPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
 
         Employee e = (Employee) a;
-        e.setEmail(newEmail);
         e.setUsername(newUsername);
         e.setPassword(Encryption.encryptDecrypt(newPassword));
         return appUserRepository.save(e);
