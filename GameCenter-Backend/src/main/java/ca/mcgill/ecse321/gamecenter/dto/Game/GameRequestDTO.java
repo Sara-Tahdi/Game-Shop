@@ -1,9 +1,8 @@
 package ca.mcgill.ecse321.gamecenter.dto.Game;
 
-import ca.mcgill.ecse321.gamecenter.model.*;
+import ca.mcgill.ecse321.gamecenter.model.Game;
+import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.List;
 
 public class GameRequestDTO {
     @NotBlank(message = "Title is required")
