@@ -126,8 +126,8 @@ public class GameService {
         }
 
         if (aRating == null
-                || aRating <= 0.0
-                || aRating >= 5.0) {
+                || aRating < 0.0
+                || aRating > 5.0) {
             throw new IllegalArgumentException("Rating is not valid");
         }
 

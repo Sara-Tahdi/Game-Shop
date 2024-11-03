@@ -98,6 +98,132 @@ public class GameServiceTests {
                 gameService.createGame(title, 0F, description, publicOpinion, category));
         assertEquals("Price is not valid", e2.getMessage());
     }
+
+    @Test
+    void testCreateGameExistingTitle() {
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        int remainingQuantity = 20;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        Game existingGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        when(gameRepository.findGameByTitle(title)).thenReturn(Optional.of(existingGame));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Game already exists with title: " + title, e.getMessage());
+    }
+
+    @Test
+    void testCreateGameExistingDescription() {
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        int remainingQuantity = 20;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        when(gameRepository.findGameByTitle(title)).thenReturn(Optional.empty());
+        Game existingGame = new Game("Other Game", price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        when(gameRepository.findGameByDescription(description)).thenReturn(Optional.of(existingGame));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Game already exists with description: " + title, e.getMessage());
+    }
+
+    @Test
+    void testCreateGameExistingTitleInCategory() {
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        int remainingQuantity = 20;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        when(gameRepository.findGameByTitle(title)).thenReturn(Optional.empty());
+        when(gameRepository.findGameByDescription(description)).thenReturn(Optional.empty());
+
+        List<Game> categoryGames = new ArrayList<>();
+        categoryGames.add(new Game(title, price, "Different description", rating, remainingQuantity, isOffered, publicOpinion, category));
+        when(gameRepository.findGamesByGameCategory(category.getCategory())).thenReturn(Optional.of(categoryGames));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Game already exists with description: " + description + " and title: " + title, e.getMessage());
+    }
+
+    @Test
+    void testCreateGameInvalidPrice() {
+        String title = "Rayman Legends";
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        int remainingQuantity = 20;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, null, description, rating, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Price is not valid", e1.getMessage());
+
+        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, -79.99F, description, rating, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Price is not valid", e2.getMessage());
+    }
+
+    @Test
+    void testCreateGameInvalidRating() {
+        // Setup test data
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        int remainingQuantity = 20;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, null, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Rating is not valid", e1.getMessage());
+
+        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, -1F, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Rating is not valid", e2.getMessage());
+
+        // Test rating >= 5
+        IllegalArgumentException e3 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, 5.1F, remainingQuantity, isOffered, publicOpinion, category));
+        assertEquals("Rating is not valid", e3.getMessage());
+    }
+
+    @Test
+    void testCreateGameInvalidQuantity() {
+        // Setup test data
+        String title = "Rayman Legends";
+        float price = 79.99F;
+        String description = "A fun platformer!";
+        float rating = 4.5F;
+        boolean isOffered = true;
+        Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
+        GameCategory category = new GameCategory("Platformer");
+
+        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, rating, null, isOffered, publicOpinion, category));
+        assertEquals("Remaining Quantity is not valid", e1.getMessage());
+
+        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.createGame(title, price, description, rating, -1, isOffered, publicOpinion, category));
+        assertEquals("Remaining Quantity is not valid", e2.getMessage());
+    }
     
     @Test
     void testGetGameById(){
