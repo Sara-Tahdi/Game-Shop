@@ -26,10 +26,10 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
     Optional<List<Game>> findGamesByGameCategory(String category);
 
     @Query("SELECT g FROM Game g WHERE g.price >= :minPrice AND g.price <= :maxPrice")
-    Optional<List<Game>>findGamesByPriceRange(Integer minPrice, Integer maxPrice);
+    Optional<List<Game>>findGamesByPriceRange(Float minPrice, Float maxPrice);
 
     @Query("SELECT g FROM Game g WHERE g.rating >= :minRating AND g.rating <= :maxRating")
-    Optional<List<Game>>findGamesByRatingRange(Integer minRating, Integer maxRating);
+    Optional<List<Game>>findGamesByRatingRange(Float minRating, Float maxRating);
 
     @Modifying
     @Transactional

@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
-import ca.mcgill.ecse321.gamecenter.model.*;
+import ca.mcgill.ecse321.gamecenter.model.Game;
+import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,9 @@ public class GameService {
     private GameCategoryRepository gameCategoryRepository;
 
     public Game createGame(String title, float price, String description, Game.GeneralFeeling generalFeeling, GameCategory category) {
+        if (price <= 0.0) {
+            throw new IllegalArgumentException("Price is not valid");
+        }
         Game g = new Game(title, price, description, 0, 0, false, generalFeeling, category);
         return gameRepository.save(g);
     }
@@ -49,7 +53,7 @@ public class GameService {
     public List<Game> getGameByCategoryId(int categoryId) {
         List<Game> g = gameRepository.findGamesByGameCategoryId(categoryId).orElse(null);
         if (g == null) {
-            throw new IllegalArgumentException("There is no Game with category: " + gameCategoryRepository.findGameCategoryById(categoryId));
+            throw new IllegalArgumentException("There is no Game with category whose ID is: " + categoryId);
         }
         return g;
     }
@@ -57,12 +61,16 @@ public class GameService {
     public List<Game> getGameByCategory(String category) {
         List<Game> g = gameRepository.findGamesByGameCategory(category).orElse(null);
         if (g == null) {
-            throw new IllegalArgumentException("There is no Game with category: " + gameCategoryRepository.findGameCategoryByCategory(category));
+            throw new IllegalArgumentException("There is no Game with category: " + category);
         }
         return g;
     }
 
-    public List<Game> getGameByPriceRange(Integer minPrice, Integer maxPrice) {
+    public List<Game> getGameByPriceRange(Float minPrice, Float maxPrice) {
+        if (minPrice == null || maxPrice == null || minPrice < 0 || maxPrice < minPrice) {
+            throw new IllegalArgumentException("Invalid price range");
+        }
+
         List<Game> g = gameRepository.findGamesByPriceRange(minPrice, maxPrice).orElse(null);
         if (g == null) {
             throw new IllegalArgumentException("There is no Game within price range: [" + minPrice + ", " + maxPrice + "]");
@@ -70,7 +78,15 @@ public class GameService {
         return g;
     }
 
-    public List<Game> getGameByRatingRange(Integer minRating, Integer maxRating) {
+    public List<Game> getGameByRatingRange(Float minRating, Float maxRating) {
+        if (minRating == null || maxRating == null) {
+            throw new IllegalArgumentException("Rating range cannot be null");
+        }
+
+        if (minRating < 0 || maxRating > 5 || minRating > maxRating) {
+            throw new IllegalArgumentException("Invalid rating range. Ratings must be between 0 and 5, and minimum rating must not exceed maximum rating");
+        }
+
         List<Game> g = gameRepository.findGamesByRatingRange(minRating, maxRating).orElse(null);
         if (g == null) {
             throw new IllegalArgumentException("There is no Game within rating range: [" + minRating + ", " + maxRating + "]");
