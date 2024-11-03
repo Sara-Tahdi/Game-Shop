@@ -7,18 +7,14 @@ import static org.mockito.Mockito.*;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
-import ca.mcgill.ecse321.gamecenter.service.GameCategoryService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-class GameCategoryServiceTest {
+class GameCategoryServiceTests {
 
     @Mock
     private GameCategoryRepository gameCategoryRepository;
