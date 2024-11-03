@@ -803,4 +803,112 @@ public class GameServiceTests {
         assertEquals("There is no Game with id: 999", e.getMessage());
     }
 
+    @Test
+    void testGetAllAvailableGamesSuccess() {
+        List<Game> games = new ArrayList<>();
+        games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer")));
+        games.add(new Game("Super Mario Odyssey", 89.99F, "A 3D platformer!", 4.9F, 15, true,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("3D Platformer")));
+
+        when(gameRepository.findAllAvailableGames()).thenReturn(Optional.of(games));
+
+        List<Game> foundGames = gameService.getAllAvailableGames();
+
+        assertNotNull(foundGames);
+        assertEquals(2, foundGames.size());
+        assertTrue(foundGames.stream().allMatch(Game::getIsOffered));
+    }
+
+    @Test
+    void testGetAllAvailableGamesEmpty() {
+        when(gameRepository.findAllAvailableGames()).thenReturn(Optional.empty());
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.getAllAvailableGames());
+        assertEquals("There are no available games", e.getMessage());
+    }
+
+    @Test
+    void testGetAllAvailableGamesByCategorySuccess() {
+        String category = "Platformer";
+        List<Game> games = new ArrayList<>();
+        games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
+                Game.GeneralFeeling.POSITIVE, new GameCategory(category)));
+
+        when(gameRepository.findAllAvailableGamesByGameCategory(category))
+                .thenReturn(Optional.of(games));
+
+        List<Game> foundGames = gameService.getAllAvailableGamesByCategory(category);
+
+        assertNotNull(foundGames);
+        assertEquals(1, foundGames.size());
+        assertTrue(foundGames.stream().allMatch(g ->
+                g.getCategory().getCategory().equals(category) && g.getIsOffered()));
+    }
+
+    @Test
+    void testGetAllAvailableGamesByCategoryEmpty() {
+        String category = "Platformer";
+        when(gameRepository.findAllAvailableGamesByGameCategory(category))
+                .thenReturn(Optional.empty());
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                gameService.getAllAvailableGamesByCategory(category));
+        assertEquals("There are no available games in category: Platformer", e.getMessage());
+    }
+
+    @Test
+    void testGetAllAvailableGamesByPriceRangeSuccess() {
+        float minPrice = 70.0F;
+        float maxPrice = 90.0F;
+        List<Game> games = new ArrayList<>();
+        games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer")));
+
+        when(gameRepository.findAllAvailableGamesByPriceRange(minPrice, maxPrice))
+                .thenReturn(Optional.of(games));
+
+        List<Game> foundGames = gameService.getAllAvailableGamesByPriceRange(minPrice, maxPrice);
+
+        assertNotNull(foundGames);
+        assertTrue(foundGames.stream().allMatch(g ->
+                g.getPrice() >= minPrice && g.getPrice() <= maxPrice && g.getIsOffered()));
+    }
+
+    @Test
+    void testGetAllAvailableGamesByRatingRangeSuccess() {
+        float minRating = 4.0F;
+        float maxRating = 5.0F;
+        List<Game> games = new ArrayList<>();
+        games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer")));
+
+        when(gameRepository.findAllAvailableGamesByRatingRange(minRating, maxRating))
+                .thenReturn(Optional.of(games));
+
+        List<Game> foundGames = gameService.getAllAvailableGamesByRatingRange(minRating, maxRating);
+
+        assertNotNull(foundGames);
+        assertTrue(foundGames.stream().allMatch(g ->
+                g.getRating() >= minRating && g.getRating() <= maxRating && g.getIsOffered()));
+    }
+
+    @Test
+    void testGetAllAvailableGamesByRatingRangeInvalid() {
+        // Test min > max
+        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.getAllAvailableGamesByRatingRange(5.0F, 4.0F));
+        assertEquals("Minimum rating cannot be greater than maximum rating", e1.getMessage());
+
+        // Test out of range values
+        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.getAllAvailableGamesByRatingRange(-1.0F, 5.0F));
+        assertEquals("Rating must be between 0 and 5", e2.getMessage());
+
+        IllegalArgumentException e3 = assertThrows(IllegalArgumentException.class, () ->
+                gameService.getAllAvailableGamesByRatingRange(0.0F, 6.0F));
+        assertEquals("Rating must be between 0 and 5", e3.getMessage());
+    }
+
 }

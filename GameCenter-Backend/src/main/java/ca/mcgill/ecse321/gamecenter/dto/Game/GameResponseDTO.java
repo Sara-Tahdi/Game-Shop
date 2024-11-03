@@ -14,18 +14,16 @@ public class GameResponseDTO {
     private Game.GeneralFeeling publicOpinion;
     private GameCategory category;
 
-    public GameResponseDTO(int id, String title, float price, String description, float rating,
-                           int remainingQuantity, boolean isOffered, Game.GeneralFeeling publicOpinion,
-                           GameCategory category) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.description = description;
-        this.rating = rating;
-        this.remainingQuantity = remainingQuantity;
-        this.isOffered = isOffered;
-        this.publicOpinion = publicOpinion;
-        this.category = category;
+    public GameResponseDTO(Game g) {
+        this.id = g.getId();
+        this.title = g.getTitle();
+        this.price = g.getPrice();
+        this.description = g.getDescription();
+        this.rating = g.getRating();
+        this.remainingQuantity = g.getRemainingQuantity();
+        this.isOffered = g.getIsOffered();
+        this.publicOpinion = g.getPublicOpinion();
+        this.category = g.getCategory();
     }
 
     public int getId() {

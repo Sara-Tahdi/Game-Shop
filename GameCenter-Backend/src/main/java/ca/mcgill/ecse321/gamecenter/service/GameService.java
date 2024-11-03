@@ -102,6 +102,50 @@ public class GameService {
         return g;
     }
 
+    public List<Game> getAllAvailableGames() {
+        List<Game> games = gameRepository.findAllAvailableGames().orElse(null);
+        if (games == null || games.isEmpty()) {
+            throw new IllegalArgumentException("There are no available games");
+        }
+        return games;
+    }
+
+    public List<Game> getAllAvailableGamesByCategory(String category) {
+        List<Game> games = gameRepository.findAllAvailableGamesByGameCategory(category).orElse(null);
+        if (games == null || games.isEmpty()) {
+            throw new IllegalArgumentException("There are no available games in category: " + category);
+        }
+        return games;
+    }
+
+    public List<Game> getAllAvailableGamesByPriceRange(float minPrice, float maxPrice) {
+        if (minPrice > maxPrice) {
+            throw new IllegalArgumentException("Minimum price cannot be greater than maximum price");
+        }
+
+        List<Game> games = gameRepository.findAllAvailableGamesByPriceRange(minPrice, maxPrice).orElse(null);
+        if (games == null || games.isEmpty()) {
+            throw new IllegalArgumentException("There are no available games within price range: [" + minPrice + ", " + maxPrice + "]");
+        }
+        return games;
+    }
+
+    public List<Game> getAllAvailableGamesByRatingRange(float minRating, float maxRating) {
+        if (minRating > maxRating) {
+            throw new IllegalArgumentException("Minimum rating cannot be greater than maximum rating");
+        }
+
+        if (minRating < 0 || maxRating > 5) {
+            throw new IllegalArgumentException("Rating must be between 0 and 5");
+        }
+
+        List<Game> games = gameRepository.findAllAvailableGamesByRatingRange(minRating, maxRating).orElse(null);
+        if (games == null || games.isEmpty()) {
+            throw new IllegalArgumentException("There are no available games within rating range: [" + minRating + ", " + maxRating + "]");
+        }
+        return games;
+    }
+
 
     @Transactional
     public Game createGame(String aTitle, Float aPrice, String aDescription, Float aRating, Integer aRemainingQuantity, boolean aIsOffered, Game.GeneralFeeling aPublicOpinion, GameCategory aCategory) {
