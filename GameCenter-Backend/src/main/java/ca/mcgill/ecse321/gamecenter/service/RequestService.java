@@ -167,7 +167,6 @@ public class RequestService {
         return requestRepository.save(gameRequest);
     }
 
-    // TODO: Implement this method once the UserRequest and GameRequest services are implemented
     @Transactional
     public Request handleRequestApproval(int requestId, boolean approval) {
         Request request = requestRepository.findRequestById(requestId).orElse(null);
@@ -190,13 +189,13 @@ public class RequestService {
             else if (request instanceof GameRequest) {
                 GameRequest gameRequest = (GameRequest) request;
                 if (gameRequest.getType() == GameRequest.Type.ADD) {
-                    gameService.setActive(gameRequest.getGame().getTitle());
+                    gameService.makeGameOffered(gameRequest.getGame().getId());
                 }
                 else if (gameRequest.getType() == GameRequest.Type.REMOVE) {
-                    gameService.setUnavailable(gameRequest.getGame().getTitle());
+                    gameService.makeGameNotOffered(gameRequest.getGame().getId());
                 }
             }
-            return requestRepository.save(request);
         }
+        return requestRepository.save(request);
     }
 }

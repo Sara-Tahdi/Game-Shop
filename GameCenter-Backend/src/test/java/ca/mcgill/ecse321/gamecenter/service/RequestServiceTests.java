@@ -940,22 +940,105 @@ public class RequestServiceTests {
         assertEquals("There is already a request of type " + "REMOVE" + " from " + "JohnDoe" + " regarding " + "Call of Duty 3", err.getMessage());
     }
 
-    
+    @Test
+    public void testHandleRequestApprovalUserRequestApproved() {
+        String email = "John.Doe@gmail.com";
+        String username = "JohnDoe";
+        String password = "password";
+        Employee e = new Employee(email, username, password);
+        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
+        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
 
+        String email3 = "Bob.Smith@gmail.com";
+        String username3 = "BobSmith";
+        String password3 = "password3";
+        String phoneNumber3 = "0123456789";
+        String deliveryAddress3 = "123 Where Am I";
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
+        Status status = Status.PENDING;
+        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
+        Request updatedUserRequest = requestService.handleRequestApproval(createdUserRequest.getId(), true);
 
-    
+        assertInstanceOf(UserRequest.class, updatedUserRequest);
+        assertEquals(Status.APPROVED, updatedUserRequest.getStatus());
+    }
 
+    @Test
+    public void testHandleRequestApprovalGameRequestApproved() {
+        String categoryName = "Action";
+        GameCategory gameCategory = new GameCategory(categoryName);
+        when(gameCategoryRepository.save(any(GameCategory.class))).thenReturn(gameCategory);
+        GameCategory createdGameCategory = gameCategoryService.createGameCategory(categoryName);
 
+        String gameTitle = "Call of Duty 3";
+        float gamePrice = 59.99f;
+        String gameDescription = "Call of Duty 3 is a first-person shooter video game developed by Treyarch and published by Activision.";
+        float rating = 4.5f;
+        int remainingCopies = 10;
+        boolean isOffered = false;
+        GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        when(gameRepository.save(any(Game.class))).thenReturn(game);
+        Game createdGame = gameService.createGame(gameTitle, gamePrice, gameDescription, generalFeeling, createdGameCategory);
 
+        String email = "John.Doe@gmail.com";
+        String username = "JohnDoe";
+        String password = "password";
+        Employee e = new Employee(email, username, password);
+        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
+        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
 
- }
+        Status status = Status.PENDING;
+        Type type = Type.ADD;
+        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
+        Request updatedGameRequest = requestService.handleRequestApproval(createdGameRequest.getId(), true);
 
+        assertInstanceOf(GameRequest.class, updatedGameRequest);
+        assertEquals(Status.APPROVED, updatedGameRequest.getStatus());
+    }
 
+    @Test
+    public void testHandleRequestApprovalDenied() {
+        String email = "John.Doe@gmail.com";
+        String username = "JohnDoe";
+        String password = "password";
+        Employee e = new Employee(email, username, password);
+        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
+        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
 
-    
+        String email3 = "Bob.Smith@gmail.com";
+        String username3 = "BobSmith";
+        String password3 = "password3";
+        String phoneNumber3 = "0123456789";
+        String deliveryAddress3 = "123 Where Am I";
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
+        Status status = Status.PENDING;
+        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
+        Request updatedUserRequest = requestService.handleRequestApproval(createdUserRequest.getId(), false);
+
+        assertInstanceOf(UserRequest.class, updatedUserRequest);
+        assertEquals(Status.DENIED, updatedUserRequest.getStatus());
+    }
+
+    @Test
+    public void testHandleRequestApprovalFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                requestService.handleRequestApproval(23, true));
+        assertEquals("There is no Request with id: " + 23, e.getMessage());
+    }
 }
