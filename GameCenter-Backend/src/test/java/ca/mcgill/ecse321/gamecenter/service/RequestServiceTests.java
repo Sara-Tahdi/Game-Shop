@@ -279,10 +279,16 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest)));  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username, username3);
 
         when(requestRepository.findRequestsByCreatedRequestUsername(e.getUsername())).thenReturn(Optional.of(List.of(
@@ -366,7 +372,7 @@ public class RequestServiceTests {
     public void testGetRequestsByCreatedRequestEmailFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 requestService.getRequestsByCreatedRequestEmail("John.Doe@gmail.com"));
-                assertEquals("There are no Requests with createdRequestsEmail: " + "John.Doe@gmail.com", e.getMessage());
+                assertEquals("There are no Requests with createdRequestEmail: " + "John.Doe@gmail.com", e.getMessage());
     }
 
     @Test
@@ -425,10 +431,10 @@ public class RequestServiceTests {
     }
 
     @Test
-    public void testGetRequestByGameTitleFail() {
+    public void testGetRequestsByGameTitleFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 requestService.getRequestByGameTitle("Call of Duty 3"));
-        assertEquals("There is no Request with gameTitle: " + "Call of Duty 3", e.getMessage());
+        assertEquals("There are no Requests with gameTitle: " + "Call of Duty 3", e.getMessage());
     }
 
     @Test
@@ -490,7 +496,7 @@ public class RequestServiceTests {
     }
 
     @Test
-    public void testGetRequestByGameIdFail() {
+    public void testGetRequestsByGameIdFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 requestService.getRequestByGameId(23));
         assertEquals("There is no Request with gameId: " + 23, e.getMessage());
@@ -687,10 +693,16 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
         UserRequest ur = new UserRequest(status, createdOwner, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
+        when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username2, username3);
 
         when(requestRepository.findRequestsByStatus(gr.getStatus())).thenReturn(Optional.of(List.of(
@@ -755,7 +767,7 @@ public class RequestServiceTests {
         String password = "password";
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
@@ -784,9 +796,16 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
-        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
-        requestService.flagUser(username, username3);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
+        UserRequest createdRequest = requestService.flagUser(username, username3);
 
+        
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdRequest)));  
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.flagUser("JohnDoe", "BobSmith"));
         assertEquals("There is already a request from " + "JohnDoe" + " regarding " + "BobSmith", err.getMessage());
@@ -884,8 +903,14 @@ public class RequestServiceTests {
         Type type = Type.ADD;
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest)));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.addGameRequest("JohnDoe", "Call of Duty 3"));
         assertEquals("There is already a request of type " + "ADD" + " from " + "JohnDoe" + " regarding " + "Call of Duty 3", err.getMessage());
@@ -987,9 +1012,11 @@ public class RequestServiceTests {
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        requestService.removeGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle);
 
-
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest)));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
                 requestService.removeGameRequest("JohnDoe", "Call of Duty 3"));
         assertEquals("There is already a request of type " + "REMOVE" + " from " + "JohnDoe" + " regarding " + "Call of Duty 3", err.getMessage());

@@ -158,7 +158,7 @@ public class RequestService {
         if (staffRequests != null) {
             for (Request r : staffRequests) {
                 if (r instanceof GameRequest && ((GameRequest) r).getGame().getTitle().equals(aGameTitle) && ((GameRequest) r).getType() == requestType) {
-                    throw new IllegalArgumentException("There is already a request of type" + requestType.toString() + "from"  + aStaffUsername + " regarding " + aGameTitle);
+                    throw new IllegalArgumentException("There is already a request of type " + requestType.toString() + " from "  + aStaffUsername + " regarding " + aGameTitle);
                 }
             }
         }
