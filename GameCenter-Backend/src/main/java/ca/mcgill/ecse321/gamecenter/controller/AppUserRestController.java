@@ -40,13 +40,13 @@ public class AppUserRestController {
         return new EmployeeResponseDTO(e);
     }
 
-    @PutMapping(value = "users/employee/fire/{employeeUsername}")
+    @PutMapping(value = "/users/employee/fire/{employeeUsername}")
     public EmployeeResponseDTO fireEmployee(@PathVariable String employeeUsername) {
         Employee e = appUserService.deactivateEmployeeAccount(employeeUsername);
         return new EmployeeResponseDTO(e);
     }
 
-    @GetMapping(value = "users/employee")
+    @GetMapping(value = "/users/employee")
     public List<EmployeeResponseDTO> getEmployees() {
         List<AppUser> employees = appUserService.getAllEmployee();
         return employees.stream()
@@ -54,13 +54,13 @@ public class AppUserRestController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(value = "users/employee/{id}")
+    @GetMapping(value = "/users/employee/{id}")
     public EmployeeResponseDTO getEmployeeById(@PathVariable int id) {
         Employee e = appUserService.getEmployeeById(id);
         return new EmployeeResponseDTO(e);
     }
 
-    @GetMapping(value = "users/employee/{username}")
+    @GetMapping(value = "/users/employee/{username}")
     public EmployeeResponseDTO getEmployeeByUsername(@PathVariable String username) {
         Employee e = appUserService.getEmployeeByUsername(username);
         return new EmployeeResponseDTO(e);

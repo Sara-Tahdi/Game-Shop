@@ -85,6 +85,7 @@ class GameRequest {
 
 class UserRequest {
   isA Request;
+  reason;
 
   0..1 -> 1 Client userFacingJudgement;
 }
