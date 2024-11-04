@@ -24,12 +24,6 @@ public class RequestService {
     private ClientRepository clientRepository;
     @Autowired
     private GameRepository gameRepository;
-
-    @Autowired
-    private AppUserService appUserService;
-    @Autowired
-    private GameService gameService;
-
     
     public List<Request> getAllRequests() {
         List<Request> a = requestRepository.findRequestsByRequestType(Request.class).orElse(null);
@@ -70,21 +64,21 @@ public class RequestService {
         }
         return a;
     }
-    // TODO: Must be multiple requests returned
-    public GameRequest getRequestByGameTitle(String gameTitle) {
-        GameRequest a = requestRepository.findRequestByGameTitle(gameTitle).orElse(null);
+
+    public List<GameRequest> getRequestsByGameTitle(String gameTitle) {
+        List<GameRequest> a = requestRepository.findRequestsByGameTitle(gameTitle).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests with gameTitle: " + gameTitle);
         }
         return a;
     }
 
-    public GameRequest getRequestByGameId(int gameId) {
-        GameRequest a = requestRepository.findRequestByGameId(gameId).orElse(null);
+    public List<GameRequest> getRequestsByGameId(int gameId) {
+        List<GameRequest> a = requestRepository.findRequestsByGameId(gameId).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There are no Requests with gameId: " + gameId);
         }
-        return a;
+        return Arrays.asList(a.toArray(new GameRequest[a.size()]));
     }
 
     public List<GameRequest> getAllGameRequests() {

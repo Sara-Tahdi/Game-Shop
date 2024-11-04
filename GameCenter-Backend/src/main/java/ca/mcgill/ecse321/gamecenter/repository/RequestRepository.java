@@ -23,7 +23,7 @@ public interface RequestRepository extends CrudRepository<Request, Integer> {
 
     Optional<List<Request>> findRequestsByStatus(Request.Status status);
 
-    Optional<GameRequest> findRequestByGameTitle(String gameTitle);
+    Optional<List<GameRequest>> findRequestsByGameTitle(String gameTitle);
 
-    Optional<GameRequest> findRequestByGameId(int gameId);
+    Optional<List<GameRequest>> findRequestsByGameId(int gameId);
 }

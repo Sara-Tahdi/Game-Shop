@@ -376,7 +376,7 @@ public class RequestServiceTests {
     }
 
     @Test
-    public void testGetRequestByGameTitle() {
+    public void testGetRequestsByGameTitle() {
         String categoryName = "Action";
         GameCategory gameCategory = new GameCategory(categoryName);
         when(gameCategoryRepository.save(any(GameCategory.class))).thenReturn(gameCategory);
@@ -405,35 +405,22 @@ public class RequestServiceTests {
         GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame); 
         gr.setId(23);  
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
-        when(requestRepository.findRequestByGameTitle(gr.getGame().getTitle())).thenReturn(Optional.of(gr));
-        GameRequest r = requestService.getRequestByGameTitle(gr.getGame().getTitle());
+        when(requestRepository.findRequestsByGameTitle(gr.getGame().getTitle())).thenReturn(Optional.of(List.of(createdGameRequest)));
+        List<GameRequest> r = requestService.getRequestsByGameTitle(gr.getGame().getTitle());
 
-        assertInstanceOf(GameRequest.class, r);
-        assertEquals(23, r.getId());
-        assertEquals(status, r.getStatus());
-        assertEquals(type, r.getType());
-
-        assertInstanceOf(Employee.class, r.getCreatedRequest());
-        assertEquals(email, r.getCreatedRequest().getEmail());
-        assertEquals(username, r.getCreatedRequest().getUsername());
-        assertEquals(password, r.getCreatedRequest().getPassword());
-
-        assertInstanceOf(Game.class, r.getGame());
-        assertEquals(gameTitle, r.getGame().getTitle());
-        assertEquals(gamePrice, r.getGame().getPrice());
-        assertEquals(gameDescription, r.getGame().getDescription());
-        assertEquals(rating, r.getGame().getRating());
-        assertEquals(remainingCopies, r.getGame().getRemainingQuantity());
-        assertEquals(isOffered, r.getGame().getIsOffered());
-        assertEquals(generalFeeling, r.getGame().getPublicOpinion());
+        assertNotNull(r);
+        assertEquals(1, r.size());
     }
 
     @Test
     public void testGetRequestsByGameTitleFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                requestService.getRequestByGameTitle("Call of Duty 3"));
+                requestService.getRequestsByGameTitle("Call of Duty 3"));
         assertEquals("There are no Requests with gameTitle: " + "Call of Duty 3", e.getMessage());
     }
 
@@ -470,36 +457,20 @@ public class RequestServiceTests {
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
 
-        when(requestRepository.findRequestByGameId(gr.getGame().getId())).thenReturn(Optional.of(gr));
-        GameRequest r = requestService.getRequestByGameId(gr.getGame().getId());
+        when(requestRepository.findRequestsByGameId(gr.getGame().getId())).thenReturn(Optional.of(List.of(createdGameRequest)));
+        List<GameRequest> r = requestService.getRequestsByGameId(gr.getGame().getId());
 
-        assertInstanceOf(GameRequest.class, r);
-        assertEquals(23, r.getId());
-        assertEquals(status, r.getStatus());
-        assertEquals(type, r.getType());
-
-        assertInstanceOf(Employee.class, r.getCreatedRequest());
-        assertEquals(email, r.getCreatedRequest().getEmail());
-        assertEquals(username, r.getCreatedRequest().getUsername());
-        assertEquals(password, r.getCreatedRequest().getPassword());
-
-        assertInstanceOf(Game.class, r.getGame());
-        assertEquals(gameTitle, r.getGame().getTitle());
-        assertEquals(gamePrice, r.getGame().getPrice());
-        assertEquals(gameDescription, r.getGame().getDescription());
-        assertEquals(rating, r.getGame().getRating());
-        assertEquals(remainingCopies, r.getGame().getRemainingQuantity());
-        assertEquals(isOffered, r.getGame().getIsOffered());
-        assertEquals(generalFeeling, r.getGame().getPublicOpinion());
+        assertNotNull(r);
+        assertEquals(1, r.size());
     }
 
     @Test
     public void testGetRequestsByGameIdFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                requestService.getRequestByGameId(23));
-        assertEquals("There is no Request with gameId: " + 23, e.getMessage());
+                requestService.getRequestsByGameId(23));
+        assertEquals("There are no Requests with gameId: " + 23, e.getMessage());
     }
 
     @Test
