@@ -33,7 +33,6 @@ class Client {
   isA AppUser;
   phoneNumber;
   deliveryAddress;
-  Integer numberOfFlags;
 }
 
 class Promotion {
@@ -85,6 +84,7 @@ class GameRequest {
 
 class UserRequest {
   isA Request;
+  reason;
 
   0..1 -> 1 Client userFacingJudgement;
 }

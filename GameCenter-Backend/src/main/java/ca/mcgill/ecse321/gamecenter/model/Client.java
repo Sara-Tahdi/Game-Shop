@@ -14,7 +14,6 @@ public class Client extends AppUser
   //Client Attributes
   private String phoneNumber;
   private String deliveryAddress;
-  private int numberOfFlags;
 
   //------------------------
   // CONSTRUCTOR
@@ -23,12 +22,11 @@ public class Client extends AppUser
   public Client() {
   }
 
-  public Client(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress, int aNumberOfFlags)
+  public Client(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress)
   {
     super(aEmail, aUsername, aPassword);
     phoneNumber = aPhoneNumber;
     deliveryAddress = aDeliveryAddress;
-    numberOfFlags = aNumberOfFlags;
   }
 
   //------------------------
@@ -51,14 +49,6 @@ public class Client extends AppUser
     return wasSet;
   }
 
-  public boolean setNumberOfFlags(int aNumberOfFlags)
-  {
-    boolean wasSet = false;
-    numberOfFlags = aNumberOfFlags;
-    wasSet = true;
-    return wasSet;
-  }
-
   public String getPhoneNumber()
   {
     return phoneNumber;
@@ -69,13 +59,6 @@ public class Client extends AppUser
     return deliveryAddress;
   }
 
-  public int getNumberOfFlags()
-  {
-    return numberOfFlags;
-  }
-
-
-
   public void delete()
   {
   }
@@ -85,7 +68,6 @@ public class Client extends AppUser
   {
     return super.toString() + "["+
             "phoneNumber" + ":" + getPhoneNumber()+ "," +
-            "deliveryAddress" + ":" + getDeliveryAddress()+ "," +
-            "numberOfFlags" + ":" + getNumberOfFlags()+ "]";
+            "deliveryAddress" + ":" + getDeliveryAddress()+ "]";
   }
 }

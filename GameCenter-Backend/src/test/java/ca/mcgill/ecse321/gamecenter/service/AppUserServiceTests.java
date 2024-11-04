@@ -556,7 +556,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -575,7 +575,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -583,7 +583,7 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email2, username, password2, phoneNumber2, deliveryAddress2, 0);
+        Client c2 = new Client(email2, username, password2, phoneNumber2, deliveryAddress2);
         when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -599,7 +599,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -607,7 +607,7 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email, username2, password2, phoneNumber2, deliveryAddress2, 0);
+        Client c2 = new Client(email, username2, password2, phoneNumber2, deliveryAddress2);
         when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -636,14 +636,14 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String newUsername = "DaveDavo";
         String newPassword = "MuchRicherThanBefore";
-        Client newC = new Client(email, newUsername, newPassword, phoneNumber, deliveryAddress, 0);
+        Client newC = new Client(email, newUsername, newPassword, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(newC);
         when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
@@ -660,7 +660,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -678,7 +678,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         c.setId(9);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -706,7 +706,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -725,7 +725,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -742,7 +742,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -754,37 +754,13 @@ public class AppUserServiceTests {
     }
 
     @Test
-    public void testAddFlagClientValid() {
-        String email = "user1@gma.ca";
-        String username = "Dave";
-        String password = "VeryRich";
-        String phoneNumber = "5141234567";
-        String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
-        when(appUserRepository.save(any(Client.class))).thenReturn(c);
-        Client created = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
-
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
-        Client flagged = appUserService.flagClientByUsername(username);
-
-        assertEquals(1, flagged.getNumberOfFlags());
-    }
-
-    @Test
-    public void testAddFlagClientInvalid() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.flagClientByUsername("Phonybaloney"));
-        assertEquals("There is no Client with username: Phonybaloney", e.getMessage());
-    }
-
-    @Test
     public void testGetAllClient() {
         String email = "user1@gma.ca";
         String username = "Dave";
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -794,7 +770,7 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email2, username2, password2, phoneNumber2, deliveryAddress2, 0);
+        Client c2 = new Client(email2, username2, password2, phoneNumber2, deliveryAddress2);
         when(appUserRepository.save(any(Client.class))).thenReturn(c2);
 
         Client createdClient2 = appUserService.createClientAccount(email2, username2, password2, phoneNumber2, deliveryAddress2);

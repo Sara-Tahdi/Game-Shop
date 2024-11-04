@@ -49,7 +49,6 @@ public class AppUserService {
         a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Employee) a;
     }
-
     public Client getClientByUsername(String username) {
         AppUser a = appUserRepository.findAppUserByUsername(username).orElse(null);
         if (!(a instanceof Client)) {
@@ -83,8 +82,7 @@ public class AppUserService {
         if (aPassword.length() < 8) {
             throw new IllegalArgumentException("Password too short");
         }
-
-        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress, 0);
+        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress);
         return appUserRepository.save(c);
     }
 
@@ -123,18 +121,7 @@ public class AppUserService {
         c.setIsActive(false);
         return appUserRepository.save(c);
     }
-
-    @Transactional
-    public Client flagClientByUsername(String username) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(username).orElse(null);
-        if (c == null) {
-            throw new IllegalArgumentException("There is no Client with username: " + username);
-        }
-        c.setNumberOfFlags(c.getNumberOfFlags() + 1);
-        return appUserRepository.save(c);
-    }
-
-    // TODO: Shouldn't this method be with the others at the top of the file?
+  
     public List<AppUser> findAllClients() {
         return appUserRepository.findAppUserByUserType(Client.class).orElse(null);
     }
