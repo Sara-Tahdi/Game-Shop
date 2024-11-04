@@ -68,7 +68,7 @@ public class GameRequestTests {
         // Create a game request
         Request.Status status = Request.Status.PENDING;
         GameRequest.Type type = GameRequest.Type.ADD;
-        GameRequest gameRequest = new GameRequest(status, createdRequest, type, "", game);
+        GameRequest gameRequest = new GameRequest(status, "", createdRequest, type, game);
         gameRequest = GameRequestRepo.save(gameRequest);
 
         // Retrieve the GameRequest, check that it was successfully retrieved, validate the attributes.

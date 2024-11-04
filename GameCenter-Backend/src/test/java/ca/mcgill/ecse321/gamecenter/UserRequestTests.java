@@ -55,7 +55,7 @@ public class UserRequestTests {
 
         // Create a user request
         Request.Status status = Request.Status.PENDING;
-        UserRequest userRequest = new UserRequest(status, createdRequest, userFacingJudgement);
+        UserRequest userRequest = new UserRequest(status, "",createdRequest, userFacingJudgement);
         userRequest = UserRequestRepo.save(userRequest);
 
         // Retrieve the UserRequest, check that it was successfully retrieved, validate the attributes.

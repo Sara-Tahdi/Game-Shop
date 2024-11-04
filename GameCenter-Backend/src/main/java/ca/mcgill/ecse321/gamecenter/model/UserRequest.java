@@ -21,8 +21,8 @@ public class UserRequest extends Request {
         super();
     }
 
-    public UserRequest(Status aStatus, Staff aCreatedRequest, Client aUserFacingJudgement) {
-        super(aStatus, aCreatedRequest);
+    public UserRequest(Status aStatus, String aReason, Staff aCreatedRequest, Client aUserFacingJudgement) {
+        super(aStatus, aReason, aCreatedRequest);
         if (!setUserFacingJudgement(aUserFacingJudgement)) {
             throw new RuntimeException(
                     "Unable to create UserRequest due to aUserFacingJudgement. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");

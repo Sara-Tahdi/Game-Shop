@@ -83,25 +83,25 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdOwner, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdOwner, createdClient);
         when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username2, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username2, username3, "");
 
         when(requestRepository.findRequestsByRequestType(Request.class)).thenReturn(Optional.of(List.of(
             createdGameRequest, createdUserRequest
@@ -133,18 +133,18 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
-        UserRequest ur = new UserRequest(status, createdOwner, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdOwner, createdClient);
         ur.setId(23);
         when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        requestService.flagUser(username2, username3);
+        requestService.flagUser(username2, username3, "");
 
         when(requestRepository.findRequestById(ur.getId())).thenReturn(Optional.of(ur));
         UserRequest r = (UserRequest) requestService.getRequestById(ur.getId());
@@ -204,25 +204,25 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
 
         when(requestRepository.findRequestsByCreatedRequestId(e.getId())).thenReturn(Optional.of(List.of(
             createdGameRequest, createdUserRequest
@@ -271,25 +271,25 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest)));  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
 
         when(requestRepository.findRequestsByCreatedRequestUsername(e.getUsername())).thenReturn(Optional.of(List.of(
             createdGameRequest, createdUserRequest
@@ -338,26 +338,26 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest))); 
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
 
         when(requestRepository.findRequestsByCreatedRequestEmail(e.getEmail())).thenReturn(Optional.of(List.of(
             createdGameRequest, createdUserRequest
@@ -402,13 +402,13 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame); 
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         gr.setId(23);  
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
         when(requestRepository.findRequestsByGameTitle(gr.getGame().getTitle())).thenReturn(Optional.of(List.of(createdGameRequest)));
         List<GameRequest> r = requestService.getRequestsByGameTitle(gr.getGame().getTitle());
@@ -451,13 +451,13 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame); 
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         gr.setId(23);  
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
         when(requestRepository.findRequestsByGameId(gr.getGame().getId())).thenReturn(Optional.of(List.of(createdGameRequest)));
         List<GameRequest> r = requestService.getRequestsByGameId(gr.getGame().getId());
@@ -510,25 +510,25 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdOwner, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdOwner, createdClient);
         when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        requestService.flagUser(username2, username3);
+        requestService.flagUser(username2, username3, "");
 
         when(requestRepository.findRequestsByRequestType(GameRequest.class)).thenReturn(Optional.of(List.of(
             createdGameRequest
@@ -583,25 +583,25 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        requestService.addGameRequest(username, gameTitle);
+        requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdOwner, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdOwner, createdClient);
         when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username2, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username2, username3, "");
 
         when(requestRepository.findRequestsByRequestType(UserRequest.class)).thenReturn(Optional.of(List.of(
             createdUserRequest
@@ -656,25 +656,25 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
-        UserRequest ur = new UserRequest(status, createdOwner, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdOwner, createdClient);
         when(staffRepository.findStaffByUsername(username2)).thenReturn(Optional.of(o));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username2)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username2, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username2, username3, "");
 
         when(requestRepository.findRequestsByStatus(gr.getStatus())).thenReturn(Optional.of(List.of(
             createdGameRequest, createdUserRequest
@@ -706,17 +706,17 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
-        UserRequest createdUserRequest = requestService.flagUser(username, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
 
         assertNotNull(createdUserRequest);
         assertEquals(status, createdUserRequest.getStatus());
@@ -727,7 +727,7 @@ public class RequestServiceTests {
     @Test
     public void testFlagUserFailMissingStaff() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                requestService.flagUser("JohnDoe", "BobSmith"));
+                requestService.flagUser("JohnDoe", "BobSmith", ""));
         assertEquals("There is no Staff with username: " + "JohnDoe", e.getMessage());
     }
 
@@ -743,7 +743,7 @@ public class RequestServiceTests {
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                requestService.flagUser("JohnDoe", "BobSmith"));
+                requestService.flagUser("JohnDoe", "BobSmith", ""));
         assertEquals("There is no Client with username: " + "BobSmith", err.getMessage());
     }
 
@@ -761,24 +761,24 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdRequest = requestService.flagUser(username, username3);
+        UserRequest createdRequest = requestService.flagUser(username, username3, "");
 
         
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdRequest)));  
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                requestService.flagUser("JohnDoe", "BobSmith"));
+                requestService.flagUser("JohnDoe", "BobSmith", ""));
         assertEquals("There is already a request from " + "JohnDoe" + " regarding " + "BobSmith", err.getMessage());
     }
 
@@ -809,12 +809,12 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
         assertNotNull(createdGameRequest);
         assertEquals(status, createdGameRequest.getStatus());
@@ -826,7 +826,7 @@ public class RequestServiceTests {
     @Test
     public void testAddGameRequestFailMissingStaff() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                requestService.addGameRequest("JohnDoe", "Call of Duty 3"));
+                requestService.addGameRequest("JohnDoe", "Call of Duty 3", ""));
         assertEquals("There is no Staff with username: " + "JohnDoe", e.getMessage());
     }
 
@@ -841,7 +841,7 @@ public class RequestServiceTests {
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                requestService.addGameRequest("JohnDoe", "Call of Duty 3"));
+                requestService.addGameRequest("JohnDoe", "Call of Duty 3", ""));
         assertEquals("There is no Game with title: " + "Call of Duty 3", err.getMessage());
     }
 
@@ -872,18 +872,18 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.ADD;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);   
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.addGameRequest(username, gameTitle, "");
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest)));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                requestService.addGameRequest("JohnDoe", "Call of Duty 3"));
+                requestService.addGameRequest("JohnDoe", "Call of Duty 3", ""));
         assertEquals("There is already a request of type " + "ADD" + " from " + "JohnDoe" + " regarding " + "Call of Duty 3", err.getMessage());
     }
 
@@ -914,12 +914,12 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.REMOVE;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame);
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
-        GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle, "");
 
         assertNotNull(createdGameRequest);
         assertEquals(status, createdGameRequest.getStatus());
@@ -931,7 +931,7 @@ public class RequestServiceTests {
     @Test
     public void testRemoveGameRequestFailMissingStaff() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                requestService.removeGameRequest("JohnDoe", "Call of Duty 3"));
+                requestService.removeGameRequest("JohnDoe", "Call of Duty 3", ""));
         assertEquals("There is no Staff with username: " + "JohnDoe", e.getMessage());
     }
 
@@ -946,7 +946,7 @@ public class RequestServiceTests {
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                requestService.removeGameRequest("JohnDoe", "Call of Duty 3"));
+                requestService.removeGameRequest("JohnDoe", "Call of Duty 3", ""));
         assertEquals("There is no Game with title: " + "Call of Duty 3", err.getMessage());
     }
 
@@ -977,19 +977,19 @@ public class RequestServiceTests {
 
         Status status = Status.PENDING;
         Type type = Type.REMOVE;
-        GameRequest gr = new GameRequest(status, createdEmployee, type, createdGame); 
+        GameRequest gr = new GameRequest(status, "", createdEmployee, type, createdGame);
 
         when(requestRepository.save(any(GameRequest.class))).thenReturn(gr);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());
-        GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle);
+        GameRequest createdGameRequest = requestService.removeGameRequest(username, gameTitle, "");
 
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(gameRepository.findGameByTitle(gameTitle)).thenReturn(Optional.of(createdGame));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.of(List.of(createdGameRequest)));
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                requestService.removeGameRequest("JohnDoe", "Call of Duty 3"));
+                requestService.removeGameRequest("JohnDoe", "Call of Duty 3", ""));
         assertEquals("There is already a request of type " + "REMOVE" + " from " + "JohnDoe" + " regarding " + "Call of Duty 3", err.getMessage());
     }
 
@@ -1007,17 +1007,17 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty()); 
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
-        UserRequest createdUserRequest = requestService.flagUser(username, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
 
         when(requestRepository.findRequestById(createdUserRequest.getId())).thenReturn(Optional.of(createdUserRequest));
         createdUserRequest.setStatus(Status.APPROVED);
@@ -1042,17 +1042,17 @@ public class RequestServiceTests {
         String password3 = "password3";
         String phoneNumber3 = "0123456789";
         String deliveryAddress3 = "123 Where Am I";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
 
         Status status = Status.PENDING;
-        UserRequest ur = new UserRequest(status, createdEmployee, createdClient);
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
         when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
         when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
         when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur);
-        UserRequest createdUserRequest = requestService.flagUser(username, username3);
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
 
         createdUserRequest.setStatus(Status.DENIED);
         when(requestRepository.findRequestById(createdUserRequest.getId())).thenReturn(Optional.of(createdUserRequest));

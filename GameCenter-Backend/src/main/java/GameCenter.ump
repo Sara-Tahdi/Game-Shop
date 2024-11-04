@@ -69,6 +69,7 @@ class Request {
   Integer id;
   enum Status {PENDING, APPROVED, DENIED};
   Status status;
+  reason;
 
   * -> 1 Staff createdRequest;
 }
@@ -84,7 +85,6 @@ class GameRequest {
 
 class UserRequest {
   isA Request;
-  reason;
 
   0..1 -> 1 Client userFacingJudgement;
 }

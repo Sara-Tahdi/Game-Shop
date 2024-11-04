@@ -106,7 +106,7 @@ public class RequestService {
     }
 
     @Transactional
-    public UserRequest flagUser(String aStaffUsername, String aClientUsername) {
+    public UserRequest flagUser(String aStaffUsername, String aClientUsername, String reason) {
         Staff staff = (Staff) staffRepository.findStaffByUsername(aStaffUsername).orElse(null);
         if (staff == null || !staff.isIsActive()) {
             throw new IllegalArgumentException("There is no Staff with username: " + aStaffUsername);
@@ -123,21 +123,21 @@ public class RequestService {
                 }
             }
         }
-        UserRequest userRequest = new UserRequest(Request.Status.PENDING, staff, client);
+        UserRequest userRequest = new UserRequest(Request.Status.PENDING, reason, staff, client);
         return requestRepository.save(userRequest);
     }
 
     @Transactional
-    public GameRequest addGameRequest(String aStaffUsername, String aGameTitle) {
-        return createGameRequest(aStaffUsername, aGameTitle, GameRequest.Type.ADD);
+    public GameRequest addGameRequest(String aStaffUsername, String aGameTitle, String reason) {
+        return createGameRequest(aStaffUsername, aGameTitle, GameRequest.Type.ADD, reason);
     }
 
     @Transactional
-    public GameRequest removeGameRequest(String aStaffUsername, String aGameTitle) {
-        return createGameRequest(aStaffUsername, aGameTitle, GameRequest.Type.REMOVE);
+    public GameRequest removeGameRequest(String aStaffUsername, String aGameTitle, String reason) {
+        return createGameRequest(aStaffUsername, aGameTitle, GameRequest.Type.REMOVE, reason);
     }
 
-    private GameRequest createGameRequest(String aStaffUsername, String aGameTitle, GameRequest.Type requestType) {
+    private GameRequest createGameRequest(String aStaffUsername, String aGameTitle, GameRequest.Type requestType, String reason) {
         Staff staff = (Staff) staffRepository.findStaffByUsername(aStaffUsername).orElse(null);
         if (staff == null  || !staff.isIsActive()) {
             throw new IllegalArgumentException("There is no Staff with username: " + aStaffUsername);
@@ -157,7 +157,7 @@ public class RequestService {
             }
         }
     
-        GameRequest gameRequest = new GameRequest(Request.Status.PENDING, staff, requestType, game);
+        GameRequest gameRequest = new GameRequest(Request.Status.PENDING, reason, staff, requestType, game);
         return requestRepository.save(gameRequest);
     }
 

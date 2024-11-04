@@ -19,7 +19,6 @@ public class GameRequest extends Request
 
   //GameRequest Attributes
   private Type type;
-  private String reason;
 
   //GameRequest Associations
   @OneToOne 
@@ -33,11 +32,10 @@ public class GameRequest extends Request
     super();
   }
 
-  public GameRequest(Status aStatus, Staff aCreatedRequest, Type aType, String aReason, Game aGame)
+  public GameRequest(Status aStatus, String aReason, Staff aCreatedRequest, Type aType, Game aGame)
   {
-    super(aStatus, aCreatedRequest);
+    super(aStatus, aReason, aCreatedRequest);
     type = aType;
-    reason = aReason;
     if (!setGame(aGame))
     {
       throw new RuntimeException("Unable to create GameRequest due to aGame. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -56,18 +54,10 @@ public class GameRequest extends Request
     return wasSet;
   }
 
-  public boolean setReason(String aReason) {
-    boolean wasSet = false;
-    reason = aReason;
-    wasSet = true;
-    return wasSet;
-  }
-
   public Type getType()
   {
     return type;
   }
-  public String getReason() { return reason; }
   /* Code from template association_GetOne */
   public Game getGame()
   {
