@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.repository;
 
 import ca.mcgill.ecse321.gamecenter.model.Request;
+import ca.mcgill.ecse321.gamecenter.model.GameRequest;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +16,14 @@ public interface RequestRepository extends CrudRepository<Request, Integer> {
     Optional<List<Request>> findRequestsByRequestType(@Param("type") Class<?> type);
 
     Optional<List<Request>> findRequestsByCreatedRequestId(int createdRequestId);
+
+    Optional<List<Request>> findRequestsByCreatedRequestUsername(String username);
+
+    Optional<List<Request>> findRequestsByCreatedRequestEmail(String email);
+
+    Optional<List<Request>> findRequestsByStatus(Request.Status status);
+
+    Optional<List<GameRequest>> findRequestsByGameTitle(String gameTitle);
+
+    Optional<List<GameRequest>> findRequestsByGameId(int gameId);
 }
