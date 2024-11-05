@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
-import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,6 @@ import java.util.List;
 public class GameService {
     @Autowired
     private GameRepository gameRepository;
-
-    @Autowired
-    private GameCategoryRepository gameCategoryRepository;
 
     public Game createGame(String title, float price, String description, Game.GeneralFeeling generalFeeling, GameCategory category) {
         if (price <= 0.0) {

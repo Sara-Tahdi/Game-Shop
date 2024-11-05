@@ -209,7 +209,6 @@ public class AppUserServiceTests {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "short";
-        Owner o = new Owner(email, username, password);
         when(appUserRepository.save(any(Owner.class))).thenThrow(IllegalArgumentException.class);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -225,12 +224,11 @@ public class AppUserServiceTests {
         Owner o = new Owner(email, username, password);
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
 
-        Owner realOwner = appUserService.createOwnerAccount(email, username, password);
+        appUserService.createOwnerAccount(email, username, password);
 
         String email2 = "betterboss@gamecente.net";
         String username2 = "IJustGotPaid";
         String password2 = "WeBringTheBoom!";
-        Owner o7 = new Owner(email2, username2, password2);
         List<AppUser> defaultOwner = new ArrayList<AppUser>();
         defaultOwner.add(o);
         when(appUserRepository.findAppUserByUserType(Owner.class)).thenReturn(Optional.of(defaultOwner));
@@ -332,7 +330,7 @@ public class AppUserServiceTests {
         Owner o = new Owner(email, username, password);
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
 
-        Owner realOwner = appUserService.createOwnerAccount(email, username, password);
+        appUserService.createOwnerAccount(email, username, password);
 
         List<AppUser> defaultOwner = new ArrayList<AppUser>();
         defaultOwner.add(o);
@@ -367,7 +365,7 @@ public class AppUserServiceTests {
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
         String email2 = "gamer@mario.ca";
         String password2 = "heahhadaaaaa";
@@ -387,7 +385,7 @@ public class AppUserServiceTests {
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
         String username2 = "bestemployee";
         String password2 = "heahhadaaaaa";
@@ -482,7 +480,7 @@ public class AppUserServiceTests {
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
         String newPassword = "chicken";
         when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(e));
 
@@ -583,7 +581,6 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email2, username, password2, phoneNumber2, deliveryAddress2);
         when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -607,7 +604,6 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email, username2, password2, phoneNumber2, deliveryAddress2);
         when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->

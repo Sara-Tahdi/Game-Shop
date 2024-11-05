@@ -107,10 +107,6 @@ public class PurchaseServiceTests {
         gameService.createGame(title, price, description, generalFeeling, gameCategory);
 
         int copies = 2;
-        float total = purchaseService.round(copies * g.getPrice());
-        int trackingCode = 3513;
-        Date date = Date.valueOf(LocalDate.now());
-        Purchase p = new Purchase(total, copies, trackingCode, date, g, c);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 purchaseService.createPurchase(c.getId(), g.getId(), copies));

@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.utilities;
 
-import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 public class Encryption {
