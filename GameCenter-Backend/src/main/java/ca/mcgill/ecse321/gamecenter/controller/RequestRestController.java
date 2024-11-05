@@ -23,9 +23,19 @@ public class RequestRestController {
     @Autowired
     private RequestService requestService;
 
-    @PostMapping(value = "/requests/game/create")
-    public GameRequestResponseDTO createGameRequest(@Validated @RequestBody GameRequestRequestDTO gameRequestToCreate) {
+    @PostMapping(value = "/requests/game/add/create")
+    public GameRequestResponseDTO createAddGameRequest(@Validated @RequestBody GameRequestRequestDTO gameRequestToCreate) {
         GameRequest g = requestService.addGameRequest(
+                gameRequestToCreate.getCreatedRequestUsername(),
+                gameRequestToCreate.getGameTitle(),
+                gameRequestToCreate.getReason()
+        );
+        return new GameRequestResponseDTO(g);
+    }
+
+    @PostMapping(value = "/requests/game/remove/create")
+    public GameRequestResponseDTO createRemoveGameRequest(@Validated @RequestBody GameRequestRequestDTO gameRequestToCreate) {
+        GameRequest g = requestService.removeGameRequest(
                 gameRequestToCreate.getCreatedRequestUsername(),
                 gameRequestToCreate.getGameTitle(),
                 gameRequestToCreate.getReason()
@@ -145,6 +155,21 @@ public class RequestRestController {
                 .map(a -> new UserRequestResponseDTO(a))
                 .collect(Collectors.toList());
     }
+
+    @PutMapping(value = "/requests/{id}/approve")
+    public RequestResponseDTO approveRequest(@PathVariable int id) {
+        Request r = requestService.handleRequestApproval(id, true);
+        return new RequestResponseDTO(r);
+    }
+
+    @PutMapping(value = "/requests/{id}/deny")
+    public RequestResponseDTO denyRequest(@PathVariable int id) {
+        Request r = requestService.handleRequestApproval(id, true);
+        return new RequestResponseDTO(r);
+    }
+
+
+
 
 
 
