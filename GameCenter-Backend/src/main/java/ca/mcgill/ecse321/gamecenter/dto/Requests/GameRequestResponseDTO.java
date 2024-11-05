@@ -10,7 +10,7 @@ public class GameRequestResponseDTO {
     private int createdRequestId;
     private String createdRequestUsername;
     private String createdRequestEmail;
-    private String requestType;
+    private String gameRequestType;
     private String gameTitle;
     private int gameId;
 
@@ -23,7 +23,7 @@ public class GameRequestResponseDTO {
         this.createdRequestId = request.getCreatedRequest().getId();
         this.createdRequestUsername = request.getCreatedRequest().getUsername();
         this.createdRequestEmail = request.getCreatedRequest().getEmail();
-        this.requestType = request.getType().toString();
+        this.gameRequestType = request.getType().toString();
         this.gameTitle = request.getGame().getTitle();
         this.gameId = request.getGame().getId();
     }
@@ -34,7 +34,7 @@ public class GameRequestResponseDTO {
     public int getCreatedRequestId() { return this.createdRequestId; }
     public String getCreatedRequestUsername() { return this.createdRequestUsername; }
     public String getCreatedRequestEmail() { return this.createdRequestEmail; }
-    public String getRequestType() { return this.requestType; }
+    public String getRequestType() { return this.gameRequestType; }
     public String getGameTitle() { return this.gameTitle; }
     public int getGameId() { return this.gameId; }
 }

@@ -1,4 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.dto.Requests;
+import ca.mcgill.ecse321.gamecenter.model.UserRequest;
+
 
 public class UserRequestResponseDTO {
     private int id;
@@ -7,9 +9,7 @@ public class UserRequestResponseDTO {
     private int createdRequestId;
     private String createdRequestUsername;
     private String createdRequestEmail;
-    private String requestType;
-    private String username;
-    
+    private int userFacingJudgementId;
     private String userFacingJudgementUsername;
     private String userFacingJudgementEmailString;
 
@@ -24,8 +24,9 @@ public class UserRequestResponseDTO {
         this.createdRequestId = request.getCreatedRequest().getId();
         this.createdRequestUsername = request.getCreatedRequest().getUsername();
         this.createdRequestEmail = request.getCreatedRequest().getEmail();
-        
-        this.username = request.getUser().getUsername();
+        this.userFacingJudgementId = request.getUserFacingJudgement().getId();
+        this.userFacingJudgementUsername = request.getUserFacingJudgement().getUsername();
+        this.userFacingJudgementEmailString = request.getUserFacingJudgement().getEmail();
     }
 
     public int getId() { return this.id; }
@@ -34,6 +35,7 @@ public class UserRequestResponseDTO {
     public int getCreatedRequestId() { return this.createdRequestId; }
     public String getCreatedRequestUsername() { return this.createdRequestUsername; }
     public String getCreatedRequestEmail() { return this.createdRequestEmail; }
-    public String getRequestType() { return this.requestType; }
-    public String getUsername() { return this.username; }
+    public int getUserFacingJudgementId() { return this.userFacingJudgementId; }
+    public String getUserFacingJudgementUsername() { return this.userFacingJudgementUsername; }
+    public String getUserFacingJudgementEmailString() { return this.userFacingJudgementEmailString; }
 }

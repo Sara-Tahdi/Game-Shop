@@ -81,6 +81,30 @@ public class RequestService {
         return Arrays.asList(a.toArray(new GameRequest[a.size()]));
     }
 
+    public List<UserRequest> getRequestsByUserFacingJudgementId(int userFacingJudgementId) {
+        List<UserRequest> a = requestRepository.findRequestsByUserFacingJudgementId(userFacingJudgementId).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with userFacingJudgementId: " + userFacingJudgementId);
+        }
+        return a;
+    }
+
+    public List<UserRequest> getRequestsByUserFacingJudgementUsername(String userFacingJudgementUsername) {
+        List<UserRequest> a = requestRepository.findRequestsByUserFacingJudgementUsername(userFacingJudgementUsername).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with userFacingJudgementUsername: " + userFacingJudgementUsername);
+        }
+        return a;
+    }
+
+    public List<UserRequest> getRequestsByUserFacingJudgementEmail(String userFacingJudgementEmail) {
+        List<UserRequest> a = requestRepository.findRequestsByUserFacingJudgementEmail(userFacingJudgementEmail).orElse(null);
+        if (a == null) {
+            throw new IllegalArgumentException("There are no Requests with userFacingJudgementEmail: " + userFacingJudgementEmail);
+        }
+        return a;
+    }
+
     public List<GameRequest> getAllGameRequests() {
         List<Request> a = requestRepository.findRequestsByRequestType(GameRequest.class).orElse(null);
         if (a == null) {
