@@ -48,6 +48,7 @@ public class AppUserIntegrationTests {
     private int appUserId;
     private String appUserUsername;
     private String appUserEmail;
+    private String appUserPassword;
 
     @BeforeAll
     public void createOwner() {
@@ -72,7 +73,6 @@ public class AppUserIntegrationTests {
         assertTrue(body.getId() > 0, "The ID should be positive");
         assertEquals(VALID_EMPLOYEE_EMAIL, body.getEmail());
         assertEquals(VALID_EMPLOYEE_USERNAME, body.getUsername());
-        assertEquals(VALID_EMPLOYEE_PASSWORD, Encryption.encryptDecrypt(body.getPassword()));
 
         this.appUserId = body.getId();
         this.appUserEmail = body.getEmail();
@@ -124,6 +124,7 @@ public class AppUserIntegrationTests {
     @Test
     @Order(5)
     public void testUpdateValidEmployeeWithNewUsernameAndPassword() {
+        String url = String.format("/users/employee/update/%s", VALID_EMPLOYEE_PASSWORD);
         String newUsername = "AmongUs";
         String newPassword = "reehheeehee";
 
@@ -132,7 +133,7 @@ public class AppUserIntegrationTests {
         HttpEntity<EmployeeRequestDTO> updateEntity = new HttpEntity<>(update);
 
         ResponseEntity<EmployeeResponseDTO> res = client.exchange(
-                "/users/employee/update",
+                url,
                 HttpMethod.PUT,
                 updateEntity,
                 EmployeeResponseDTO.class
@@ -144,7 +145,6 @@ public class AppUserIntegrationTests {
         assertEquals(this.appUserId, body.getId());
         assertEquals(this.appUserEmail, body.getEmail());
         assertEquals(newUsername, body.getUsername());
-        assertEquals(newPassword, Encryption.encryptDecrypt(body.getPassword()));
 
         this.appUserUsername = body.getUsername();
     }
@@ -204,7 +204,6 @@ public class AppUserIntegrationTests {
         assertTrue(body.getId() > 0, "The ID should be positive");
         assertEquals(VALID_CLIENT_EMAIL, body.getEmail());
         assertEquals(VALID_CLIENT_USERNAME, body.getUsername());
-        assertEquals(VALID_CLIENT_PASSWORD, Encryption.encryptDecrypt(body.getPassword()));
         assertEquals(VALID_CLIENT_PHONENUMBER, body.getPhoneNumber());
         assertEquals(VALID_CLIENT_DELIVERYADDRESS, body.getDeliveryAddress());
 
@@ -258,6 +257,7 @@ public class AppUserIntegrationTests {
     @Test
     @Order(12)
     public void testUpdateValidClientWithNewUsernameAndPassword() {
+        String url = String.format("/users/client/update/%s", VALID_CLIENT_PASSWORD);
         String newUsername = "Skibidi";
         String newPassword = "reehheeehee";
 
@@ -266,7 +266,7 @@ public class AppUserIntegrationTests {
         HttpEntity<ClientRequestDTO> updateEntity = new HttpEntity<>(update);
 
         ResponseEntity<ClientResponseDTO> res = client.exchange(
-                "/users/client/update",
+                url,
                 HttpMethod.PUT,
                 updateEntity,
                 ClientResponseDTO.class
@@ -278,7 +278,6 @@ public class AppUserIntegrationTests {
         assertEquals(this.appUserId, body.getId());
         assertEquals(this.appUserEmail, body.getEmail());
         assertEquals(newUsername, body.getUsername());
-        assertEquals(newPassword, Encryption.encryptDecrypt(body.getPassword()));
 
         this.appUserUsername = body.getUsername();
     }
