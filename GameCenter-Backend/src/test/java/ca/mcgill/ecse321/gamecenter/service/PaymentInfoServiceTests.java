@@ -7,13 +7,16 @@ import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 public class PaymentInfoServiceTests {
     @Mock
     private AppUserRepository appUserRepository;
@@ -50,6 +53,10 @@ public class PaymentInfoServiceTests {
         );
         assertNotNull(savedPaymentInfo);
         assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
+        assertEquals(savedPaymentInfo.getCardNumber(), cardNumber);
+        assertEquals(savedPaymentInfo.getCvv(), cvv);
+        assertEquals(savedPaymentInfo.getExpiryMonth(), expiryMonth);
+        assertEquals(savedPaymentInfo.getExpiryYear(), expiryYear);
     }
 
     @Test
@@ -71,6 +78,9 @@ public class PaymentInfoServiceTests {
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
         when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
+        when(paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber))
+                .thenReturn(Optional.empty())
+                .thenReturn(Optional.of(paymentInfo));
 
         PaymentInfo savedPaymentInfo = paymentInfoService.savePaymentInfo(
                 cardNumber, cvv, expiryMonth, expiryYear, createdClient
@@ -111,6 +121,9 @@ public class PaymentInfoServiceTests {
         );
         assertNotNull(savedPaymentInfo);
         assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
+
+        when(paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber)).thenReturn(Optional.of(paymentInfo));
+        doNothing().when(paymentInfoRepository).delete(paymentInfo);
 
         paymentInfoService.deletePaymentInfo(cardNumber);
 
@@ -170,6 +183,7 @@ public class PaymentInfoServiceTests {
         assertNotNull(savedPaymentInfo);
         assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
 
+        when(paymentInfoRepository.findPaymentInfoById(paymentInfo.getId())).thenReturn(Optional.of(paymentInfo));
         PaymentInfo foundPaymentInfo = paymentInfoService.findPaymentInfoById(paymentInfo.getId());
         assertNotNull(foundPaymentInfo);
         assertEquals(foundPaymentInfo.getClient().getId(), createdClient.getId());
@@ -199,6 +213,6 @@ public class PaymentInfoServiceTests {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             paymentInfoService.findPaymentInfoById(paymentInfo.getId());
         });
-        assertEquals(e.getMessage(), "No payment info with id: " + cardNumber);
+        assertEquals(e.getMessage(), "No payment info with id: " + paymentInfo.getId());
     }
 }
