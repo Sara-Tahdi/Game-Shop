@@ -778,4 +778,50 @@ public class AppUserServiceTests {
         assertNotNull(clients);
         assertEquals(2, clients.size());
     }
+
+    @Test
+    public void testLoginUser() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(createdClient1));
+        AppUser loggedInUser = appUserService.loginUser(email, password);
+
+        assertInstanceOf(Client.class, loggedInUser);
+        assertEquals(email, loggedInUser.getEmail());
+        assertEquals(23, loggedInUser.getId());
+        assertEquals(username, loggedInUser.getUsername());
+        assertEquals(password, loggedInUser.getPassword());
+    }
+
+    @Test
+    public void testLoginUserFailWrongEmail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.loginUser("inthesystem@google.com", "VeryRich"));
+        assertEquals("Invalid email and/or password.", e.getMessage());
+    }
+
+    @Test
+    public void testLoginUserFailWrongPassword() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(createdClient1));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.loginUser("user1@gma.ca", "VeryRich"));
+        assertEquals("Invalid email and/or password.", e.getMessage());
+    }
+
 }
