@@ -48,6 +48,7 @@ public class AppUserIntegrationTests {
     private int appUserId;
     private String appUserUsername;
     private String appUserEmail;
+    private String appUserPassword;
 
     @BeforeAll
     public void createOwner() {
@@ -123,6 +124,7 @@ public class AppUserIntegrationTests {
     @Test
     @Order(5)
     public void testUpdateValidEmployeeWithNewUsernameAndPassword() {
+        String url = String.format("/users/employee/update/%s", VALID_EMPLOYEE_PASSWORD);
         String newUsername = "AmongUs";
         String newPassword = "reehheeehee";
 
@@ -131,7 +133,7 @@ public class AppUserIntegrationTests {
         HttpEntity<EmployeeRequestDTO> updateEntity = new HttpEntity<>(update);
 
         ResponseEntity<EmployeeResponseDTO> res = client.exchange(
-                "/users/employee/update",
+                url,
                 HttpMethod.PUT,
                 updateEntity,
                 EmployeeResponseDTO.class
@@ -255,6 +257,7 @@ public class AppUserIntegrationTests {
     @Test
     @Order(12)
     public void testUpdateValidClientWithNewUsernameAndPassword() {
+        String url = String.format("/users/client/update/%s", VALID_CLIENT_PASSWORD);
         String newUsername = "Skibidi";
         String newPassword = "reehheeehee";
 
@@ -263,7 +266,7 @@ public class AppUserIntegrationTests {
         HttpEntity<ClientRequestDTO> updateEntity = new HttpEntity<>(update);
 
         ResponseEntity<ClientResponseDTO> res = client.exchange(
-                "/users/client/update",
+                url,
                 HttpMethod.PUT,
                 updateEntity,
                 ClientResponseDTO.class

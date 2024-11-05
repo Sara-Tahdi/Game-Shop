@@ -91,7 +91,7 @@ public class AppUserService {
     }
 
     @Transactional
-    public Client updateClientAccount(String email, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress) {
+    public Client updateClientAccount(String email, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress, String oldPassword) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
@@ -104,6 +104,10 @@ public class AppUserService {
         AppUser testEmail = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testEmail != null && testEmail.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
+        }
+
+        if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         if (newPassword.length() < 8) {
@@ -149,7 +153,7 @@ public class AppUserService {
     }
 
     @Transactional
-    public Owner updateOwnerAccount(String email, String newUsername, String newPassword) {
+    public Owner updateOwnerAccount(String email, String newUsername, String newPassword, String oldPassword) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
@@ -158,6 +162,10 @@ public class AppUserService {
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
+        }
+
+        if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         if (newPassword.length() < 8) {
@@ -194,7 +202,7 @@ public class AppUserService {
     }
 
     @Transactional
-    public Employee updateEmployeeAccount(String email, String newUsername, String newPassword) {
+    public Employee updateEmployeeAccount(String email, String newUsername, String newPassword, String oldPassword) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
@@ -207,6 +215,10 @@ public class AppUserService {
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
+        }
+
+        if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         if (newPassword.length() < 8) {
