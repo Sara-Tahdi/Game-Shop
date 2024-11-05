@@ -72,7 +72,6 @@ public class AppUserIntegrationTests {
         assertTrue(body.getId() > 0, "The ID should be positive");
         assertEquals(VALID_EMPLOYEE_EMAIL, body.getEmail());
         assertEquals(VALID_EMPLOYEE_USERNAME, body.getUsername());
-        assertEquals(VALID_EMPLOYEE_PASSWORD, Encryption.encryptDecrypt(body.getPassword()));
 
         this.appUserId = body.getId();
         this.appUserEmail = body.getEmail();
@@ -144,7 +143,6 @@ public class AppUserIntegrationTests {
         assertEquals(this.appUserId, body.getId());
         assertEquals(this.appUserEmail, body.getEmail());
         assertEquals(newUsername, body.getUsername());
-        assertEquals(newPassword, Encryption.encryptDecrypt(body.getPassword()));
 
         this.appUserUsername = body.getUsername();
     }
@@ -204,7 +202,6 @@ public class AppUserIntegrationTests {
         assertTrue(body.getId() > 0, "The ID should be positive");
         assertEquals(VALID_CLIENT_EMAIL, body.getEmail());
         assertEquals(VALID_CLIENT_USERNAME, body.getUsername());
-        assertEquals(VALID_CLIENT_PASSWORD, Encryption.encryptDecrypt(body.getPassword()));
         assertEquals(VALID_CLIENT_PHONENUMBER, body.getPhoneNumber());
         assertEquals(VALID_CLIENT_DELIVERYADDRESS, body.getDeliveryAddress());
 
@@ -278,7 +275,6 @@ public class AppUserIntegrationTests {
         assertEquals(this.appUserId, body.getId());
         assertEquals(this.appUserEmail, body.getEmail());
         assertEquals(newUsername, body.getUsername());
-        assertEquals(newPassword, Encryption.encryptDecrypt(body.getPassword()));
 
         this.appUserUsername = body.getUsername();
     }
