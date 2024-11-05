@@ -164,7 +164,7 @@ public class RequestTests {
         client.setPassword("canada");
         client = clientRepository.save(client);
 
-        UserRequest userRequest = new UserRequest(UserRequest.Status.PENDING, "", (Employee) employee, client);
+        UserRequest userRequest = new UserRequest(UserRequest.Status.PENDING, "",(Employee) employee, client);
         userRequest = requestRepository.save(userRequest);
 
         // Delete the request
