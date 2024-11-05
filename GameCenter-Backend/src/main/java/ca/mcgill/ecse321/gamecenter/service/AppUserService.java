@@ -14,6 +14,8 @@ public class AppUserService {
     @Autowired
     private AppUserRepository appUserRepository;
 
+    private boolean isUserActive(AppUser a) { return a.isIsActive(); }
+
     public Client getClientById(int id) {
         AppUser a = appUserRepository.findAppUserById(id).orElse(null);
         if (!(a instanceof Client)) {
@@ -93,6 +95,10 @@ public class AppUserService {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
+        }
+
+        if (!isUserActive(a)) {
+            throw new IllegalArgumentException("This Client is not active");
         }
 
         AppUser testEmail = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
@@ -192,6 +198,10 @@ public class AppUserService {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
+        }
+
+        if (!isUserActive(a)) {
+            throw new IllegalArgumentException("This Employee is not active");
         }
 
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);

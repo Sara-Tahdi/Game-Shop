@@ -42,7 +42,7 @@ public class Review
 
   public Review() {}
 
-  public Review(String aAuthor, String aReview, String aManagerReply, Rating aStars, int aThumbsUp, int aThumbsDown, Game aGame)
+  public Review(String aAuthor, String aReview, String aManagerReply, Rating aStars, Game aGame)
   {
     author = aAuthor;
     review = aReview;

@@ -449,6 +449,21 @@ public class AppUserServiceTests {
     }
 
     @Test
+    public void testUpdateEmployeeNotActive() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        Employee e = new Employee(email, username, password);
+        e.setIsActive(false);
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(e));
+
+        IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.updateEmployeeAccount(email, username, password));
+        assertEquals("This Employee is not active", err.getMessage());
+    }
+
+    @Test
     public void testUpdateEmployeeInvalidUsername() {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
@@ -669,6 +684,23 @@ public class AppUserServiceTests {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 appUserService.updateClientAccount(unknownUser, username, password, phoneNumber, deliveryAddress));
         assertEquals("There is no User with email: " + unknownUser, e.getMessage());
+    }
+
+    @Test
+    public void testUpdateClientNotActive() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
+        c.setIsActive(false);
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.updateClientAccount(email, username, password, phoneNumber, deliveryAddress));
+        assertEquals("This Client is not active", e.getMessage());
     }
 
     @Test
