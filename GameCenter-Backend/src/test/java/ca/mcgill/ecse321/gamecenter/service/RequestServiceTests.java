@@ -1070,4 +1070,124 @@ public class RequestServiceTests {
                 requestService.handleRequestApproval(23, true));
         assertEquals("There is no Request with id: " + 23, e.getMessage());
     }
+
+    @Test
+    public void testGetRequestByUserFacingJudgementId() {
+        String email = "John.Doe@gmail.com";
+        String username = "JohnDoe";
+        String password = "password";
+        Employee e = new Employee(email, username, password);
+        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
+        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+
+        String email3 = "Bob.Smith@gmail.com";
+        String username3 = "BobSmith";
+        String password3 = "password3";
+        String phoneNumber3 = "0123456789";
+        String deliveryAddress3 = "123 Where Am I";
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
+
+        Status status = Status.PENDING;
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
+
+        when(requestRepository.findRequestsByUserFacingJudgementId(ur.getUserFacingJudgement().getId())).thenReturn(Optional.of(List.of(createdUserRequest)));
+        List<UserRequest> requests = requestService.getRequestsByUserFacingJudgementId(ur.getUserFacingJudgement().getId());
+
+        assertNotNull(requests);
+        assertEquals(1, requests.size());
+    }
+
+    @Test
+    public void testGetRequestsByUserFacingJudgementIdFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                requestService.getRequestsByUserFacingJudgementId(23));
+        assertEquals("There are no Requests with userFacingJudgementId: " + 23, e.getMessage());
+    }
+
+    @Test
+    public void testGetRequestByUserFacingJudgementUsername() {
+        String email = "John.Doe@gmail.com";
+        String username = "JohnDoe";
+        String password = "password";
+        Employee e = new Employee(email, username, password);
+        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
+        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+
+        String email3 = "Bob.Smith@gmail.com";
+        String username3 = "BobSmith";
+        String password3 = "password3";
+        String phoneNumber3 = "0123456789";
+        String deliveryAddress3 = "123 Where Am I";
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
+
+        Status status = Status.PENDING;
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
+
+        when(requestRepository.findRequestsByUserFacingJudgementUsername(ur.getUserFacingJudgement().getUsername())).thenReturn(Optional.of(List.of(createdUserRequest)));
+        List<UserRequest> requests = requestService.getRequestsByUserFacingJudgementUsername(ur.getUserFacingJudgement().getUsername());
+
+        assertNotNull(requests);
+        assertEquals(1, requests.size());
+    }
+
+    @Test
+    public void testGetRequestsByUserFacingJudgementUsernameFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                requestService.getRequestsByUserFacingJudgementUsername("BobSmith"));
+        assertEquals("There are no Requests with userFacingJudgementUsername: " + "BobSmith", e.getMessage());
+    }
+
+    @Test
+    public void testGetRequestByUserFacingJudgementEmail() {
+        String email = "John.Doe@gmail.com";
+        String username = "JohnDoe";
+        String password = "password";
+        Employee e = new Employee(email, username, password);
+        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
+        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+
+        String email3 = "Bob.Smith@gmail.com";
+        String username3 = "BobSmith";
+        String password3 = "password3";
+        String phoneNumber3 = "0123456789";
+        String deliveryAddress3 = "123 Where Am I";
+        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient = appUserService.createClientAccount(email3, username3, password3, phoneNumber3, deliveryAddress3);
+
+        Status status = Status.PENDING;
+        UserRequest ur = new UserRequest(status, "", createdEmployee, createdClient);
+        when(staffRepository.findStaffByUsername(username)).thenReturn(Optional.of(e));
+        when(clientRepository.findClientByUsername(username3)).thenReturn(Optional.of(c));
+        when(requestRepository.findRequestsByCreatedRequestUsername(username)).thenReturn(Optional.empty());  
+        when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
+        UserRequest createdUserRequest = requestService.flagUser(username, username3, "");
+
+        when(requestRepository.findRequestsByUserFacingJudgementEmail(ur.getUserFacingJudgement().getEmail())).thenReturn(Optional.of(List.of(createdUserRequest)));
+        List<UserRequest> requests = requestService.getRequestsByUserFacingJudgementEmail(ur.getUserFacingJudgement().getEmail());
+
+        assertNotNull(requests);
+        assertEquals(1, requests.size());
+    }
+
+    @Test
+    public void testGetRequestsByUserFacingJudgementEmailFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                requestService.getRequestsByUserFacingJudgementEmail("Bob.Smith@gmail.com"));
+        assertEquals("There are no Requests with userFacingJudgementEmail: " + "Bob.Smith@gmail.com", e.getMessage());
+    }
 }
