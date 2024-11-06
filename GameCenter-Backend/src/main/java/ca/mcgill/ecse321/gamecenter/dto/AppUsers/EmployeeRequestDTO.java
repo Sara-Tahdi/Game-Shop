@@ -12,9 +12,9 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
-    public EmployeeRequestDTO(String username, String email, String password) {
-        this.username = username;
+    public EmployeeRequestDTO(String email, String username, String password) {
         this.email = email;
+        this.username = username;
         this.password = password;
     }
 

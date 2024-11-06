@@ -6,7 +6,6 @@ public class ClientResponseDTO {
     private int id;
     private String username;
     private String email;
-    private String password;
     private String phoneNumber;
     private String deliveryAddress;
     private boolean isActive;
@@ -17,7 +16,6 @@ public class ClientResponseDTO {
         this.id = client.getId();
         this.username = client.getUsername();
         this.email = client.getEmail();
-        this.password = client.getPassword();
         this.phoneNumber = client.getPhoneNumber();
         this.deliveryAddress = client.getDeliveryAddress();
         this.isActive = client.getIsActive();
@@ -26,7 +24,6 @@ public class ClientResponseDTO {
     public int getId() { return this.id; }
     public String getUsername() { return this.username; }
     public String getEmail() { return this.email; }
-    public String getPassword() { return this.password; }
     public String getPhoneNumber() { return this.phoneNumber; }
     public String getDeliveryAddress() { return this.deliveryAddress; }
 

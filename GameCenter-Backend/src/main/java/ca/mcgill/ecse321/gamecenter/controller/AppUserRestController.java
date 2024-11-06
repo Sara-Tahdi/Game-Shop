@@ -30,12 +30,13 @@ public class AppUserRestController {
         return new EmployeeResponseDTO(e);
     }
 
-    @PutMapping(value = "/users/emplyee/update")
-    public EmployeeResponseDTO updateEmployee(@Validated @RequestBody EmployeeRequestDTO employeeToUpdate) {
+    @PutMapping(value = "/users/employee/update/{oldPassword}")
+    public EmployeeResponseDTO updateEmployee(@Validated @RequestBody EmployeeRequestDTO employeeToUpdate, @PathVariable String oldPassword) {
         Employee e = appUserService.updateEmployeeAccount(
                 employeeToUpdate.getEmail(),
                 employeeToUpdate.getUsername(),
-                employeeToUpdate.getPassword()
+                employeeToUpdate.getPassword(),
+                oldPassword
         );
         return new EmployeeResponseDTO(e);
     }
@@ -60,13 +61,13 @@ public class AppUserRestController {
         return new EmployeeResponseDTO(e);
     }
 
-    @GetMapping(value = "/users/employee/{username}")
+    @GetMapping(value = "/users/employee/username/{username}")
     public EmployeeResponseDTO getEmployeeByUsername(@PathVariable String username) {
         Employee e = appUserService.getEmployeeByUsername(username);
         return new EmployeeResponseDTO(e);
     }
 
-    @GetMapping(value = "/users/employee/{email}")
+    @GetMapping(value = "/users/employee/email/{email}")
     public EmployeeResponseDTO getEmployeeByEmail(@PathVariable String email) {
         Employee e = appUserService.getEmployeeByEmail(email);
         return new EmployeeResponseDTO(e);
@@ -84,14 +85,15 @@ public class AppUserRestController {
         return new ClientResponseDTO(c);
     }
 
-    @PutMapping(value = "/users/client/update")
-    public ClientResponseDTO updateClientAccount(@Validated @RequestBody ClientRequestDTO clientToUpdate) {
+    @PutMapping(value = "/users/client/update/{oldPassword}")
+    public ClientResponseDTO updateClientAccount(@Validated @RequestBody ClientRequestDTO clientToUpdate, @PathVariable String oldPassword) {
         Client c = appUserService.updateClientAccount(
                 clientToUpdate.getEmail(),
                 clientToUpdate.getUsername(),
                 clientToUpdate.getPassword(),
                 clientToUpdate.getPhoneNumber(),
-                clientToUpdate.getDeliveryAddress()
+                clientToUpdate.getDeliveryAddress(),
+                oldPassword
         );
         return new ClientResponseDTO(c);
     }
@@ -102,7 +104,7 @@ public class AppUserRestController {
         return new ClientResponseDTO(c);
     }
 
-    @GetMapping(value = "users/client")
+    @GetMapping(value = "/users/client")
     public List<ClientResponseDTO> getClients() {
         List<AppUser> clients = appUserService.findAllClients();
         return clients.stream()
@@ -116,13 +118,13 @@ public class AppUserRestController {
         return new ClientResponseDTO(c);
     }
 
-    @GetMapping(value = "/users/client/{username}")
+    @GetMapping(value = "/users/client/username/{username}")
     public ClientResponseDTO getClientByUsername(@PathVariable String username) {
         Client c = appUserService.getClientByUsername(username);
         return new ClientResponseDTO(c);
     }
 
-    @GetMapping(value = "/users/client/{email}")
+    @GetMapping(value = "/users/client/email/{email}")
     public ClientResponseDTO getClientByEmail(@PathVariable String email) {
         Client c = appUserService.getClientByEmail(email);
         return new ClientResponseDTO(c);

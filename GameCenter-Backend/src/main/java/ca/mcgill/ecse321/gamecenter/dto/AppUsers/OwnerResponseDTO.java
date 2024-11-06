@@ -2,16 +2,16 @@ package ca.mcgill.ecse321.gamecenter.dto.AppUsers;
 
 import ca.mcgill.ecse321.gamecenter.model.Employee;
 
-public class EmployeeResponseDTO {
+public class OwnerResponseDTO {
     private int id;
     private String username;
     private String email;
     private boolean isActive;
 
-    public EmployeeResponseDTO() {
+    public OwnerResponseDTO() {
     }
 
-    public EmployeeResponseDTO(Employee employee) {
+    public OwnerResponseDTO(Employee employee) {
         this.id = employee.getId();
         this.username = employee.getUsername();
         this.email = employee.getEmail();
