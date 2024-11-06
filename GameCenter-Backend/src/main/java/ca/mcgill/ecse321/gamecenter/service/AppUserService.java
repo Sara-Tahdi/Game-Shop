@@ -245,7 +245,7 @@ public class AppUserService {
         return appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
     }
 
-    // TODO: Fix login password validation, and implement controller and DTO
+    // TODO: Implement login controller and DTO
     @Transactional
     public AppUser loginUser(String email, String password) {
         AppUser user = appUserRepository.findAppUserByEmail(email).orElse(null);
@@ -253,7 +253,7 @@ public class AppUserService {
             throw new IllegalArgumentException("Invalid email and/or password.");
         }
     
-        if (!user.getPassword().equals(Encryption.encryptDecrypt(password))) {
+        if (!password.equals(Encryption.encryptDecrypt(user.getPassword()))) {
             throw new IllegalArgumentException("Invalid email and/or password.");
         }
     

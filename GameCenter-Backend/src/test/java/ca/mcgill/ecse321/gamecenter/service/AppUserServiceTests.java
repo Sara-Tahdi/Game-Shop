@@ -818,7 +818,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
+        Client c = new Client(email, username, Encryption.encryptDecrypt(password), phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -827,9 +827,9 @@ public class AppUserServiceTests {
 
         assertInstanceOf(Client.class, loggedInUser);
         assertEquals(email, loggedInUser.getEmail());
-        assertEquals(23, loggedInUser.getId());
+        assertEquals(0, loggedInUser.getId());
         assertEquals(username, loggedInUser.getUsername());
-        assertEquals(password, loggedInUser.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(loggedInUser.getPassword()));
     }
 
     @Test
@@ -846,14 +846,13 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
+        Client c = new Client(email, username, Encryption.encryptDecrypt(password), phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(createdClient1));
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.loginUser("user1@gma.ca", "VeryRich"));
+                appUserService.loginUser("user1@gma.ca", "VeryPoor"));
         assertEquals("Invalid email and/or password.", e.getMessage());
     }
-
 }
