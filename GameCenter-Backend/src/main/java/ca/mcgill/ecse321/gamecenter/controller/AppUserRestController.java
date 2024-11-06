@@ -4,6 +4,8 @@ import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientResponseDTO;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.AppUsers.LoginRequestDTO;
+import ca.mcgill.ecse321.gamecenter.dto.AppUsers.AppUserResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.AppUser;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Employee;
@@ -129,4 +131,11 @@ public class AppUserRestController {
         Client c = appUserService.getClientByEmail(email);
         return new ClientResponseDTO(c);
     }
+
+    @PostMapping(value = "/users/login")
+    public AppUserResponseDTO loginUser(@Validated @RequestBody LoginRequestDTO loginRequest) {
+        AppUser user = appUserService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+        return new AppUserResponseDTO(user);
+    }
+
 }
