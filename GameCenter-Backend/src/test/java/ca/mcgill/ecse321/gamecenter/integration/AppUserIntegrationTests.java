@@ -48,7 +48,6 @@ public class AppUserIntegrationTests {
     private int appUserId;
     private String appUserUsername;
     private String appUserEmail;
-    private String appUserPassword;
 
     @BeforeAll
     public void createOwner() {
