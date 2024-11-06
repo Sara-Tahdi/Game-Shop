@@ -13,9 +13,8 @@ public class UserRequestResponseDTO {
     private String userFacingJudgementUsername;
     private String userFacingJudgementEmailString;
 
-
-
-    public UserRequestResponseDTO() {}
+    @SuppressWarnings("unused")
+    private UserRequestResponseDTO() {}
 
     public UserRequestResponseDTO(UserRequest request) {
         this.id = request.getId();
@@ -38,4 +37,14 @@ public class UserRequestResponseDTO {
     public int getUserFacingJudgementId() { return this.userFacingJudgementId; }
     public String getUserFacingJudgementUsername() { return this.userFacingJudgementUsername; }
     public String getUserFacingJudgementEmailString() { return this.userFacingJudgementEmailString; }
+
+    public void setId(int id) { this.id = id; }
+    public void setStatus(String status) { this.status = status; }
+    public void setReason(String reason) { this.reason = reason; }
+    public void setCreatedRequestId(int createdRequestId) { this.createdRequestId = createdRequestId; }
+    public void setCreatedRequestUsername(String createdRequestUsername) { this.createdRequestUsername = createdRequestUsername; }
+    public void setCreatedRequestEmail(String createdRequestEmail) { this.createdRequestEmail = createdRequestEmail; }
+    public void setUserFacingJudgementId(int userFacingJudgementId) { this.userFacingJudgementId = userFacingJudgementId; }
+    public void setUserFacingJudgementUsername(String userFacingJudgementUsername) { this.userFacingJudgementUsername = userFacingJudgementUsername; }
+    public void setUserFacingJudgementEmailString(String userFacingJudgementEmailString) { this.userFacingJudgementEmailString = userFacingJudgementEmailString; }
 }
