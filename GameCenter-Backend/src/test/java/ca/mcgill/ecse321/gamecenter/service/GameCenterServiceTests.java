@@ -1,12 +1,16 @@
-package test.java.ca.mcgill.ecse321.gamecenter.service;
+package ca.mcgill.ecse321.gamecenter.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCenter;
 import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
 import ca.mcgill.ecse321.gamecenter.service.GameCenterService;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,11 +22,11 @@ import java.util.Optional;
 class GameCenterServiceTest {
 
     // Mocking the repository to simulate database operations
-    @MockBean
+    @Mock
     private GameCenterRepository gameCenterRepository;
 
     // Injecting the actual GameCenterService to test its functionality
-    @Autowired
+    @InjectMocks
     private GameCenterService gameCenterService;
 
     @Test
@@ -99,6 +103,9 @@ class GameCenterServiceTest {
 
         // Mock findById to return the existing GameCenter for updating
         when(gameCenterRepository.findById(existingGameCenter.getName())).thenReturn(Optional.of(existingGameCenter));
+
+        when(gameCenterRepository.save(existingGameCenter)).thenReturn(existingGameCenter);
+
 
         // Create a duplicate GameCenter with different times and policy
         GameCenter duplicateGameCenter = new GameCenter("GameZone", Time.valueOf("08:00:00"), Time.valueOf("22:00:00"), "Food allowed");
