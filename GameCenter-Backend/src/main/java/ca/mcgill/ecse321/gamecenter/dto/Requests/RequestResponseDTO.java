@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.dto.Requests;
 import ca.mcgill.ecse321.gamecenter.model.Request;
 
-
-
 public class RequestResponseDTO {
     private int id;
     private String status;

@@ -245,7 +245,6 @@ public class AppUserService {
         return appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
     }
 
-    // TODO: Implement login controller and DTO
     @Transactional
     public AppUser loginUser(String email, String password) {
         AppUser user = appUserRepository.findAppUserByEmail(email).orElse(null);
