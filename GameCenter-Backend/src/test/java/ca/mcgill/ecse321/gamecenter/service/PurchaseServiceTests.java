@@ -8,6 +8,7 @@ import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Round;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -72,7 +73,7 @@ public class PurchaseServiceTests {
         Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory);
 
         int copies = 2;
-        float total = purchaseService.round(copies * g.getPrice());
+        float total = Round.round(copies * g.getPrice());
         int trackingCode = 3513;
         Date date = Date.valueOf(LocalDate.now());
         Purchase p = new Purchase(total, copies, trackingCode, date, g, c);
@@ -215,7 +216,7 @@ public class PurchaseServiceTests {
         when(gameRepository.findGameById(g2.getId())).thenReturn(Optional.of(g2));
 
         int copies1 = 3;
-        float total1 = purchaseService.round(g1.getPrice() * copies1);
+        float total1 = Round.round(g1.getPrice() * copies1);
         int trackingNumber1 = 391;
         Purchase p1 = new Purchase(total1, copies1, trackingNumber1, Date.valueOf(LocalDate.now()), g1, c);
         p1.setId(7);
@@ -223,7 +224,7 @@ public class PurchaseServiceTests {
         purchaseService.createPurchase(c.getId(), g1.getId(), copies1);
 
         int copies2 = 2;
-        float total2 = purchaseService.round(g2.getPrice() * copies2);
+        float total2 = Round.round(g2.getPrice() * copies2);
         int trackingNumber2 = 57539;
         Purchase p2 = new Purchase(total2, copies2, trackingNumber2, Date.valueOf(LocalDate.now().minusDays(100)), g2, c);
         p2.setId(47381);
@@ -278,7 +279,7 @@ public class PurchaseServiceTests {
         when(gameRepository.findGameById(g2.getId())).thenReturn(Optional.of(g2));
 
         int copies1 = 3;
-        float total1 = purchaseService.round(g1.getPrice() * copies1);
+        float total1 = Round.round(g1.getPrice() * copies1);
         int trackingNumber1 = 391;
         Purchase p1 = new Purchase(total1, copies1, trackingNumber1, Date.valueOf(LocalDate.now()), g1, c);
         p1.setId(7);
@@ -286,7 +287,7 @@ public class PurchaseServiceTests {
         purchaseService.createPurchase(c.getId(), g1.getId(), copies1);
 
         int copies2 = 2;
-        float total2 = purchaseService.round(g2.getPrice() * copies2);
+        float total2 = Round.round(g2.getPrice() * copies2);
         int trackingNumber2 = 57539;
         Purchase p2 = new Purchase(total2, copies2, trackingNumber2, Date.valueOf(LocalDate.now().minusDays(100)), g2, c);
         p2.setId(47381);
