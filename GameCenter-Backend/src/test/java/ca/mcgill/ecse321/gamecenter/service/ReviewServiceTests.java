@@ -113,7 +113,7 @@ public class ReviewServiceTests {
         Review r = new Review(author, reviewContent, managerReply, stars, g);
 
         when(reviewRepository.save(any(Review.class))).thenReturn(r);
-        Review createdReview = reviewService.createReview(author, reviewContent, managerReply, stars, g);
+        Review createdReview = reviewService.createReview(author, reviewContent, stars, g);
 
         assertNotNull(createdReview);
         assertEquals(createdReview.getId(), r.getId());
@@ -143,7 +143,7 @@ public class ReviewServiceTests {
 
         when(reviewRepository.save(any(Review.class))).thenReturn(r);
         when(reviewRepository.findReviewById(r.getId())).thenReturn(Optional.of(r));
-        Review createdReview = reviewService.createReview(author, reviewContent, managerReply, stars, g);
+        Review createdReview = reviewService.createReview(author, reviewContent, stars, g);
         assertNotNull(createdReview);
 
         when(reviewRepository.findReviewsByGameId(createdGame.getId())).thenReturn(Optional.of(List.of(createdReview)));
