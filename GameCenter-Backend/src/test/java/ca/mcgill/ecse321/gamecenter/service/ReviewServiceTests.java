@@ -54,7 +54,7 @@ public class ReviewServiceTests {
         String reviewContent = "yes yes this good game, i like";
         String managerReply = "";
         Review.Rating stars = Review.Rating.TWO;
-        Review r = new Review(author, reviewContent, managerReply, stars, 0, 0, g);
+        Review r = new Review(author, reviewContent, managerReply, stars, g);
 
         when(reviewRepository.save(any(Review.class))).thenReturn(r);
         when(reviewRepository.findReviewById(r.getId())).thenReturn(Optional.of(r));
@@ -83,7 +83,7 @@ public class ReviewServiceTests {
         String reviewContent = "yes yes this good game, i like";
         String managerReply = "";
         Review.Rating stars = Review.Rating.TWO;
-        Review r = new Review(author, reviewContent, managerReply, stars, 0, 0, g);
+        Review r = new Review(author, reviewContent, managerReply, stars, g);
         when(reviewRepository.save(any(Review.class))).thenReturn(r);
         when(reviewRepository.findReviewById(r.getId())).thenReturn(Optional.empty());
 
@@ -110,7 +110,7 @@ public class ReviewServiceTests {
         String reviewContent = "yes yes this good game, i like";
         String managerReply = "";
         Review.Rating stars = Review.Rating.TWO;
-        Review r = new Review(author, reviewContent, managerReply, stars, 0, 0, g);
+        Review r = new Review(author, reviewContent, managerReply, stars, g);
 
         when(reviewRepository.save(any(Review.class))).thenReturn(r);
         Review createdReview = reviewService.createReview(author, reviewContent, managerReply, stars, g);
@@ -139,7 +139,7 @@ public class ReviewServiceTests {
         String reviewContent = "yes yes this good game, i like";
         String managerReply = "";
         Review.Rating stars = Review.Rating.TWO;
-        Review r = new Review(author, reviewContent, managerReply, stars, 0, 0, g);
+        Review r = new Review(author, reviewContent, managerReply, stars, g);
 
         when(reviewRepository.save(any(Review.class))).thenReturn(r);
         when(reviewRepository.findReviewById(r.getId())).thenReturn(Optional.of(r));

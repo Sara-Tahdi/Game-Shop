@@ -32,7 +32,7 @@ public class ReviewService {
             Game game)
     {
         // TODO: Change the umple code so that it doesn't take thumbs up/down in the review constructor
-        Review review = new Review(author, reviewContent, managerReply, stars, 0, 0, game);
+        Review review = new Review(author, reviewContent, managerReply, stars, game);
         return reviewRepository.save(review);
     }
 
