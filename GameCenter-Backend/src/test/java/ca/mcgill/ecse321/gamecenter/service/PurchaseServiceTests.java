@@ -49,7 +49,7 @@ public class PurchaseServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         c.setId(21);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
@@ -107,10 +107,6 @@ public class PurchaseServiceTests {
         gameService.createGame(title, price, description, generalFeeling, gameCategory);
 
         int copies = 2;
-        float total = purchaseService.round(copies * g.getPrice());
-        int trackingCode = 3513;
-        Date date = Date.valueOf(LocalDate.now());
-        Purchase p = new Purchase(total, copies, trackingCode, date, g, c);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 purchaseService.createPurchase(c.getId(), g.getId(), copies));

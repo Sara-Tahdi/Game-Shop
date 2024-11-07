@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Encryption;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,60 +23,18 @@ public class AppUserServiceTests {
 
     /* Getter tests */
     @Test
-    public void testGetAllUsersError() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.getAllAppUser());
-        assertEquals("There are no Users", e.getMessage());
-    }
-
-    @Test
-    public void testGetAllUsers() {
+    public void testGetEmployeeById() {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
-        when(appUserRepository.save(any(Owner.class))).thenReturn(o);
-        Owner createdOwner = appUserService.createOwnerAccount(email, username, password);
+        Employee e = new Employee(email, username, password);
+        e.setId(23);
+        e.setPassword(Encryption.encryptDecrypt(e.getPassword()));
 
-        String email2 = "5booms@boommeter.com";
-        String username2 = "BigAJ";
-        String password2 = "DoubleChunkChocolateCookie";
-        Employee e = new Employee(email2, username2, password2);
-        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        Employee createdEmployee = appUserService.createEmployeeAccount(email2, username2, password2);
+        when(appUserRepository.findAppUserById(e.getId())).thenReturn(Optional.of(e));
+        AppUser a = appUserService.getEmployeeById(e.getId());
 
-        String email3 = "user1@gma.ca";
-        String username3 = "Dave";
-        String password3 = "VeryRich";
-        String phoneNumber3 = "5141234567";
-        String deliveryAddress3 = "123 John Street";
-        Client c = new Client(email3, username3, password3, phoneNumber3, deliveryAddress3, 0);
-        when(appUserRepository.save(any(Client.class))).thenReturn(c);
-        Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber3, deliveryAddress3);
-
-        when(appUserRepository.findAppUserByUserType(AppUser.class)).thenReturn(Optional.of(List.of(
-                createdOwner, createdEmployee, createdClient
-        )));
-        List<AppUser> users = appUserService.getAllAppUser();
-
-        assertNotNull(users);
-        assertEquals(3, users.size());
-    }
-
-    @Test
-    public void testGetUserById() {
-        String email = "bigboss@gamecenter.net";
-        String username = "biggestboss";
-        String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
-        o.setId(23);
-        when(appUserRepository.save(any(Owner.class))).thenReturn(o);
-        appUserService.createOwnerAccount(email, username, password);
-
-        when(appUserRepository.findAppUserById(o.getId())).thenReturn(Optional.of(o));
-        AppUser a = appUserService.getAppUserById(o.getId());
-
-        assertInstanceOf(Owner.class, a);
+        assertInstanceOf(Employee.class, a);
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
@@ -83,26 +42,25 @@ public class AppUserServiceTests {
     }
 
     @Test
-    public void testGetUserByIdFail() {
+    public void testGetEmployeeByIdFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.getAppUserById(2));
-        assertEquals("There is no User with id: " + 2, e.getMessage());
+                appUserService.getEmployeeById(2));
+        assertEquals("There is no Employee with id: " + 2, e.getMessage());
     }
 
     @Test
-    public void testGetUserbyUsername() {
+    public void testGetEmployeeByUsername() {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
-        o.setId(23);
-        when(appUserRepository.save(any(Owner.class))).thenReturn(o);
-        appUserService.createOwnerAccount(email, username, password);
+        Employee e = new Employee(email, username, password);
+        e.setId(23);
+        e.setPassword(Encryption.encryptDecrypt(e.getPassword()));
 
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(o));
-        AppUser a = appUserService.getAppUserByUsername(username);
+        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(e));
+        AppUser a = appUserService.getEmployeeByUsername(username);
 
-        assertInstanceOf(Owner.class, a);
+        assertInstanceOf(Employee.class, a);
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
@@ -110,26 +68,25 @@ public class AppUserServiceTests {
     }
 
     @Test
-    public void testGetUserByUsernameFail() {
+    public void testGetEmployeeByUsernameFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.getAppUserByUsername("realUser"));
-        assertEquals("There is no User with username: realUser", e.getMessage());
+                appUserService.getEmployeeByUsername("realUser"));
+        assertEquals("There is no Employee with username: realUser", e.getMessage());
     }
 
     @Test
-    public void testGetUserbyEmail() {
+    public void testGetEmployeeByEmail() {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
-        o.setId(23);
-        when(appUserRepository.save(any(Owner.class))).thenReturn(o);
-        appUserService.createOwnerAccount(email, username, password);
+        Employee e = new Employee(email, username, password);
+        e.setId(23);
+        e.setPassword(Encryption.encryptDecrypt(e.getPassword()));
 
-        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(o));
-        AppUser a = appUserService.getAppUserByEmail(email);
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(e));
+        AppUser a = appUserService.getEmployeeByEmail(email);
 
-        assertInstanceOf(Owner.class, a);
+        assertInstanceOf(Employee.class, a);
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
@@ -137,10 +94,97 @@ public class AppUserServiceTests {
     }
 
     @Test
-    public void testGetUserByEmailFail() {
+    public void testGetEmployeeByEmailFail() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.getAppUserByEmail("inthesystem@google.com"));
-        assertEquals("There is no User with email: inthesystem@google.com", e.getMessage());
+                appUserService.getEmployeeByEmail("inthesystem@google.com"));
+        assertEquals("There is no Employee with email: inthesystem@google.com", e.getMessage());
+    }
+
+    @Test
+    public void testGetClientById() {
+        String email = "bigboss@gamecenter.net";
+        String username = "biggestboss";
+        String password = "GameCenter!!";
+        Client c = new Client();
+        c.setEmail(email);
+        c.setUsername(username);
+        c.setPassword(password);
+        c.setId(23);
+        c.setPassword(Encryption.encryptDecrypt(c.getPassword()));
+
+        when(appUserRepository.findAppUserById(c.getId())).thenReturn(Optional.of(c));
+        AppUser a = appUserService.getClientById(c.getId());
+
+        assertInstanceOf(Client.class, a);
+        assertEquals(email, a.getEmail());
+        assertEquals(23, a.getId());
+        assertEquals(username, a.getUsername());
+        assertEquals(password, a.getPassword());
+    }
+
+    @Test
+    public void testGetClientByIdFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.getClientById(2));
+        assertEquals("There is no Client with id: " + 2, e.getMessage());
+    }
+
+    @Test
+    public void testGetClientByUsername() {
+        String email = "bigboss@gamecenter.net";
+        String username = "biggestboss";
+        String password = "GameCenter!!";
+        Client c = new Client();
+        c.setEmail(email);
+        c.setUsername(username);
+        c.setPassword(password);
+        c.setId(23);
+        c.setPassword(Encryption.encryptDecrypt(c.getPassword()));
+
+        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
+        AppUser a = appUserService.getClientByUsername(username);
+
+        assertInstanceOf(Client.class, a);
+        assertEquals(email, a.getEmail());
+        assertEquals(23, a.getId());
+        assertEquals(username, a.getUsername());
+        assertEquals(password, a.getPassword());
+    }
+
+    @Test
+    public void testGetClientByUsernameFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.getClientByUsername("realUser"));
+        assertEquals("There is no Client with username: realUser", e.getMessage());
+    }
+
+    @Test
+    public void testGetClientByEmail() {
+        String email = "bigboss@gamecenter.net";
+        String username = "biggestboss";
+        String password = "GameCenter!!";
+        Client c = new Client();
+        c.setEmail(email);
+        c.setUsername(username);
+        c.setPassword(password);
+        c.setId(23);
+        c.setPassword(Encryption.encryptDecrypt(c.getPassword()));
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
+        AppUser a = appUserService.getClientByEmail(email);
+
+        assertInstanceOf(Client.class, a);
+        assertEquals(email, a.getEmail());
+        assertEquals(23, a.getId());
+        assertEquals(username, a.getUsername());
+        assertEquals(password, a.getPassword());
+    }
+
+    @Test
+    public void testGetClientByEmailFail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.getClientByEmail("inthesystem@google.com"));
+        assertEquals("There is no Client with email: inthesystem@google.com", e.getMessage());
     }
 
     /* All Owner Tests */
@@ -165,7 +209,6 @@ public class AppUserServiceTests {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "short";
-        Owner o = new Owner(email, username, password);
         when(appUserRepository.save(any(Owner.class))).thenThrow(IllegalArgumentException.class);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -181,12 +224,11 @@ public class AppUserServiceTests {
         Owner o = new Owner(email, username, password);
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
 
-        Owner realOwner = appUserService.createOwnerAccount(email, username, password);
+        appUserService.createOwnerAccount(email, username, password);
 
         String email2 = "betterboss@gamecente.net";
         String username2 = "IJustGotPaid";
         String password2 = "WeBringTheBoom!";
-        Owner o7 = new Owner(email2, username2, password2);
         List<AppUser> defaultOwner = new ArrayList<AppUser>();
         defaultOwner.add(o);
         when(appUserRepository.findAppUserByUserType(Owner.class)).thenReturn(Optional.of(defaultOwner));
@@ -201,22 +243,22 @@ public class AppUserServiceTests {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
+        Owner o = new Owner(email, username, Encryption.encryptDecrypt(password));
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
 
         Owner createdOwner = appUserService.createOwnerAccount(email, username, password);
 
         String newUsername = "TheLegend27";
-        Owner updatedOwner = new Owner(email, newUsername, password);
+        Owner updatedOwner = new Owner(email, newUsername, Encryption.encryptDecrypt(password));
         when(appUserRepository.save(any(Owner.class))).thenReturn(updatedOwner);
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(o));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(o));
 
-        createdOwner = appUserService.updateOwnerAccount(createdOwner.getUsername(), createdOwner.getEmail(), newUsername, createdOwner.getPassword());
+        createdOwner = appUserService.updateOwnerAccount(createdOwner.getEmail(), newUsername, createdOwner.getPassword(), password);
 
         assertEquals(newUsername, createdOwner.getUsername());
         assertNotEquals(username, createdOwner.getUsername());
         assertEquals(email, createdOwner.getEmail());
-        assertEquals(password, createdOwner.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(createdOwner.getPassword()));
     }
 
     @Test
@@ -228,11 +270,11 @@ public class AppUserServiceTests {
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
 
         Owner createdOwner = appUserService.createOwnerAccount(email, username, password);
-        String unknownUsername = "maliciousCode";
+        String unknownEmail = "maliciousCode@bad.com";
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateOwnerAccount(unknownUsername, createdOwner.getEmail(), createdOwner.getUsername(), createdOwner.getPassword()));
-        assertEquals("There is no User with username: " + unknownUsername, e.getMessage());
+                appUserService.updateOwnerAccount(unknownEmail, createdOwner.getUsername(), createdOwner.getPassword(), password));
+        assertEquals("There is no User with email: " + unknownEmail, e.getMessage());
     }
 
     @Test
@@ -253,38 +295,12 @@ public class AppUserServiceTests {
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
         appUserService.createEmployeeAccount(email, username, password);
 
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(o));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(o));
         when(appUserRepository.findAppUserByUsername(username2)).thenReturn(Optional.of(e));
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateOwnerAccount(username, email, username2, password));
+                appUserService.updateOwnerAccount(email, username2, password, password));
         assertEquals("There already exists a User with username: " + username2, err.getMessage());
-    }
-
-    @Test
-    public void testUpdateOwnerInvalidEmail() {
-        String email = "bigboss@gamecenter.net";
-        String username = "biggestboss";
-        String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
-        o.setId(3);
-        when(appUserRepository.save(any(Owner.class))).thenReturn(o);
-        appUserService.createOwnerAccount(email, username, password);
-
-        String email2 = "5booms@boommeter.com";
-        String username2 = "BigAJ";
-        String password2 = "DoubleChunkChocolateCookie";
-        Employee e = new Employee(email2, username2, password2);
-        e.setId(5);
-        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        appUserService.createEmployeeAccount(email, username, password);
-
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(o));
-        when(appUserRepository.findAppUserByEmail(email2)).thenReturn(Optional.of(e));
-
-        IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateOwnerAccount(username, email2, username, password));
-        assertEquals("There already exists a User with email: " + email2, err.getMessage());
     }
 
     @Test
@@ -292,16 +308,17 @@ public class AppUserServiceTests {
         String email = "bigboss@gamecenter.net";
         String username = "biggestboss";
         String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
+        Owner o = new Owner(email, username, Encryption.encryptDecrypt(password));
         o.setId(3);
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
         appUserService.createOwnerAccount(email, username, password);
 
         String newPassword = "small";
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(o));
         when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(o));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateOwnerAccount(username, email, username, newPassword));
+                appUserService.updateOwnerAccount(email, username, newPassword, password));
         assertEquals("Password too short", e.getMessage());
     }
 
@@ -313,7 +330,7 @@ public class AppUserServiceTests {
         Owner o = new Owner(email, username, password);
         when(appUserRepository.save(any(Owner.class))).thenReturn(o);
 
-        Owner realOwner = appUserService.createOwnerAccount(email, username, password);
+        appUserService.createOwnerAccount(email, username, password);
 
         List<AppUser> defaultOwner = new ArrayList<AppUser>();
         defaultOwner.add(o);
@@ -348,7 +365,7 @@ public class AppUserServiceTests {
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
         String email2 = "gamer@mario.ca";
         String password2 = "heahhadaaaaa";
@@ -368,7 +385,7 @@ public class AppUserServiceTests {
         Employee e = new Employee(email, username, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
 
         String username2 = "bestemployee";
         String password2 = "heahhadaaaaa";
@@ -396,22 +413,21 @@ public class AppUserServiceTests {
         String email = "5booms@boommeter.com";
         String username = "BigAJ";
         String password = "DoubleChunkChocolateCookie";
-        Employee e = new Employee(email, username, password);
+        Employee e = new Employee(email, username, Encryption.encryptDecrypt(password));
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
         Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
 
-        String newEmail = "chickenbake@costco.com";
-        Employee updatedEmployee = new Employee(newEmail, username, password);
+        String newUsername = "chickenbake";
+        Employee updatedEmployee = new Employee(email, newUsername, password);
         when(appUserRepository.save(any(Employee.class))).thenReturn(updatedEmployee);
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(e));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(e));
 
-        createdEmployee = appUserService.updateEmployeeAccount(createdEmployee.getUsername(), newEmail, createdEmployee.getUsername(), createdEmployee.getPassword());
+        createdEmployee = appUserService.updateEmployeeAccount(email, newUsername, createdEmployee.getPassword(), password);
 
-        assertEquals(newEmail, createdEmployee.getEmail());
-        assertEquals(username, createdEmployee.getUsername());
+        assertEquals(email, createdEmployee.getEmail());
+        assertEquals(newUsername, createdEmployee.getUsername());
         assertEquals(password, createdEmployee.getPassword());
-        assertNotEquals(email, createdEmployee.getEmail());
     }
 
     @Test
@@ -423,37 +439,26 @@ public class AppUserServiceTests {
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
         Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
-        String unknownUser = "ItotallyExist";
+        String unknownUser = "ItotallyExist@real.ca";
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateEmployeeAccount(unknownUser, createdEmployee.getEmail(), createdEmployee.getUsername(), createdEmployee.getPassword()));
-        assertEquals("There is no User with username: " + unknownUser, err.getMessage());
+                appUserService.updateEmployeeAccount(unknownUser, createdEmployee.getUsername(), createdEmployee.getPassword(), password));
+        assertEquals("There is no User with email: " + unknownUser, err.getMessage());
     }
 
     @Test
-    public void testUpdateEmployeeInvalidEmail() {
-        String email = "bigboss@gamecenter.net";
-        String username = "biggestboss";
-        String password = "GameCenter!!";
-        Owner o = new Owner(email, username, password);
-        o.setId(3);
-        when(appUserRepository.save(any(Owner.class))).thenReturn(o);
-        appUserService.createOwnerAccount(email, username, password);
+    public void testUpdateEmployeeNotActive() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        Employee e = new Employee(email, username, password);
+        e.setIsActive(false);
 
-        String email2 = "5booms@boommeter.com";
-        String username2 = "BigAJ";
-        String password2 = "DoubleChunkChocolateCookie";
-        Employee e = new Employee(email2, username2, password2);
-        e.setId(5);
-        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        appUserService.createEmployeeAccount(email2, username2, password2);
-
-        when(appUserRepository.findAppUserByUsername(username2)).thenReturn(Optional.of(e));
-        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(o));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(e));
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateEmployeeAccount(username2, email, username2, password2));
-        assertEquals("There already exists a User with email: " + email, err.getMessage());
+                appUserService.updateEmployeeAccount(email, username, password, password));
+        assertEquals("This Employee is not active", err.getMessage());
     }
 
     @Test
@@ -475,10 +480,10 @@ public class AppUserServiceTests {
         appUserService.createEmployeeAccount(email2, username2, password2);
 
         when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(o));
-        when(appUserRepository.findAppUserByUsername(username2)).thenReturn(Optional.of(e));
+        when(appUserRepository.findAppUserByEmail(email2)).thenReturn(Optional.of(e));
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateEmployeeAccount(username2, email2, username, password2));
+                appUserService.updateEmployeeAccount(email2, username, password2, password2));
         assertEquals("There already exists a User with username: " + username, err.getMessage());
     }
 
@@ -487,15 +492,15 @@ public class AppUserServiceTests {
         String email = "5booms@boommeter.com";
         String username = "BigAJ";
         String password = "DoubleChunkChocolateCookie";
-        Employee e = new Employee(email, username, password);
+        Employee e = new Employee(email, username, Encryption.encryptDecrypt(password));
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
 
-        Employee createdEmployee = appUserService.createEmployeeAccount(email, username, password);
+        appUserService.createEmployeeAccount(email, username, password);
         String newPassword = "chicken";
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(e));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(e));
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateEmployeeAccount(username, email, username, newPassword));
+                appUserService.updateEmployeeAccount(email, username, newPassword, password));
         assertEquals("Password too short", err.getMessage());
     }
 
@@ -564,7 +569,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -583,7 +588,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -591,7 +596,6 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email2, username, password2, phoneNumber2, deliveryAddress2, 0);
         when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -607,7 +611,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -615,7 +619,6 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email, username2, password2, phoneNumber2, deliveryAddress2, 0);
         when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -644,18 +647,18 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, Encryption.encryptDecrypt(password), phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String newUsername = "DaveDavo";
         String newPassword = "MuchRicherThanBefore";
-        Client newC = new Client(email, newUsername, newPassword, phoneNumber, deliveryAddress, 0);
+        Client newC = new Client(email, newUsername, newPassword, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(newC);
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
-        createdClient = appUserService.updateClientAccount(username, email, newUsername, newPassword, phoneNumber, deliveryAddress);
+        createdClient = appUserService.updateClientAccount(email, newUsername, newPassword, phoneNumber, deliveryAddress, password);
 
         assertEquals(newUsername, createdClient.getUsername());
         assertEquals(newPassword, createdClient.getPassword());
@@ -668,43 +671,32 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
-        String unknownUser = "Davi";
+        String unknownUser = "Davi@Dave.dave";
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateClientAccount(unknownUser, email, username, password, phoneNumber, deliveryAddress));
-        assertEquals("There is no User with username: " + unknownUser, e.getMessage());
+                appUserService.updateClientAccount(unknownUser, username, password, phoneNumber, deliveryAddress, password));
+        assertEquals("There is no User with email: " + unknownUser, e.getMessage());
     }
 
     @Test
-    public void testUpdateClientInvalidEmail() {
+    public void testUpdateClientNotActive() {
         String email = "user1@gma.ca";
         String username = "Dave";
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
-        c.setId(9);
-        when(appUserRepository.save(any(Client.class))).thenReturn(c);
-        appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
+        c.setIsActive(false);
 
-        String email2 = "5booms@boommeter.com";
-        String username2 = "BigAJ";
-        String password2 = "DoubleChunkChocolateCookie";
-        Employee e = new Employee(email2, username2, password2);
-        e.setId(2941);
-        when(appUserRepository.save(any(Employee.class))).thenReturn(e);
-        appUserService.createEmployeeAccount(email2, username2, password2);
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
-        when(appUserRepository.findAppUserByEmail(email2)).thenReturn(Optional.of(e));
-
-        IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateClientAccount(username, email2, username, password, phoneNumber, deliveryAddress));
-        assertEquals("There already exists a User with email: " + email2, err.getMessage());
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.updateClientAccount(email, username, password, phoneNumber, deliveryAddress, password));
+        assertEquals("This Client is not active", e.getMessage());
     }
 
     @Test
@@ -714,7 +706,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         c.setId(9);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -727,11 +719,11 @@ public class AppUserServiceTests {
         when(appUserRepository.save(any(Employee.class))).thenReturn(e);
         appUserService.createEmployeeAccount(email2, username2, password2);
 
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
         when(appUserRepository.findAppUserByUsername(username2)).thenReturn(Optional.of(e));
 
         IllegalArgumentException err = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateClientAccount(username, email, username2, password, phoneNumber, deliveryAddress));
+                appUserService.updateClientAccount(email, username2, password, phoneNumber, deliveryAddress, password));
         assertEquals("There already exists a User with username: " + username2, err.getMessage());
     }
 
@@ -742,15 +734,15 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, Encryption.encryptDecrypt(password), phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String newPassword = "longpwd";
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(c));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.updateClientAccount(username, email, username, newPassword, phoneNumber, deliveryAddress));
+                appUserService.updateClientAccount(email, username, newPassword, phoneNumber, deliveryAddress, password));
         assertEquals("Password too short", e.getMessage());
     }
 
@@ -761,7 +753,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -778,7 +770,7 @@ public class AppUserServiceTests {
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
         appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
@@ -790,37 +782,13 @@ public class AppUserServiceTests {
     }
 
     @Test
-    public void testAddFlagClientValid() {
-        String email = "user1@gma.ca";
-        String username = "Dave";
-        String password = "VeryRich";
-        String phoneNumber = "5141234567";
-        String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
-        when(appUserRepository.save(any(Client.class))).thenReturn(c);
-        Client created = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
-
-        when(appUserRepository.findAppUserByUsername(username)).thenReturn(Optional.of(c));
-        Client flagged = appUserService.flagClientByUsername(username);
-
-        assertEquals(1, flagged.getNumberOfFlags());
-    }
-
-    @Test
-    public void testAddFlagClientInvalid() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                appUserService.flagClientByUsername("Phonybaloney"));
-        assertEquals("There is no Client with username: Phonybaloney", e.getMessage());
-    }
-
-    @Test
     public void testGetAllClient() {
         String email = "user1@gma.ca";
         String username = "Dave";
         String password = "VeryRich";
         String phoneNumber = "5141234567";
         String deliveryAddress = "123 John Street";
-        Client c = new Client(email, username, password, phoneNumber, deliveryAddress, 0);
+        Client c = new Client(email, username, password, phoneNumber, deliveryAddress);
         when(appUserRepository.save(any(Client.class))).thenReturn(c);
 
         Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
@@ -830,7 +798,7 @@ public class AppUserServiceTests {
         String password2 = "QuiteHandsome";
         String phoneNumber2 = "5143419319";
         String deliveryAddress2 = "123 Jane Street";
-        Client c2 = new Client(email2, username2, password2, phoneNumber2, deliveryAddress2, 0);
+        Client c2 = new Client(email2, username2, password2, phoneNumber2, deliveryAddress2);
         when(appUserRepository.save(any(Client.class))).thenReturn(c2);
 
         Client createdClient2 = appUserService.createClientAccount(email2, username2, password2, phoneNumber2, deliveryAddress2);
@@ -841,5 +809,50 @@ public class AppUserServiceTests {
 
         assertNotNull(clients);
         assertEquals(2, clients.size());
+    }
+
+    @Test
+    public void testLoginUser() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, Encryption.encryptDecrypt(password), phoneNumber, deliveryAddress);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(createdClient1));
+        AppUser loggedInUser = appUserService.loginUser(email, password);
+
+        assertInstanceOf(Client.class, loggedInUser);
+        assertEquals(email, loggedInUser.getEmail());
+        assertEquals(0, loggedInUser.getId());
+        assertEquals(username, loggedInUser.getUsername());
+        assertEquals(password, Encryption.encryptDecrypt(loggedInUser.getPassword()));
+    }
+
+    @Test
+    public void testLoginUserFailWrongEmail() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.loginUser("inthesystem@google.com", "VeryRich"));
+        assertEquals("Invalid email and/or password.", e.getMessage());
+    }
+
+    @Test
+    public void testLoginUserFailWrongPassword() {
+        String email = "user1@gma.ca";
+        String username = "Dave";
+        String password = "VeryRich";
+        String phoneNumber = "5141234567";
+        String deliveryAddress = "123 John Street";
+        Client c = new Client(email, username, Encryption.encryptDecrypt(password), phoneNumber, deliveryAddress);
+        when(appUserRepository.save(any(Client.class))).thenReturn(c);
+        Client createdClient1 = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
+
+        when(appUserRepository.findAppUserByEmail(email)).thenReturn(Optional.of(createdClient1));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                appUserService.loginUser("user1@gma.ca", "VeryPoor"));
+        assertEquals("Invalid email and/or password.", e.getMessage());
     }
 }

@@ -4,8 +4,6 @@
 package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.*;
 
-import java.util.*;
-
 // line 50 "../../../../../../GameCenter.ump"
 @Entity
 public class Game
