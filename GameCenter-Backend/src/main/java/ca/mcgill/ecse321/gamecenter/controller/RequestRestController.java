@@ -164,7 +164,7 @@ public class RequestRestController {
 
     @PutMapping(value = "/requests/deny/{id}")
     public RequestResponseDTO denyRequest(@PathVariable int id) {
-        Request r = requestService.handleRequestApproval(id, true);
+        Request r = requestService.handleRequestApproval(id, false);
         return new RequestResponseDTO(r);
     }
 

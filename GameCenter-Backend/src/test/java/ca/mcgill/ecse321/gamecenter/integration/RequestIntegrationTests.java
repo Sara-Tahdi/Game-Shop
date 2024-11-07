@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -393,8 +395,11 @@ public class RequestIntegrationTests {
         // Arrange
         ResponseEntity<RequestResponseDTO[]> response = client.getForEntity("/requests", RequestResponseDTO[].class);
 
+        String url = "/requests/approve/" + response.getBody()[0].getId();
+
         // Act
-        ResponseEntity<RequestResponseDTO> response2 = client.getForEntity("/requests/approve/" + response.getBody()[0].getId(), RequestResponseDTO.class);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(null);
+        ResponseEntity<RequestResponseDTO> response2 = client.exchange(url, HttpMethod.PUT, requestEntity, RequestResponseDTO.class);
 
         // Assert
         assertNotNull(response2);
@@ -402,5 +407,25 @@ public class RequestIntegrationTests {
         RequestResponseDTO body = response2.getBody();
         assertNotNull(body);
         assertEquals("APPROVED", body.getStatus());
+    }
+
+    @Test
+    @Order(18)
+    public void testDenyRequest() {
+        // Arrange
+        ResponseEntity<RequestResponseDTO[]> response = client.getForEntity("/requests", RequestResponseDTO[].class);
+
+        String url = "/requests/deny/" + response.getBody()[0].getId();
+
+        // Act
+        HttpEntity<Void> requestEntity = new HttpEntity<>(null);
+        ResponseEntity<RequestResponseDTO> response2 = client.exchange(url, HttpMethod.PUT, requestEntity, RequestResponseDTO.class);
+
+        // Assert
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        RequestResponseDTO body = response2.getBody();
+        assertNotNull(body);
+        assertEquals("DENIED", body.getStatus());
     }
 }
