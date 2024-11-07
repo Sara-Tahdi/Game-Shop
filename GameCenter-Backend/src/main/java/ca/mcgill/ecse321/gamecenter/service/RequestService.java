@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
@@ -26,11 +27,12 @@ public class RequestService {
     private GameRepository gameRepository;
     
     public List<Request> getAllRequests() {
-        List<Request> a = requestRepository.findRequestsByRequestType(Request.class).orElse(null);
-        if (a == null) {
+        List<Request> requests = new ArrayList<>();
+        requestRepository.findAll().forEach(requests::add);
+        if (requests.isEmpty()) {
             throw new IllegalArgumentException("There are no Requests");
         }
-        return a;
+        return requests;
     }
 
     public Request getRequestById(int id) {

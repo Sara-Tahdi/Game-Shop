@@ -103,9 +103,9 @@ public class RequestServiceTests {
         when(requestRepository.save(any(UserRequest.class))).thenReturn(ur); 
         UserRequest createdUserRequest = requestService.flagUser(username2, username3, "");
 
-        when(requestRepository.findRequestsByRequestType(Request.class)).thenReturn(Optional.of(List.of(
+        when(requestRepository.findAll()).thenReturn(List.of(
             createdGameRequest, createdUserRequest
-        )));
+            ));
         List<Request> requests = requestService.getAllRequests();
 
         assertNotNull(requests);
