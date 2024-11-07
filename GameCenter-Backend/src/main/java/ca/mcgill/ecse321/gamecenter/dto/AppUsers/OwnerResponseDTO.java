@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.dto.AppUsers;
 
 import ca.mcgill.ecse321.gamecenter.model.Employee;
+import ca.mcgill.ecse321.gamecenter.model.Owner;
 
 public class OwnerResponseDTO {
     private int id;
@@ -11,11 +12,11 @@ public class OwnerResponseDTO {
     public OwnerResponseDTO() {
     }
 
-    public OwnerResponseDTO(Employee employee) {
-        this.id = employee.getId();
-        this.username = employee.getUsername();
-        this.email = employee.getEmail();
-        this.isActive = employee.getIsActive();
+    public OwnerResponseDTO(Owner owner) {
+        this.id = owner.getId();
+        this.username = owner.getUsername();
+        this.email = owner.getEmail();
+        this.isActive = owner.getIsActive();
     }
 
     public int getId() { return this.id; }

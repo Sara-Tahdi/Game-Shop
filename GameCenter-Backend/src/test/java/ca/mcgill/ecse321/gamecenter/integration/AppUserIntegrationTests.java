@@ -1,10 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.integration;
 
 
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientRequestDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientResponseDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeRequestDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.AppUsers.*;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import org.junit.jupiter.api.*;
@@ -50,7 +47,7 @@ public class AppUserIntegrationTests {
 
     @BeforeAll
     public void createOwner() {
-        appUserRepository.save(new Owner(VALID_OWNER_EMAIL, VALID_OWNER_USERNAME, VALID_OWNER_PASSWORD));
+        appUserRepository.save(new Owner(VALID_OWNER_EMAIL, VALID_OWNER_USERNAME, Encryption.encryptDecrypt(VALID_OWNER_PASSWORD)));
     }
 
     @AfterAll
@@ -314,5 +311,37 @@ public class AppUserIntegrationTests {
         assertEquals(this.appUserEmail, body.getEmail());
         assertEquals(this.appUserUsername, body.getUsername());
         assertFalse(body.getIsActive());
+    }
+
+    @Test
+    @Order(15)
+    public void testUpdateOwnerPassword() {
+        String newPassword = "Billionair";
+
+        OwnerRequestDTO ownerRequestDTO = new OwnerRequestDTO(
+                VALID_OWNER_EMAIL,
+                VALID_OWNER_USERNAME,
+                newPassword
+        );
+
+        String url = String.format("/users/owner/update/%s", VALID_OWNER_PASSWORD);
+
+        HttpEntity<OwnerRequestDTO> updateEntity = new HttpEntity<>(ownerRequestDTO);
+
+        ResponseEntity<OwnerResponseDTO> res = client.exchange(
+                url,
+                HttpMethod.PUT,
+                updateEntity,
+                OwnerResponseDTO.class
+        );
+
+        // No sending back passwords --> can't test if it was changed
+        // BUT we know if method didn't throw error --> method succeeded
+
+        assertNotNull(res);
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+        OwnerResponseDTO body = res.getBody();
+        assertEquals(VALID_OWNER_EMAIL, body.getEmail());
+        assertEquals(VALID_OWNER_USERNAME, body.getUsername());
     }
 }

@@ -14,6 +14,8 @@ public class GameResponseDTO {
     private Game.GeneralFeeling publicOpinion;
     private GameCategory category;
 
+    public GameResponseDTO() {}
+
     public GameResponseDTO(Game g) {
         this.id = g.getId();
         this.title = g.getTitle();
