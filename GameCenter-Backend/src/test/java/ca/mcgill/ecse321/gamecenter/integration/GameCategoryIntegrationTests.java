@@ -1,7 +1,9 @@
 package ca.mcgill.ecse321.gamecenter.integration;
 
-import ca.mcgill.ecse321.gamecenter.dto.GameCategoryDTO;
+import ca.mcgill.ecse321.gamecenter.dto.GameCategory.GameCategoryRequestDTO;
+import ca.mcgill.ecse321.gamecenter.dto.GameCategory.GameCategoryResponseDTO;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -13,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,21 +38,26 @@ public class GameCategoryIntegrationTests {
         gameCategoryRepository.deleteAll();  // Clear the database before each test
     }
 
+    @AfterAll
+    public void cleanup() {
+        gameCategoryRepository.deleteAll();  // Clear the database after all tests have completed
+    }
+
     @Test
     @Order(1)
     public void testCreateGameCategory() {
         // Arrange
-        GameCategoryDTO requestDto = new GameCategoryDTO();
+        GameCategoryRequestDTO requestDto = new GameCategoryRequestDTO();
         requestDto.setCategory(VALID_CATEGORY_NAME);
 
         // Act
-        ResponseEntity<GameCategoryDTO> response = restTemplate.postForEntity(BASE_URL + "/create", requestDto, GameCategoryDTO.class);
+        ResponseEntity<GameCategoryResponseDTO> response = restTemplate.postForEntity(BASE_URL + "/create", requestDto, GameCategoryResponseDTO.class);
 
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        GameCategoryDTO createdCategory = response.getBody();
+        GameCategoryResponseDTO createdCategory = response.getBody();
         assertNotNull(createdCategory);
         assertEquals(VALID_CATEGORY_NAME, createdCategory.getCategory());
         assertTrue(createdCategory.getId() > 0);
@@ -67,13 +72,13 @@ public class GameCategoryIntegrationTests {
         testCreateGameCategory();
 
         // Act
-        ResponseEntity<GameCategoryDTO> response = restTemplate.getForEntity(BASE_URL + "/" + createdCategoryId, GameCategoryDTO.class);
+        ResponseEntity<GameCategoryResponseDTO> response = restTemplate.getForEntity(BASE_URL + "/" + createdCategoryId, GameCategoryResponseDTO.class);
 
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        GameCategoryDTO retrievedCategory = response.getBody();
+        GameCategoryResponseDTO retrievedCategory = response.getBody();
         assertNotNull(retrievedCategory);
         assertEquals(createdCategoryId, retrievedCategory.getId());
         assertEquals(VALID_CATEGORY_NAME, retrievedCategory.getCategory());
@@ -87,20 +92,20 @@ public class GameCategoryIntegrationTests {
 
         // Arrange
         String updatedCategoryName = "Puzzle";
-        GameCategoryDTO updateDto = new GameCategoryDTO();
+        GameCategoryRequestDTO updateDto = new GameCategoryRequestDTO();
         updateDto.setCategory(updatedCategoryName);
 
         // Act
-        restTemplate.postForEntity(BASE_URL + "/" + createdCategoryId, updateDto, GameCategoryDTO.class);
+        restTemplate.postForEntity(BASE_URL + "/" + createdCategoryId, updateDto, GameCategoryResponseDTO.class);
 
         // Retrieve updated category to verify changes
-        ResponseEntity<GameCategoryDTO> response = restTemplate.getForEntity(BASE_URL + "/" + createdCategoryId, GameCategoryDTO.class);
+        ResponseEntity<GameCategoryResponseDTO> response = restTemplate.getForEntity(BASE_URL + "/" + createdCategoryId, GameCategoryResponseDTO.class);
 
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        GameCategoryDTO updatedCategory = response.getBody();
+        GameCategoryResponseDTO updatedCategory = response.getBody();
         assertNotNull(updatedCategory);
         assertEquals(createdCategoryId, updatedCategory.getId());
         assertEquals(updatedCategoryName, updatedCategory.getCategory());
@@ -112,18 +117,18 @@ public class GameCategoryIntegrationTests {
         // First, create two categories
         testCreateGameCategory();
 
-        GameCategoryDTO secondCategory = new GameCategoryDTO();
+        GameCategoryRequestDTO secondCategory = new GameCategoryRequestDTO();
         secondCategory.setCategory("Sports");
-        restTemplate.postForEntity(BASE_URL + "/create", secondCategory, GameCategoryDTO.class);
+        restTemplate.postForEntity(BASE_URL + "/create", secondCategory, GameCategoryResponseDTO.class);
 
         // Act
-        ResponseEntity<GameCategoryDTO[]> response = restTemplate.getForEntity(BASE_URL, GameCategoryDTO[].class);
+        ResponseEntity<GameCategoryResponseDTO[]> response = restTemplate.getForEntity(BASE_URL, GameCategoryResponseDTO[].class);
 
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        GameCategoryDTO[] categories = response.getBody();
+        GameCategoryResponseDTO[] categories = response.getBody();
         assertNotNull(categories);
         assertEquals(2, categories.length);
     }
