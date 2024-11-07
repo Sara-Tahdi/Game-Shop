@@ -12,9 +12,9 @@ public class OwnerRequestDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
-    public OwnerRequestDTO(String username, String email, String password) {
-        this.username = username;
+    public OwnerRequestDTO(String email, String username, String password) {
         this.email = email;
+        this.username = username;
         this.password = password;
     }
 
