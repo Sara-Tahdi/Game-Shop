@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.dto.AppUsers;
 
-import ca.mcgill.ecse321.gamecenter.model.Employee;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
 
 public class OwnerResponseDTO {

@@ -2,8 +2,6 @@ package ca.mcgill.ecse321.gamecenter.dto.Purchase;
 
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientResponseDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameResponseDTO;
-import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.Purchase;
 
 import java.sql.Date;
