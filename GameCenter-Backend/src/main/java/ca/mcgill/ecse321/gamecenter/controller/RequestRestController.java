@@ -166,22 +166,5 @@ public class RequestRestController {
     public RequestResponseDTO denyRequest(@PathVariable int id) {
         Request r = requestService.handleRequestApproval(id, false);
         return new RequestResponseDTO(r);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
+    } 
 }

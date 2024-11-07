@@ -5,6 +5,8 @@ import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientResponseDTO;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.AppUsers.LoginRequestDTO;
+import ca.mcgill.ecse321.gamecenter.dto.AppUsers.AppUserResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import org.junit.jupiter.api.*;
@@ -297,6 +299,21 @@ public class AppUserIntegrationTests {
 
     @Test
     @Order(14)
+    public void testLoginUser() {
+        LoginRequestDTO login = new LoginRequestDTO(this.appUserEmail, "reehheeehee");
+
+        ResponseEntity<AppUserResponseDTO> res = client.postForEntity("/users/login", login, AppUserResponseDTO.class);
+
+        assertNotNull(res);
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+        AppUserResponseDTO body = res.getBody();
+        assertEquals(this.appUserId, body.getId());
+        assertEquals(this.appUserEmail, body.getEmail());
+        assertEquals(this.appUserUsername, body.getUsername());
+    }
+
+    @Test
+    @Order(15)
     public void testBanClient() {
         String url = String.format("/users/client/ban/%s", this.appUserUsername);
 
