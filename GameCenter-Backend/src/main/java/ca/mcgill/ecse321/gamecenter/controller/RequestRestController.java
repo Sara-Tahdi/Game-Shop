@@ -70,14 +70,12 @@ public class RequestRestController {
                 .collect(Collectors.toList());
     }
 
-    // TODO: Jumped over
     @GetMapping(value = "/requests/id/{id}")
     public RequestResponseDTO getRequestById(@PathVariable int id) {
         Request r = requestService.getRequestById(id);
         return new RequestResponseDTO(r);
     }
 
-    // TODO: Jumped over
     @GetMapping(value = "/requests/creator/id/{createdRequestId}")
     public List<RequestResponseDTO> getRequestsByCreatedRequestId(@PathVariable int createdRequestId) {
         List<Request> requests = requestService.getRequestsByCreatedRequestId(createdRequestId);
@@ -158,13 +156,13 @@ public class RequestRestController {
                 .collect(Collectors.toList());
     }
 
-    @PutMapping(value = "/requests/management/approve/{id}")
+    @PutMapping(value = "/requests/approve/{id}")
     public RequestResponseDTO approveRequest(@PathVariable int id) {
         Request r = requestService.handleRequestApproval(id, true);
         return new RequestResponseDTO(r);
     }
 
-    @PutMapping(value = "/requests/management/deny/{id}")
+    @PutMapping(value = "/requests/deny/{id}")
     public RequestResponseDTO denyRequest(@PathVariable int id) {
         Request r = requestService.handleRequestApproval(id, true);
         return new RequestResponseDTO(r);

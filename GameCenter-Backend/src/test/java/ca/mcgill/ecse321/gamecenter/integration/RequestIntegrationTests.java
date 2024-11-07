@@ -284,7 +284,7 @@ public class RequestIntegrationTests {
         ResponseEntity<RequestResponseDTO[]> response = client.getForEntity("/requests", RequestResponseDTO[].class);
 
         // Act
-        ResponseEntity<RequestResponseDTO[]> response2 = client.getForEntity("/requests/id/" + response.getBody()[0].getCreatedRequest().getId(), RequestResponseDTO[].class);
+        ResponseEntity<RequestResponseDTO[]> response2 = client.getForEntity("/requests/creator/id/" + response.getBody()[0].getCreatedRequest().getId(), RequestResponseDTO[].class);
 
         // Assert
         assertNotNull(response2);
@@ -311,5 +311,96 @@ public class RequestIntegrationTests {
         assertEquals(response.getBody()[0].getId(), body.getId());
     }
 
+    @Test
+    @Order(12)
+    public void testGetRequestsByGameTitle() {
+        // Act
+        ResponseEntity<GameRequestResponseDTO[]> response = client.getForEntity("/requests/game/title/" + VALID_GAME_TITLE_1, GameRequestResponseDTO[].class);
 
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<GameRequestResponseDTO> body = Arrays.stream(response.getBody()).toList();
+        assertNotNull(body);
+        assertEquals(1, body.size());
+    }
+
+    @Test
+    @Order(13)
+    public void testGetRequestsByGameId() {
+        // Arrange
+        ResponseEntity<GameRequestResponseDTO[]> response = client.getForEntity("/requests/game", GameRequestResponseDTO[].class);
+
+        // Act
+        ResponseEntity<GameRequestResponseDTO[]> response2 = client.getForEntity("/requests/game/id/" + response.getBody()[0].getGame().getId(), GameRequestResponseDTO[].class);
+
+        // Assert
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        List<GameRequestResponseDTO> body = Arrays.stream(response2.getBody()).toList();
+        assertNotNull(body);
+        assertEquals(1, body.size());
+    }
+
+    @Test
+    @Order(14)
+    public void testGetRequestsByUserFacingJudgementEmail() {
+        // Act
+        ResponseEntity<UserRequestResponseDTO[]> response = client.getForEntity("/requests/user/email/" + VALID_CLIENT_EMAIL, UserRequestResponseDTO[].class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<UserRequestResponseDTO> body = Arrays.stream(response.getBody()).toList();
+        assertNotNull(body);
+        assertEquals(1, body.size());
+    }
+
+    @Test
+    @Order(15)
+    public void testGetRequestsByUserFacingJudgementId() {
+        // Arrange
+        ResponseEntity<UserRequestResponseDTO[]> response = client.getForEntity("/requests/user", UserRequestResponseDTO[].class);
+
+        // Act
+        ResponseEntity<UserRequestResponseDTO[]> response2 = client.getForEntity("/requests/user/id/" + response.getBody()[0].getUserFacingJudgement().getId(), UserRequestResponseDTO[].class);
+
+        // Assert
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        List<UserRequestResponseDTO> body = Arrays.stream(response2.getBody()).toList();
+        assertNotNull(body);
+        assertEquals(1, body.size());
+    }
+
+    @Test
+    @Order(16)
+    public void testGetRequestsByUserFacingJudgementUsername() {
+        // Act
+        ResponseEntity<UserRequestResponseDTO[]> response = client.getForEntity("/requests/user/username/" + VALID_CLIENT_USERNAME, UserRequestResponseDTO[].class);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<UserRequestResponseDTO> body = Arrays.stream(response.getBody()).toList();
+        assertNotNull(body);
+        assertEquals(1, body.size());
+    }
+
+    @Test
+    @Order(17)
+    public void testApproveRequest() {
+        // Arrange
+        ResponseEntity<RequestResponseDTO[]> response = client.getForEntity("/requests", RequestResponseDTO[].class);
+
+        // Act
+        ResponseEntity<RequestResponseDTO> response2 = client.getForEntity("/requests/approve/" + response.getBody()[0].getId(), RequestResponseDTO.class);
+
+        // Assert
+        assertNotNull(response2);
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        RequestResponseDTO body = response2.getBody();
+        assertNotNull(body);
+        assertEquals("APPROVED", body.getStatus());
+    }
 }
