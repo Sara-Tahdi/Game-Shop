@@ -25,6 +25,8 @@ public class RequestService {
     private ClientRepository clientRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private AppUserService appUserService;
     
     public List<Request> getAllRequests() {
         List<Request> requests = new ArrayList<>();
@@ -196,7 +198,10 @@ public class RequestService {
         Request.Status newStatus = approval ? Request.Status.APPROVED : Request.Status.DENIED;
         request.setStatus(newStatus);
 
-        // TODO: Handle banning users and removing/adding games
+        if (approval && request instanceof UserRequest) {
+            appUserService.deactivateClientAccountByUsername(((UserRequest) request).getUserFacingJudgement().getUsername());
+        }
+
         return requestRepository.save(request);
     }
 }
