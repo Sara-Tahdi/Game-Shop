@@ -144,5 +144,4 @@ public class AppUserRestController {
         AppUser user = appUserService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
         return new AppUserResponseDTO(user);
     }
-
 }
