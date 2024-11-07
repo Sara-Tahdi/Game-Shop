@@ -14,7 +14,8 @@ public class GameRequestResponseDTO {
     private String gameTitle;
     private int gameId;
 
-    public GameRequestResponseDTO() {}
+    @SuppressWarnings("unused")
+    private GameRequestResponseDTO() {}
 
     public GameRequestResponseDTO(GameRequest request) {
         this.id = request.getId();
@@ -37,4 +38,14 @@ public class GameRequestResponseDTO {
     public String getRequestType() { return this.gameRequestType; }
     public String getGameTitle() { return this.gameTitle; }
     public int getGameId() { return this.gameId; }
+
+    public void setId(int id) { this.id = id; }
+    public void setStatus(String status) { this.status = status; }
+    public void setReason(String reason) { this.reason = reason; }
+    public void setCreatedRequestId(int createdRequestId) { this.createdRequestId = createdRequestId; }
+    public void setCreatedRequestUsername(String createdRequestUsername) { this.createdRequestUsername = createdRequestUsername; }
+    public void setCreatedRequestEmail(String createdRequestEmail) { this.createdRequestEmail = createdRequestEmail; }
+    public void setRequestType(String gameRequestType) { this.gameRequestType = gameRequestType; }
+    public void setGameTitle(String gameTitle) { this.gameTitle = gameTitle; }
+    public void setGameId(int gameId) { this.gameId = gameId; }
 }

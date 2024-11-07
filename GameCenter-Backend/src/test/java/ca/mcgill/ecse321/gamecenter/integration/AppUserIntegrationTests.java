@@ -4,7 +4,6 @@ package ca.mcgill.ecse321.gamecenter.integration;
 import ca.mcgill.ecse321.gamecenter.dto.AppUsers.*;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
-import ca.mcgill.ecse321.gamecenter.utilities.Encryption;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

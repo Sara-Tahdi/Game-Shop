@@ -138,4 +138,11 @@ public class AppUserRestController {
         Client c = appUserService.getClientByEmail(email);
         return new ClientResponseDTO(c);
     }
+
+    @PostMapping(value = "/users/login")
+    public AppUserResponseDTO loginUser(@Validated @RequestBody LoginRequestDTO loginRequest) {
+        AppUser user = appUserService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+        return new AppUserResponseDTO(user);
+    }
+
 }

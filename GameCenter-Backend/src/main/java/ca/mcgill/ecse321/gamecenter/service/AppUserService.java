@@ -247,4 +247,24 @@ public class AppUserService {
     public List<AppUser> getAllEmployee() {
         return appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
     }
+
+    @Transactional
+    public AppUser loginUser(String email, String password) {
+        AppUser user = appUserRepository.findAppUserByEmail(email).orElse(null);
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid email and/or password.");
+        }
+    
+        if (!password.equals(Encryption.encryptDecrypt(user.getPassword()))) {
+            throw new IllegalArgumentException("Invalid email and/or password.");
+        }
+    
+        return user;
+    }
+    
+
+
+
+
+
 }
