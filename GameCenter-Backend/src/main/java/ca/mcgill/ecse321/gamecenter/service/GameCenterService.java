@@ -4,12 +4,12 @@ import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 @Service
 public class GameCenterService {
     @Autowired
     private GameCenterRepository gameCenterRepository;
 
+    @Transactional
     public GameCenter saveOrUpdateGameCenter(GameCenter gameCenter) {
         if (gameCenter == null||gameCenter.getName()==null||gameCenter.getName().isEmpty()||gameCenter.getOpen()==null|| gameCenter.getClose() == null) {
             throw new IllegalArgumentException("GameCenter name, opening time, and closing time are required.");

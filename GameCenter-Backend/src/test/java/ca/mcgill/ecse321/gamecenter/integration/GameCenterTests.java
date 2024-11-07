@@ -1,24 +1,18 @@
 package ca.mcgill.ecse321.gamecenter.integration;
 import java.sql.Time;
-import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.gamecenter.dto.GameCenterDTO;
-import ca.mcgill.ecse321.gamecenter.model.Game;
-import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
