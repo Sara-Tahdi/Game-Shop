@@ -164,6 +164,9 @@ public class AppUserService {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
         }
 
+        System.out.println(oldPassword);
+        System.out.println(Encryption.encryptDecrypt(a.getPassword()));
+
         if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
             throw new IllegalArgumentException("Incorrect password");
         }
