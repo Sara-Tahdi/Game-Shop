@@ -14,7 +14,7 @@ import java.sql.Time;
 import java.util.Optional;
 
 @SpringBootTest
-class GameCenterServiceTest {
+class GameCenterServiceTests {
 
     // Mocking the repository to simulate database operations
     @Mock

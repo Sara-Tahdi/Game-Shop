@@ -27,12 +27,10 @@ public class ReviewService {
     public Review createReview(
             String author,
             String reviewContent,
-            String managerReply,
             Review.Rating stars,
             Game game)
     {
-        // TODO: Change the umple code so that it doesn't take thumbs up/down in the review constructor
-        Review review = new Review(author, reviewContent, managerReply, stars, game);
+        Review review = new Review(author, reviewContent, null, stars, game);
         return reviewRepository.save(review);
     }
 
