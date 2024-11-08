@@ -4,22 +4,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCenter;
 import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
-import ca.mcgill.ecse321.gamecenter.service.GameCenterService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Time;
 import java.util.Optional;
 
 @SpringBootTest
-class GameCenterServiceTest {
+class GameCenterServiceTests {
 
     // Mocking the repository to simulate database operations
     @Mock

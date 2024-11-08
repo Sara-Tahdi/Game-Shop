@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.gamecenter.dto.GameCenterDTO;
 import ca.mcgill.ecse321.gamecenter.repository.GameCenterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterAll;
+import java.sql.Time;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.sql.Time;
 
 import static org.junit.jupiter.api.Assertions.*;
 

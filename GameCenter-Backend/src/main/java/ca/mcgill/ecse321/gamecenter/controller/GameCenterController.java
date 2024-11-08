@@ -5,9 +5,6 @@ import ca.mcgill.ecse321.gamecenter.service.GameCenterService;
 import ca.mcgill.ecse321.gamecenter.dto.GameCenterDTO;
 import ca.mcgill.ecse321.gamecenter.model.GameCenter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/gamecenter")
 public class GameCenterController {
