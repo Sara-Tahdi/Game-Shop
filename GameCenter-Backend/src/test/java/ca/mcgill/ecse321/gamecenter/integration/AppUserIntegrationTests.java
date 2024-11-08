@@ -336,15 +336,14 @@ public class AppUserIntegrationTests {
         OwnerRequestDTO ownerRequestDTO = new OwnerRequestDTO(
                 VALID_OWNER_EMAIL,
                 VALID_OWNER_USERNAME,
-                newPassword
+                newPassword,
+                VALID_OWNER_PASSWORD
         );
-
-        String url = String.format("/users/owner/update/%s", VALID_OWNER_PASSWORD);
 
         HttpEntity<OwnerRequestDTO> updateEntity = new HttpEntity<>(ownerRequestDTO);
 
         ResponseEntity<OwnerResponseDTO> res = client.exchange(
-                url,
+                "/users/owner/update",
                 HttpMethod.PUT,
                 updateEntity,
                 OwnerResponseDTO.class

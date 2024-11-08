@@ -18,13 +18,13 @@ public class AppUserRestController {
     @Autowired
     private AppUserService appUserService;
 
-    @PutMapping(value = "/users/owner/update/{oldPassword}")
-    public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate, @PathVariable String oldPassword) {
+    @PutMapping(value = "/users/owner/update")
+    public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate) {
         Owner o = appUserService.updateOwnerAccount(
                 ownerToUpdate.getEmail(),
                 ownerToUpdate.getUsername(),
-                ownerToUpdate.getPassword(),
-                oldPassword
+                ownerToUpdate.getNewPassword(),
+                ownerToUpdate.getPassword()
         );
         return new OwnerResponseDTO(o);
     }

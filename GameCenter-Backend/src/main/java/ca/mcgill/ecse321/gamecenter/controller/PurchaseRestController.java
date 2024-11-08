@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.gamecenter.controller;
 
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.RefundRequestDTO;
 import ca.mcgill.ecse321.gamecenter.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -22,9 +23,9 @@ public class PurchaseRestController {
                 .collect(Collectors.toList());
     }
 
-    @PutMapping("/purchases/{purchaseId}/refund/{reason}")
-    public PurchaseResponseDTO refundPurchase(@PathVariable int purchaseId, @PathVariable String reason) {
-        return new PurchaseResponseDTO(purchaseService.returnGame(purchaseId, reason));
+    @PutMapping("/purchases/refund/{purchaseId}")
+    public PurchaseResponseDTO refundPurchase(@Validated @RequestBody RefundRequestDTO refundReason, @PathVariable int purchaseId) {
+        return new PurchaseResponseDTO(purchaseService.returnGame(purchaseId, refundReason.getReason()));
     }
 
     @GetMapping("/purchases/{clientId}")
