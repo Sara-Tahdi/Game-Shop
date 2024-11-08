@@ -14,6 +14,8 @@ public class AppUserService {
     @Autowired
     private AppUserRepository appUserRepository;
 
+    private boolean isUserActive(AppUser a) { return a.isIsActive(); }
+
     public Client getClientById(int id) {
         AppUser a = appUserRepository.findAppUserById(id).orElse(null);
         if (!(a instanceof Client)) {
@@ -84,20 +86,28 @@ public class AppUserService {
             throw new IllegalArgumentException("Password too short");
         }
 
-        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress, 0);
+        Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress);
         return appUserRepository.save(c);
     }
 
     @Transactional
-    public Client updateClientAccount(String email, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress) {
+    public Client updateClientAccount(String email, String newUsername, String newPassword, String newPhoneNumber, String newDeliveryAddress, String oldPassword) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
         }
 
+        if (!isUserActive(a)) {
+            throw new IllegalArgumentException("This Client is not active");
+        }
+
         AppUser testEmail = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testEmail != null && testEmail.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
+        }
+
+        if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         if (newPassword.length() < 8) {
@@ -124,16 +134,6 @@ public class AppUserService {
         return appUserRepository.save(c);
     }
 
-    @Transactional
-    public Client flagClientByUsername(String username) {
-        Client c = (Client) appUserRepository.findAppUserByUsername(username).orElse(null);
-        if (c == null) {
-            throw new IllegalArgumentException("There is no Client with username: " + username);
-        }
-        c.setNumberOfFlags(c.getNumberOfFlags() + 1);
-        return appUserRepository.save(c);
-    }
-
     public List<AppUser> findAllClients() {
         return appUserRepository.findAppUserByUserType(Client.class).orElse(null);
     }
@@ -153,7 +153,7 @@ public class AppUserService {
     }
 
     @Transactional
-    public Owner updateOwnerAccount(String email, String newUsername, String newPassword) {
+    public Owner updateOwnerAccount(String email, String newUsername, String newPassword, String oldPassword) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
@@ -162,6 +162,13 @@ public class AppUserService {
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
+        }
+
+        System.out.println(oldPassword);
+        System.out.println(Encryption.encryptDecrypt(a.getPassword()));
+
+        if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         if (newPassword.length() < 8) {
@@ -198,15 +205,23 @@ public class AppUserService {
     }
 
     @Transactional
-    public Employee updateEmployeeAccount(String email, String newUsername, String newPassword) {
+    public Employee updateEmployeeAccount(String email, String newUsername, String newPassword, String oldPassword) {
         AppUser a = appUserRepository.findAppUserByEmail(email).orElse(null);
         if (a == null) {
             throw new IllegalArgumentException("There is no User with email: " + email);
         }
 
+        if (!isUserActive(a)) {
+            throw new IllegalArgumentException("This Employee is not active");
+        }
+
         AppUser testUsername = appUserRepository.findAppUserByUsername(newUsername).orElse(null);
         if (testUsername != null && testUsername.getId() != a.getId()) {
             throw new IllegalArgumentException("There already exists a User with username: " + newUsername);
+        }
+
+        if (!oldPassword.equals(Encryption.encryptDecrypt(a.getPassword()))) {
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         if (newPassword.length() < 8) {
@@ -232,4 +247,24 @@ public class AppUserService {
     public List<AppUser> getAllEmployee() {
         return appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
     }
+
+    @Transactional
+    public AppUser loginUser(String email, String password) {
+        AppUser user = appUserRepository.findAppUserByEmail(email).orElse(null);
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid email and/or password.");
+        }
+    
+        if (!password.equals(Encryption.encryptDecrypt(user.getPassword()))) {
+            throw new IllegalArgumentException("Invalid email and/or password.");
+        }
+    
+        return user;
+    }
+    
+
+
+
+
+
 }

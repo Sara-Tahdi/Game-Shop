@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.dto.Purchase;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public class PurchaseRequestDTO {
@@ -8,6 +9,7 @@ public class PurchaseRequestDTO {
     @NotBlank(message = "Game is required")
     private int gameId;
     @NotBlank(message = "Game copies is required")
+    @Min(value = 1, message = "At least 1 copy")
     private int copies;
 
     public PurchaseRequestDTO(int clientId, int gameId, int copies) {

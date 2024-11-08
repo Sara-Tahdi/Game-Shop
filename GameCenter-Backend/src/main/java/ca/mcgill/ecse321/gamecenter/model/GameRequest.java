@@ -32,9 +32,9 @@ public class GameRequest extends Request
     super();
   }
 
-  public GameRequest(Status aStatus, Staff aCreatedRequest, Type aType, Game aGame)
+  public GameRequest(Status aStatus, String aReason, Staff aCreatedRequest, Type aType, Game aGame)
   {
-    super(aStatus, aCreatedRequest);
+    super(aStatus, aReason, aCreatedRequest);
     type = aType;
     if (!setGame(aGame))
     {

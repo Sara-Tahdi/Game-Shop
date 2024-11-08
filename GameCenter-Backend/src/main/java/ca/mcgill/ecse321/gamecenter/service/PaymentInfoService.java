@@ -26,8 +26,23 @@ public class PaymentInfoService {
         Integer expiryYear,
         Client client)
     {
+        if (cardNumber.length() == 16) {
+            throw new IllegalArgumentException("Card number should have 16 digits");
+        }
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, client);
+
+        PaymentInfo paymentInfoFromRepo = paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber).orElse(null);
+        if (paymentInfoFromRepo != null) {
+            throw new IllegalArgumentException("A payment info with card number "+cardNumber+" already exists in the system.");
+        }
         return paymentInfoRepository.save(paymentInfo);
+    }
+
+    @Transactional
+    public void deletePaymentInfo(String cardNumber) {
+        PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber).orElse(null);
+        if (paymentInfo == null) {throw new IllegalArgumentException("No payment info with card number: " + cardNumber);}
+        paymentInfoRepository.delete(paymentInfo);
     }
 
 }

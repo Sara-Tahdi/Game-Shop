@@ -16,7 +16,7 @@ public class ClientRequestDTO {
     @NotBlank(message = "Delivery address is required")
     private String deliveryAddress;
 
-    public ClientRequestDTO(String username, String email, String password, String phoneNumber, String deliveryAddress) {
+    public ClientRequestDTO(String email, String username, String password, String phoneNumber, String deliveryAddress) {
         this.username = username;
         this.email = email;
         this.password = password;

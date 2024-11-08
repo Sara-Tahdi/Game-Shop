@@ -33,7 +33,6 @@ class Client {
   isA AppUser;
   phoneNumber;
   deliveryAddress;
-  Integer numberOfFlags;
 }
 
 class Promotion {
@@ -70,6 +69,7 @@ class Request {
   Integer id;
   enum Status {PENDING, APPROVED, DENIED};
   Status status;
+  reason;
 
   * -> 1 Staff createdRequest;
 }
