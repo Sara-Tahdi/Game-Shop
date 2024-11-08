@@ -74,7 +74,7 @@ public class PurchaseServiceTests {
 
         int copies = 2;
         float total = Round.round(copies * g.getPrice());
-        int trackingCode = 3513;
+        String trackingCode = "a3451n14m2";
         Date date = Date.valueOf(LocalDate.now());
         Purchase p = new Purchase(total, copies, trackingCode, date, g, c);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p);
@@ -217,7 +217,7 @@ public class PurchaseServiceTests {
 
         int copies1 = 3;
         float total1 = Round.round(g1.getPrice() * copies1);
-        int trackingNumber1 = 391;
+        String trackingNumber1 = "a3451n14m2";
         Purchase p1 = new Purchase(total1, copies1, trackingNumber1, Date.valueOf(LocalDate.now()), g1, c);
         p1.setId(7);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p1);
@@ -225,7 +225,7 @@ public class PurchaseServiceTests {
 
         int copies2 = 2;
         float total2 = Round.round(g2.getPrice() * copies2);
-        int trackingNumber2 = 57539;
+        String trackingNumber2 = "38aojvq9d2";
         Purchase p2 = new Purchase(total2, copies2, trackingNumber2, Date.valueOf(LocalDate.now().minusDays(100)), g2, c);
         p2.setId(47381);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p2);
@@ -280,7 +280,7 @@ public class PurchaseServiceTests {
 
         int copies1 = 3;
         float total1 = Round.round(g1.getPrice() * copies1);
-        int trackingNumber1 = 391;
+        String trackingNumber1 = "a3451n14m2";
         Purchase p1 = new Purchase(total1, copies1, trackingNumber1, Date.valueOf(LocalDate.now()), g1, c);
         p1.setId(7);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p1);
@@ -288,7 +288,7 @@ public class PurchaseServiceTests {
 
         int copies2 = 2;
         float total2 = Round.round(g2.getPrice() * copies2);
-        int trackingNumber2 = 57539;
+        String trackingNumber2 = "38aojvq9d2";
         Purchase p2 = new Purchase(total2, copies2, trackingNumber2, Date.valueOf(LocalDate.now().minusDays(100)), g2, c);
         p2.setId(47381);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p2);

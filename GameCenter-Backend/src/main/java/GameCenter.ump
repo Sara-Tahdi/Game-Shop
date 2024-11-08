@@ -93,7 +93,7 @@ class Purchase {
   Integer id;
   Float totalPrice;
   Integer copies;
-  Integer trackingCode;
+  String trackingCode;
   Date purchaseDate;
   refundReason;
 
