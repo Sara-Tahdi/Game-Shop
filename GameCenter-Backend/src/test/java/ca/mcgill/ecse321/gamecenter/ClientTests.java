@@ -191,7 +191,7 @@ public class ClientTests {
         purchase.setTotalPrice(game.getPrice());
         purchase.setCopies(1);
         purchase.setPurchaseDate(Date.valueOf(LocalDate.now()));
-        purchase.setTrackingCode(3513531);
+        purchase.setTrackingCode("a3451n14m2");
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
 

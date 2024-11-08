@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
 import ca.mcgill.ecse321.gamecenter.utilities.Round;
+import ca.mcgill.ecse321.gamecenter.utilities.TrackingCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class PurchaseService {
 
         float total = Round.round(g.getPrice() * aCopies);
         int copies = aCopies;
-        int trackingCode = random.nextInt() & Integer.MAX_VALUE; // avoid negative numbers
+        String trackingCode = TrackingCode.nextCode(); // avoid negative numbers
         Date purchaseDate = Date.valueOf(LocalDate.now());
 
         Purchase p = new Purchase(total, copies, trackingCode, purchaseDate, g, c);
