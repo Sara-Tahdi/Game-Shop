@@ -42,7 +42,7 @@ public class PaymentInfoServiceTests {
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String cardNumber = "12830142";
-        Integer cvv = 111;
+        String cvv = "111";
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
@@ -73,7 +73,7 @@ public class PaymentInfoServiceTests {
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String cardNumber = "12830142";
-        Integer cvv = 111;
+        String cvv = "111";
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
@@ -110,7 +110,7 @@ public class PaymentInfoServiceTests {
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String cardNumber = "12830142";
-        Integer cvv = 111;
+        String cvv = "111";
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
@@ -145,7 +145,7 @@ public class PaymentInfoServiceTests {
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String cardNumber = "12830142";
-        Integer cvv = 111;
+        String cvv = "111";
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
@@ -171,7 +171,7 @@ public class PaymentInfoServiceTests {
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String cardNumber = "12830142";
-        Integer cvv = 111;
+        String cvv = "111";
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);
@@ -203,7 +203,7 @@ public class PaymentInfoServiceTests {
         Client createdClient = appUserService.createClientAccount(email, username, password, phoneNumber, deliveryAddress);
 
         String cardNumber = "12830142";
-        Integer cvv = 111;
+        String cvv = "111";
         Integer expiryMonth = 12;
         Integer expiryYear = 2029;
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, createdClient);

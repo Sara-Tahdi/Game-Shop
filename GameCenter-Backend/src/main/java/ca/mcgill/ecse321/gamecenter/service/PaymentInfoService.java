@@ -21,7 +21,7 @@ public class PaymentInfoService {
     @Transactional
     public PaymentInfo savePaymentInfo(
         String cardNumber,
-        Integer cvv,
+        String cvv,
         Integer expiryMonth,
         Integer expiryYear,
         Client client)
