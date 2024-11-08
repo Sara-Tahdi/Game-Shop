@@ -1,21 +1,18 @@
-package ca.mcgill.ecse321.gamecenter.dto;
+package ca.mcgill.ecse321.gamecenter.dto.GameCategory;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
+@SuppressWarnings("unused")
 
-public class GameCategoryDTO {
-    @SuppressWarnings("unused")
+public class GameCategoryResponseDTO {
     private int id;
     private String category;
 
-    public GameCategoryDTO() {
-    }
+    public GameCategoryResponseDTO() {}
 
-    public GameCategoryDTO(GameCategory gameCategory) {
+    public GameCategoryResponseDTO(GameCategory gameCategory) {
         if (gameCategory != null) {
-
-            this.category = gameCategory.getCategory();
             this.id = gameCategory.getId();
-
+            this.category = gameCategory.getCategory();
         }
     }
 
@@ -23,13 +20,14 @@ public class GameCategoryDTO {
         return id;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
-    }
     public void setCategory(String category) {
         this.category = category;
     }
