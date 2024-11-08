@@ -8,13 +8,14 @@ public class PaymentInfoRequestDTO {
     @Length(min = 16, max = 16, message = "Card number must be 16 digits")
     private String cardNumber;
     @NotBlank(message = "CVV is required")
-    private int cvv;
+    @Length(min = 3, max = 3, message = "CVV must be 3 digits")
+    private String cvv;
     @NotBlank(message = "Expiry month is required")
     private int expiryMonth;
     @NotBlank(message = "Expiry year is required")
     private int expiryYear;
 
-    public PaymentInfoRequestDTO(String cardNumber, int cvv, int expiryMonth, int expiryYear) {
+    public PaymentInfoRequestDTO(String cardNumber, String cvv, int expiryMonth, int expiryYear) {
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expiryMonth = expiryMonth;
@@ -22,7 +23,7 @@ public class PaymentInfoRequestDTO {
     }
 
     public String getCardNumber() { return this.cardNumber; }
-    public int getCvv() { return this.cvv; }
+    public String getCvv() { return this.cvv; }
     public int getExpiryMonth() { return this.expiryMonth; }
     public int getExpiryYear() { return this.expiryYear; }
 
