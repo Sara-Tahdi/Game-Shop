@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentInfoService {
     @Autowired
@@ -36,10 +38,16 @@ public class PaymentInfoService {
     }
 
     @Transactional
-    public void deletePaymentInfo(String cardNumber) {
-        PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber).orElse(null);
-        if (paymentInfo == null) {throw new IllegalArgumentException("No payment info with card number: " + cardNumber);}
+    public void deletePaymentInfo(int paymentInfoId) {
+        PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfoId).orElse(null);
+        if (paymentInfo == null) {throw new IllegalArgumentException("No payment info with id: " + paymentInfoId);}
         paymentInfoRepository.delete(paymentInfo);
+    }
+
+    public List<PaymentInfo> getPaymentInfosByClient(int clientId) {
+        List<PaymentInfo> paymentInfos = paymentInfoRepository.findPaymentInfosByClientId(clientId).orElse(null);
+        if (paymentInfos == null) {throw new IllegalArgumentException("Client: " + clientId + "has no payment infos");}
+        return paymentInfos;
     }
 
 }
