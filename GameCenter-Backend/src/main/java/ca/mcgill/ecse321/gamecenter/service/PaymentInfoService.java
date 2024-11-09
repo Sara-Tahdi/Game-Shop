@@ -26,9 +26,6 @@ public class PaymentInfoService {
         Integer expiryYear,
         Client client)
     {
-        if (cardNumber.length() == 16) {
-            throw new IllegalArgumentException("Card number should have 16 digits");
-        }
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, client);
 
         PaymentInfo paymentInfoFromRepo = paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber).orElse(null);
