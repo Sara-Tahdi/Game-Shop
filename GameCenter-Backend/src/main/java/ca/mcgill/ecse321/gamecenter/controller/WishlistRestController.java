@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Controller for managing wishlists.
- */
 @RestController
 public class WishlistRestController {
 
@@ -37,37 +34,18 @@ public class WishlistRestController {
         return new WishlistResponseDto(createdWishlist);
     }
 
-    /**
-     * Remove a game from a client's wishlist.
-     *
-     * @param clientId The client ID from whose wishlist the game should be removed.
-     * @param gameId The game ID to remove from the wishlist.
-     * @return A response indicating the game was removed.
-     */
     @DeleteMapping(value = "/wishlists/remove")
     public ResponseEntity<Object> removeGameFromWishlist(@RequestParam int clientId, @RequestParam int gameId) {
         wishlistService.removeWishlist(clientId, gameId);
         return ResponseEntity.noContent().build();  // HTTP 204 No Content
     }
 
-    /**
-     * Find a wishlist by its ID.
-     *
-     * @param wishlistId The wishlist ID to search for.
-     * @return The wishlist with the given ID.
-     */
     @GetMapping(value = "/wishlists/{wishlistId}")
     public WishlistResponseDto findWishlistById(@PathVariable int wishlistId) {
         Wishlist wishlist = wishlistService.findWishlistById(wishlistId);
         return new WishlistResponseDto(wishlist);
     }
 
-    /**
-     * Find all wishlists for a specific client.
-     *
-     * @param clientId The client ID whose wishlists are to be retrieved.
-     * @return A list of all wishlists for the specified client.
-     */
     @GetMapping(value = "/wishlists/client/{clientId}")
     public List<WishlistResponseDto> findWishlistsByClientId(@PathVariable int clientId) {
         List<Wishlist> wishlists = wishlistService.findWishlistsByClientId(clientId);
@@ -76,12 +54,6 @@ public class WishlistRestController {
                         .collect(Collectors.toList());
     }
 
-    /**
-     * Find all wishlists for a specific game.
-     *
-     * @param gameId The game ID whose wishlists are to be retrieved.
-     * @return A list of all wishlists that contain the specified game.
-     */
     @GetMapping(value = "/wishlists/game/{gameId}")
     public List<WishlistResponseDto> findWishlistsByGameId(@PathVariable int gameId) {
         List<Wishlist> wishlists = wishlistService.findWishlistsByGameId(gameId);
@@ -90,13 +62,6 @@ public class WishlistRestController {
                         .collect(Collectors.toList());
     }
 
-    /**
-     * Find a wishlist by a client and game.
-     *
-     * @param clientId The client ID.
-     * @param gameId The game ID.
-     * @return The wishlist if it exists, else a 404 error.
-     */
     @GetMapping(value = "/wishlists/client/{clientId}/game/{gameId}")
     public WishlistResponseDto findWishlistByClientAndGame(@PathVariable int clientId, @PathVariable int gameId) {
         Wishlist wishlist = wishlistService.findWishlistByClientIdAndGameId(clientId, gameId);
