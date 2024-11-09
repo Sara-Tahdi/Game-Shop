@@ -23,8 +23,10 @@ import ca.mcgill.ecse321.gamecenter.repository.WishlistRepository;
 import ca.mcgill.ecse321.gamecenter.repository.ClientRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.List;
 
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
 public class WishlistServiceTests {
@@ -57,7 +59,7 @@ public class WishlistServiceTests {
         when(mockWishlistRepo.save(any(Wishlist.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Act
-        Wishlist createdWishlist = service.addGameToWishlist(VALID_CLIENT_ID, VALID_GAME_ID);
+        Wishlist createdWishlist = service.createWishlist(VALID_CLIENT_ID, VALID_GAME_ID);
 
         // Assert
         assertNotNull(createdWishlist);
@@ -91,38 +93,13 @@ public class WishlistServiceTests {
     }
 
     @Test
-    public void testAddGameToWishlistForInvalidClient() {
-        // Arrange
-        Game game = new Game();
-        game.setId(VALID_GAME_ID);
-        when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> service.addGameToWishlist(VALID_CLIENT_ID, VALID_GAME_ID));
-        assertEquals("No client found with id: " +  VALID_CLIENT_ID, error.getMessage());
-    }
-
-    @Test
-    public void testAddGameToWishlistForInvalidGame() {
-        // Arrange
-        Client client = new Client();
-        when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.of(client));
-        when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.empty());
-
-
-        // Act & Assert
-        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> service.addGameToWishlist(VALID_CLIENT_ID, VALID_GAME_ID));
-        assertEquals("No game found with id: " +  VALID_GAME_ID, error.getMessage());
-    }
-
-    @Test
     public void testRemoveGameFromWishlist() {
         // Arrange
         Wishlist wishlist = new Wishlist();
         when(mockWishlistRepo.findWishlistByClientIdAndGameId(VALID_CLIENT_ID, VALID_GAME_ID)).thenReturn(Optional.of(wishlist));
 
         // Act
-        service.removeGameFromWishlist(VALID_CLIENT_ID, VALID_GAME_ID);
+        service.removeWishlist(VALID_CLIENT_ID, VALID_GAME_ID);
 
         // Assert
         verify(mockWishlistRepo, times(1)).delete(wishlist);
@@ -134,8 +111,135 @@ public class WishlistServiceTests {
         when(mockWishlistRepo.findWishlistByClientIdAndGameId(VALID_CLIENT_ID, VALID_GAME_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
-        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> service.removeGameFromWishlist(VALID_CLIENT_ID, VALID_GAME_ID));
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> service.removeWishlist(VALID_CLIENT_ID, VALID_GAME_ID));
         assertEquals("There is no wishlist with Game ID: " + VALID_GAME_ID + " and Client ID: " + VALID_CLIENT_ID, error.getMessage());
 
+    }
+
+    @Test
+    public void testCreateWishlistValid() {
+        // Arrange
+        Client mockClient = new Client();
+        mockClient.setId(VALID_CLIENT_ID);
+
+        Game mockGame = new Game();
+        mockGame.setId(VALID_GAME_ID);
+
+        // Mock repository returns
+        when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.of(mockClient));
+        when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.of(mockGame));
+        when(mockWishlistRepo.save(any(Wishlist.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Wishlist wishlist = service.createWishlist(VALID_CLIENT_ID, VALID_GAME_ID);
+
+        // Assert
+        assertNotNull(wishlist);
+        assertEquals(mockClient, wishlist.getClient());
+        assertEquals(mockGame, wishlist.getGame());
+
+        // Verify that the repositories were called
+        verify(mockClientRepo).save(mockClient);
+        verify(mockGameRepo).save(mockGame);
+        verify(mockWishlistRepo).save(wishlist);
+    }
+
+    @Test
+    public void testCreateWishlistInvalidClient() {
+        // Arrange
+        when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> service.createWishlist(VALID_CLIENT_ID, VALID_GAME_ID));
+        
+        assertEquals("No client found with client id: " + VALID_CLIENT_ID, exception.getMessage());
+    }
+
+    @Test
+    public void testFindWishlistsByValidClientId() {
+        // Arrange
+        List<Wishlist> wishlists = new ArrayList<>();
+        Wishlist wishlist1 = new Wishlist();
+        Wishlist wishlist2 = new Wishlist();
+        wishlists.add(wishlist1);
+        wishlists.add(wishlist2);
+        
+        when(mockWishlistRepo.findWishlistsByClientId(VALID_CLIENT_ID)).thenReturn(Optional.of(wishlists));
+
+        // Act
+        List<Wishlist> foundWishlists = service.findWishlistsByClientId(VALID_CLIENT_ID);
+
+        // Assert
+        assertNotNull(foundWishlists);
+        assertEquals(2, foundWishlists.size());
+    }
+
+    @Test
+    public void testFindWishlistsByInvalidClientId() {
+        // Arrange
+        when(mockWishlistRepo.findWishlistsByClientId(VALID_CLIENT_ID)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> service.findWishlistsByClientId(VALID_CLIENT_ID));
+        assertEquals("There is no wishlist with Client ID: " + VALID_CLIENT_ID, exception.getMessage());
+    }
+
+    @Test
+    public void testFindWishlistsByValidGameId() {
+        // Arrange
+        List<Wishlist> wishlists = new ArrayList<>();
+        Wishlist wishlist1 = new Wishlist();
+        Wishlist wishlist2 = new Wishlist();
+        wishlists.add(wishlist1);
+        wishlists.add(wishlist2);
+
+        when(mockWishlistRepo.findWishlistsByGameId(VALID_GAME_ID)).thenReturn(Optional.of(wishlists));
+
+        // Act
+        List<Wishlist> foundWishlists = service.findWishlistsByGameId(VALID_GAME_ID);
+
+        // Assert
+        assertNotNull(foundWishlists);
+        assertEquals(2, foundWishlists.size());
+    }
+
+    @Test
+    public void testFindWishlistsByInvalidGameId() {
+        // Arrange
+        when(mockWishlistRepo.findWishlistsByGameId(VALID_GAME_ID)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> service.findWishlistsByGameId(VALID_GAME_ID));
+        assertEquals("There is no wishlist with Game ID: " + VALID_GAME_ID, exception.getMessage());
+    }
+
+    @Test
+    public void testFindWishlistByValidClientIdAndGameId() {
+        // Arrange
+        Wishlist wishlist = new Wishlist();
+        when(mockWishlistRepo.findWishlistByClientIdAndGameId(VALID_CLIENT_ID, VALID_GAME_ID))
+                .thenReturn(Optional.of(wishlist));
+
+        // Act
+        Wishlist foundWishlist = service.findWishlistByClientIdAndGameId(VALID_GAME_ID, VALID_CLIENT_ID);
+
+        // Assert
+        assertNotNull(foundWishlist);
+    }
+
+    @Test
+    public void testFindWishlistByInvalidClientIdAndGameId() {
+        // Arrange
+        when(mockWishlistRepo.findWishlistByClientIdAndGameId(VALID_CLIENT_ID, VALID_GAME_ID))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> service.findWishlistByClientIdAndGameId(VALID_GAME_ID, VALID_CLIENT_ID));
+        assertEquals("There is no wishlist with Game ID: " + VALID_GAME_ID + " and Client ID: " + VALID_CLIENT_ID, 
+                     exception.getMessage());
     }
 }

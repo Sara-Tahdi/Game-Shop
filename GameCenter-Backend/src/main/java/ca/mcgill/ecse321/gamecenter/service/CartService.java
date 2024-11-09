@@ -26,7 +26,31 @@ public class CartService {
     @Transactional
 
     public Cart createCart(int clientId, int gameId) {
+        // Fetch client and game
+        Client client = clientRepository.findById(clientId).orElse(null);
+        if (client == null) {
+            throw new IllegalArgumentException("No client found with client id: " + clientId);
+        }
+
+        Game game = gameRepository.findById(gameId).orElse(null);
+        if (game == null) {
+            throw new IllegalArgumentException("No game found with game id: " + gameId);
+        }
+
+        // Check if the game is already in the cart for the client
+        Cart existingCart = cartRepository.findCartByClientIdAndGameId(clientId, gameId).orElse(null);
+        if (existingCart != null) {
+            throw new IllegalArgumentException("Game already exists in the cart for this client.");
+        }
+
+        // Create and save cart
         Cart cart = new Cart();
+        cart.setClient(client);
+        cart.setGame(game);
+
+        // Persist the entities
+        clientRepository.save(client);
+        gameRepository.save(game);
         return cartRepository.save(cart);
     }
 
@@ -54,7 +78,6 @@ public class CartService {
         return carts;
     }
 
-    //Shouldnt this find a cart item and not a cart?
     public Cart findCartByClientIdAndGameId(int gameId, int clientId) {
         Cart cart = cartRepository.findCartByClientIdAndGameId(clientId,gameId).orElse(null);
         if (cart == null) {
@@ -64,32 +87,17 @@ public class CartService {
         return cart;
     }
 
-    public Cart addGameToCart(int clientId, int gameId) {
-        Client client = clientRepository.findById(clientId).orElse(null);
-        if (client == null) {
-            throw new IllegalArgumentException("No client found with id: " + clientId);
+    public void removeCart(int clientId, int gameId) {
+        // Fetch the cart item
+        Cart cartItem = cartRepository.findCartByClientIdAndGameId(clientId, gameId).orElse(null);
+        if (cartItem == null) {
+            throw new IllegalArgumentException("There is no cart with Game ID: " + gameId + " and Client ID: " + clientId);
         }
-        Game game = gameRepository.findById(gameId).orElse(null);
-        if (game == null) {
-            throw new IllegalArgumentException("No game found with id: " + gameId);
-        }
-
-        Cart cart = new Cart();
-        cart.setClient(client);
-        cart.setGame(game);
-        return cartRepository.save(cart);
+    
+        // Delete the cart item
+        cartRepository.delete(cartItem);
     }
 
-    // Wait I dont get it its 1 cart per game? Whats the point of the cart? When I do cart.getGame, i only get 1 game. Why do clients have multiple carts?
-
-    // I dont really know if this would work, because i cant find a game by its id in the cart
-    // public void removeGameFromCart(int cartId) {
-    //     Cart cart = cartRepository.findById(cartId).orElse(null);
-    //     if (cart == null) {
-    //         throw new IllegalArgumentException("No cart found with id: " + cartId);
-    //     }
-
-    //      Actually this for sure wouldnt work because im deleting a cart. Are we deleting carts? Or every client has a cart
-    //     cartRepository.deleteById(cart.getGame().getId());
-    // }
+    //Should I add an "update" method
+    //I should probably add a view all items in cart method
 }
