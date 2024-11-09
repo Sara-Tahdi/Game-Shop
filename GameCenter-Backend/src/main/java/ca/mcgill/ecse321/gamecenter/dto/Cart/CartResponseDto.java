@@ -10,18 +10,15 @@ public class CartResponseDto {
     private int gameId;
     private int clientId;
 
-    // Default constructor for Jackson
     public CartResponseDto() {
     }
 
-    // Constructor for initialization
     public CartResponseDto(Cart cart) {
         this.id = cart.getId();
         this.gameId = cart.getGame().getId();
         this.clientId = cart.getClient().getId();
     }
 
-    // Getters and setters for Jackson deserialization
     public int getId() {
         return id;
     }
