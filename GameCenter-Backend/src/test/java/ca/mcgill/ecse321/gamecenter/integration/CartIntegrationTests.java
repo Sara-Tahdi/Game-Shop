@@ -50,7 +50,7 @@ public class CartIntegrationTests {
 
     @BeforeAll
     public void setupDatabase() {
-        // Create the owner and client
+        //Create owner and client
         appUserRepository.save(new Owner(VALID_OWNER_EMAIL, VALID_OWNER_USERNAME, VALID_OWNER_PASSWORD));
         Client c = appUserRepository.save(new Client(
                 VALID_CLIENT_EMAIL,
@@ -65,7 +65,7 @@ public class CartIntegrationTests {
         GameCategory gameCategory = new GameCategory(VALID_GAME_CATEGORY);
         gameCategoryRepository.save(gameCategory);
 
-        // Create the game
+        // Create  game
         Game g1 = gameRepository.save(new Game(
                 VALID_GAME_NAME,
                 VALID_GAME_PRICE,
@@ -103,7 +103,7 @@ public class CartIntegrationTests {
         assertEquals(this.clientId, body.getClientId());
         assertEquals(this.gameId_1, body.getGameId());
 
-        this.cartId_1 = body.getId();  // Save the cart ID for later tests
+        this.cartId_1 = body.getId();  // Save the cart ID for later test
     }
 
     @Test
@@ -116,7 +116,7 @@ public class CartIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<CartResponseDto> body = List.of(res.getBody());
-        assertTrue(body.size() >= 1);  // We expect at least 1 game in the cart (as only 1 game is added)
+        assertTrue(body.size() >= 1);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class CartIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<CartResponseDto> body = List.of(res.getBody());
-        assertTrue(body.size() >= 1);  // We expect at least 1 cart that contains the game
+        assertTrue(body.size() >= 1);
     }
 
     @Test
@@ -167,7 +167,7 @@ public class CartIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<CartResponseDto> body = List.of(res.getBody());
-        assertTrue(body.size() == 0);  // After removal, there should be no carts for the client
+        assertTrue(body.size() == 0);
     }
 
     @Test
@@ -180,6 +180,6 @@ public class CartIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<CartResponseDto> body = List.of(res.getBody());
-        assertTrue(body.size() == 0);  // After removal, there should be no carts containing the game
+        assertTrue(body.size() == 0);
     }
 }

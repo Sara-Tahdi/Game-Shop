@@ -55,7 +55,6 @@ public class WishlistServiceTests {
         Game game = new Game();
         when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.of(game));
         
-        // Whenever mockWishlistRepo.save(wishlist) is called, return the wishlist
         when(mockWishlistRepo.save(any(Wishlist.class))).thenAnswer((InvocationOnMock iom) -> iom.getArgument(0));
 
         // Act
@@ -125,7 +124,6 @@ public class WishlistServiceTests {
         Game mockGame = new Game();
         mockGame.setId(VALID_GAME_ID);
 
-        // Mock repository returns
         when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.of(mockClient));
         when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.of(mockGame));
         when(mockWishlistRepo.save(any(Wishlist.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -138,7 +136,6 @@ public class WishlistServiceTests {
         assertEquals(mockClient, wishlist.getClient());
         assertEquals(mockGame, wishlist.getGame());
 
-        // Verify that the repositories were called
         verify(mockClientRepo).save(mockClient);
         verify(mockGameRepo).save(mockGame);
         verify(mockWishlistRepo).save(wishlist);
