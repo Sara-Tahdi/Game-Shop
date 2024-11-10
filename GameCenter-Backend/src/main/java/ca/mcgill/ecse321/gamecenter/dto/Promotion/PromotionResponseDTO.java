@@ -4,7 +4,6 @@ import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.Promotion;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class PromotionResponseDTO {

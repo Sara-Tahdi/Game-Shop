@@ -14,4 +14,9 @@ public class GameCategoryService {
         GameCategory g = new GameCategory(categoryName);
         return gameCategoryRepository.save(g);
     }
+
+    public GameCategory getGameCategoryById(int id) {
+        return gameCategoryRepository.findGameCategoryById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Game category not found with id: " + id));
+    }
 }

@@ -1,28 +1,27 @@
 package ca.mcgill.ecse321.gamecenter.dto.Game;
 
 import ca.mcgill.ecse321.gamecenter.model.Game;
-import ca.mcgill.ecse321.gamecenter.model.GameCategory;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class GameRequestDTO {
-    @NotBlank(message = "Title is required")
+    @NotNull(message = "Title is required")
     private String title;
-    @NotBlank(message = "Price is required")
+    @NotNull(message = "Price is required")
     private float price;
-    @NotBlank(message = "Description is required")
+    @NotNull(message = "Description is required")
     private String description;
-    @NotBlank(message = "Rating is required")
+    @NotNull(message = "Rating is required")
     private float rating;
-    @NotBlank(message = "Remaining quantity is required")
+    @NotNull(message = "Remaining quantity is required")
     private int remainingQuantity;
-    @NotBlank(message = "Availability status is required")
+    @NotNull(message = "Availability status is required")
     private boolean isOffered;
-    @NotBlank(message = "Public Opinion is required")
+    @NotNull(message = "Public Opinion is required")
     private Game.GeneralFeeling publicOpinion;
-    @NotBlank(message = "Category is required")
-    private GameCategory category;
+    @NotNull(message = "Category ID is required")
+    private int categoryId;
 
-    public GameRequestDTO(String title, float price, String description, float rating, int remainingQuantity, boolean isOffered, Game.GeneralFeeling publicOpinion, GameCategory category) {
+    public GameRequestDTO(String title, float price, String description, float rating, int remainingQuantity, boolean isOffered, Game.GeneralFeeling publicOpinion, int categoryId) {
         this.title = title;
         this.price = price;
         this.description = description;
@@ -30,7 +29,7 @@ public class GameRequestDTO {
         this.remainingQuantity = remainingQuantity;
         this.isOffered = isOffered;
         this.publicOpinion = publicOpinion;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public String getTitle() {
@@ -61,8 +60,8 @@ public class GameRequestDTO {
         return this.publicOpinion;
     }
 
-    public GameCategory getCategory() {
-        return this.category;
+    public int getCategoryId() {
+        return this.categoryId;
     }
 
 }
