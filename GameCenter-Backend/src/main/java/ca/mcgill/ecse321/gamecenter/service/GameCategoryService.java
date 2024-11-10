@@ -51,4 +51,10 @@ public class GameCategoryService {
     public Optional<GameCategory> getGameCategory(int id) {
         return gameCategoryRepository.findById(id);
     }
+
+
+    public GameCategory getGameCategoryById(int id) {
+        return gameCategoryRepository.findGameCategoryById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Game category not found with id: " + id));
+    }
 }
