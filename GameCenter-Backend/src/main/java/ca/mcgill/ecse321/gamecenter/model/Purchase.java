@@ -21,7 +21,7 @@ public class Purchase
   private int id;
   private float totalPrice;
   private int copies;
-  private int trackingCode;
+  private String trackingCode;
   private Date purchaseDate;
   private String refundReason;
 
@@ -37,7 +37,7 @@ public class Purchase
 
   public Purchase() {}
 
-  public Purchase(float aTotalPrice, int aCopies, int aTrackingCode, Date aPurchaseDate, Game aGame, Client aClient)
+  public Purchase(float aTotalPrice, int aCopies, String aTrackingCode, Date aPurchaseDate, Game aGame, Client aClient)
   {
     totalPrice = aTotalPrice;
     copies = aCopies;
@@ -81,7 +81,7 @@ public class Purchase
     return wasSet;
   }
 
-  public boolean setTrackingCode(int aTrackingCode)
+  public boolean setTrackingCode(String aTrackingCode)
   {
     boolean wasSet = false;
     trackingCode = aTrackingCode;
@@ -120,7 +120,7 @@ public class Purchase
     return copies;
   }
 
-  public int getTrackingCode()
+  public String getTrackingCode()
   {
     return trackingCode;
   }

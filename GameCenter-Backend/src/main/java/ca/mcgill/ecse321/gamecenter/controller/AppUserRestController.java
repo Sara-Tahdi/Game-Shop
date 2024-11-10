@@ -1,14 +1,10 @@
 package ca.mcgill.ecse321.gamecenter.controller;
 
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientRequestDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.ClientResponseDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeRequestDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeResponseDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.LoginRequestDTO;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.AppUserResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.AppUsers.*;
 import ca.mcgill.ecse321.gamecenter.model.AppUser;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Employee;
+import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +17,17 @@ import java.util.stream.Collectors;
 public class AppUserRestController {
     @Autowired
     private AppUserService appUserService;
+
+    @PutMapping(value = "/users/owner/update")
+    public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate) {
+        Owner o = appUserService.updateOwnerAccount(
+                ownerToUpdate.getEmail(),
+                ownerToUpdate.getUsername(),
+                ownerToUpdate.getNewPassword(),
+                ownerToUpdate.getPassword()
+        );
+        return new OwnerResponseDTO(o);
+    }
 
     @PostMapping(value = "/users/employee/create")
     public EmployeeResponseDTO createEmployeeAccount(@Validated @RequestBody EmployeeRequestDTO employeeToCreate) {
@@ -137,5 +144,4 @@ public class AppUserRestController {
         AppUser user = appUserService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
         return new AppUserResponseDTO(user);
     }
-
 }

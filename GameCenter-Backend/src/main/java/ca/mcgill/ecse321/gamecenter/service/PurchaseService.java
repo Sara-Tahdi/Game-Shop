@@ -6,11 +6,11 @@ import ca.mcgill.ecse321.gamecenter.model.Purchase;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Round;
+import ca.mcgill.ecse321.gamecenter.utilities.TrackingCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.Random;
@@ -28,12 +28,6 @@ public class PurchaseService {
 
     private Random random = new Random();
 
-    public float round(float price) {
-        BigDecimal bg = new BigDecimal(Float.toString(price));
-        bg = bg.setScale(2, RoundingMode.UP);
-        return bg.floatValue();
-    }
-
     public Purchase createPurchase(int clientId, int gameId, int aCopies) {
         Client c = (Client) appUserRepository.findAppUserById(clientId).orElse(null);
         if (c == null) {
@@ -49,9 +43,9 @@ public class PurchaseService {
             throw new IllegalArgumentException("Attempting to purchase more copies than available, copies left: " + g.getRemainingQuantity());
         }
 
-        float total = round(g.getPrice() * aCopies);
+        float total = Round.round(g.getPrice() * aCopies);
         int copies = aCopies;
-        int trackingCode = random.nextInt() & Integer.MAX_VALUE; // avoid negative numbers
+        String trackingCode = TrackingCode.nextCode(); // avoid negative numbers
         Date purchaseDate = Date.valueOf(LocalDate.now());
 
         Purchase p = new Purchase(total, copies, trackingCode, purchaseDate, g, c);
