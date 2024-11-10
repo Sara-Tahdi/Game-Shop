@@ -38,7 +38,6 @@ public class PromotionIntegrationTests {
     private TestRestTemplate client;
 
     private final float VALID_NEW_PRICE = 59.99F;
-    private Game VALID_GAME;
     private final LocalDate VALID_START_DATE = LocalDate.of(2024, 1, 1);
     private final LocalDate VALID_END_DATE = LocalDate.of(2024, 12, 31);
     private int validId;
@@ -61,7 +60,6 @@ public class PromotionIntegrationTests {
                 savedCategory
         );
         savedGame = gameRepository.save(game);
-        VALID_GAME = savedGame;
     }
 
     @AfterAll
