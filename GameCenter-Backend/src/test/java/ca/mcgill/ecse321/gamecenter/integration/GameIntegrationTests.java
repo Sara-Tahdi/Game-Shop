@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.gamecenter.integration;
 
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Game.GameUpdateRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -171,10 +173,22 @@ public class GameIntegrationTests {
         Float newPrice = 69.99F;
         String newDescription = "Updated description";
 
+        GameUpdateRequestDTO update = new GameUpdateRequestDTO(
+                g.getTitle(),
+                newPrice,
+                newDescription,
+                g.getRating(),
+                g.getRemainingQuantity(),
+                g.getIsOffered(),
+                g.getCategory().getId()
+        );
+
+        HttpEntity<GameUpdateRequestDTO> entity = new HttpEntity<>(update);
+
         ResponseEntity<GameResponseDTO> response = client.exchange(
-                "/games/update/" + savedGame.getId() + "?newPrice=" + newPrice + "&newDescription=" + newDescription,
+                "/games/update/" + savedGame.getId(),
                 HttpMethod.PUT,
-                null,
+                entity,
                 GameResponseDTO.class
         );
 

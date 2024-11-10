@@ -2,10 +2,12 @@ package ca.mcgill.ecse321.gamecenter.controller;
 
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Game.GameUpdateRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.service.GameCategoryService;
 import ca.mcgill.ecse321.gamecenter.service.GameService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,39 +39,18 @@ public class GameRestController {
     }
 
     @PutMapping("/games/update/{id}")
-    public GameResponseDTO updateGame(
-            @PathVariable int id,
-            @RequestParam(required = false) String newTitle,
-            @RequestParam(required = false) Float newPrice,
-            @RequestParam(required = false) String newDescription,
-            @RequestParam(required = false) Float newRating,
-            @RequestParam(required = false) Integer newRemainingQuantity,
-            @RequestParam(required = false) Boolean newIsOffered,
-            @RequestParam(required = false) Game.GeneralFeeling newPublicOpinion,
-            @RequestParam(required = false) Integer newCategoryId) {
-
-        Game existingGame = gameService.getGameById(id);
-
-        String titleToUpdate = newTitle != null ? newTitle : existingGame.getTitle();
-        Float priceToUpdate = newPrice != null ? newPrice : existingGame.getPrice();
-        String descriptionToUpdate = newDescription != null ? newDescription : existingGame.getDescription();
-        Float ratingToUpdate = newRating != null ? newRating : existingGame.getRating();
-        Integer quantityToUpdate = newRemainingQuantity != null ? newRemainingQuantity : existingGame.getRemainingQuantity();
-        Boolean isOfferedToUpdate = newIsOffered != null ? newIsOffered : existingGame.getIsOffered();GameCategory categoryToUpdate = newCategoryId != null ?
-                gameCategoryService.getGameCategoryById(newCategoryId) :
-                existingGame.getCategory();
-
+    public GameResponseDTO updateGame(@Validated @RequestBody GameUpdateRequestDTO gameToUpdate, @PathVariable int id) {
+        GameCategory categoryToUpdate =  gameCategoryService.getGameCategoryById(gameToUpdate.getCategoryId());
         Game game = gameService.updateGame(
                 id,
-                titleToUpdate,
-                priceToUpdate,
-                descriptionToUpdate,
-                ratingToUpdate,
-                quantityToUpdate,
-                isOfferedToUpdate,
+                gameToUpdate.getTitle(),
+                gameToUpdate.getPrice(),
+                gameToUpdate.getDescription(),
+                gameToUpdate.getRating(),
+                gameToUpdate.getRemainingQuantity(),
+                gameToUpdate.getIsOffered(),
                 categoryToUpdate
         );
-
         return new GameResponseDTO(game);
     }
 

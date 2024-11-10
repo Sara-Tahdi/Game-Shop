@@ -193,6 +193,10 @@ public class GameService {
         Game game = gameRepository.findGameById(id)
                 .orElseThrow(() -> new IllegalArgumentException("There is no Game with id: " + id));
 
+        Game gameTitle = gameRepository.findGameByTitle(title).orElse(null);
+        if (gameTitle != null && gameTitle.getId() != id) {
+            throw new IllegalArgumentException("There already exists a Game with title: " + title);
+        }
         if (price < 0) {
             throw new IllegalArgumentException("Price is not valid");
         }
