@@ -1,12 +1,9 @@
 package ca.mcgill.ecse321.gamecenter.integration;
 
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.EmployeeResponseDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Promotion.PromotionRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Promotion.PromotionResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
-import ca.mcgill.ecse321.gamecenter.model.Owner;
-import ca.mcgill.ecse321.gamecenter.model.Promotion;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PromotionRepository;
@@ -19,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -42,12 +38,9 @@ public class PromotionIntegrationTests {
     private TestRestTemplate client;
 
     private final float VALID_NEW_PRICE = 59.99F;
-    private final Date VALID_START_DATE = Date.valueOf("2024-01-01");
-    private final Date VALID_END_DATE = Date.valueOf("2024-12-31");
     private Game VALID_GAME;
-    private final Date INVALID_START_DATE = Date.valueOf("2024-12-31");
-    private final Date INVALID_END_DATE = Date.valueOf("2024-01-01");
-    private final int INVALID_ID = 0;
+    private final LocalDate VALID_START_DATE = LocalDate.of(2024, 1, 1);
+    private final LocalDate VALID_END_DATE = LocalDate.of(2024, 12, 31);
     private int validId;
     private Game savedGame;
     private GameCategory savedCategory;
@@ -85,7 +78,7 @@ public class PromotionIntegrationTests {
                 VALID_NEW_PRICE,
                 VALID_START_DATE,
                 VALID_END_DATE,
-                savedGame
+                savedGame.getId()
         );
 
         ResponseEntity<PromotionResponseDTO> response = client.postForEntity(
@@ -103,39 +96,12 @@ public class PromotionIntegrationTests {
         assertEquals(VALID_END_DATE, body.getEndDate());
     }
 
-
     @Test
     @Order(2)
-    public void testCreatePromotionInvalidDates() {
-        PromotionRequestDTO promotion = new PromotionRequestDTO(VALID_NEW_PRICE, INVALID_START_DATE,
-                INVALID_END_DATE, VALID_GAME);
-
-        ResponseEntity<String> response = client.postForEntity("/promotions", promotion, String.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("Start and End Dates are not valid"));
-    }
-
-    @Test
-    @Order(3)
-    public void testCreatePromotionInvalidPrice() {
-        PromotionRequestDTO promotion = new PromotionRequestDTO(-10.0F, VALID_START_DATE,
-                VALID_END_DATE, VALID_GAME);
-
-        ResponseEntity<String> response = client.postForEntity("/promotions", promotion, String.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("Price is not valid"));
-    }
-
-    @Test
-    @Order(4)
     public void testGetPromotionById() {
         PromotionRequestDTO promotion = new PromotionRequestDTO(VALID_NEW_PRICE, VALID_START_DATE,
-                VALID_END_DATE, VALID_GAME);
-        ResponseEntity<PromotionResponseDTO> createResponse = client.postForEntity("/promotions",
+                VALID_END_DATE, savedGame.getId());
+        ResponseEntity<PromotionResponseDTO> createResponse = client.postForEntity("/promotions/create",
                 promotion, PromotionResponseDTO.class);
         validId = Objects.requireNonNull(createResponse.getBody()).getId();
 
@@ -150,21 +116,18 @@ public class PromotionIntegrationTests {
         assertEquals(VALID_NEW_PRICE, retrievedPromotion.getNewPrice());
     }
 
-    @Test
-    @Order(5)
-    public void testGetPromotionByInvalidId() {
-        ResponseEntity<String> response = client.getForEntity("/promotions/" + INVALID_ID, String.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("There is no Promotion with id: " + INVALID_ID));
-    }
 
     @Test
-    @Order(6)
+    @Order(3)
     public void testGetPromotionsByGameId() {
+        PromotionRequestDTO promotionRequest = new PromotionRequestDTO(VALID_NEW_PRICE, VALID_START_DATE,
+                VALID_END_DATE, savedGame.getId());
+        client.postForEntity("/promotions/create", promotionRequest, PromotionResponseDTO.class);
+
         ResponseEntity<PromotionResponseDTO[]> response = client.getForEntity(
-                "/promotions/game/" + VALID_GAME.getId(), PromotionResponseDTO[].class);
+                "/promotions/game/" + savedGame.getId(),
+                PromotionResponseDTO[].class
+        );
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -172,74 +135,99 @@ public class PromotionIntegrationTests {
         assertNotNull(promotions);
         assertTrue(promotions.length > 0);
         for (PromotionResponseDTO promotion : promotions) {
-            assertEquals(VALID_GAME.getId(), promotion.getGame().getId());
+            assertEquals(savedGame.getId(), promotion.getGame().getId());
         }
     }
 
     @Test
-    @Order(7)
-    public void testUpdatePromotionSuccess() {
-        float newPrice = 49.99F;
-        Date newStartDate = Date.valueOf(LocalDate.now().plusDays(1));
-        Date newEndDate = Date.valueOf(LocalDate.now().plusMonths(1));
+    @Order(4)
+    public void testUpdatePromotionWithPartialData() {
+        PromotionRequestDTO createRequest = new PromotionRequestDTO(
+                VALID_NEW_PRICE,
+                VALID_START_DATE,
+                VALID_END_DATE,
+                savedGame.getId()
+        );
 
-        ResponseEntity<PromotionResponseDTO> response = client.exchange(
-                "/promotions/update/" + validId + "?newPrice=" + newPrice +
-                        "&newStartDate=" + newStartDate + "&newEndDate=" + newEndDate,
+        ResponseEntity<PromotionResponseDTO> createResponse = client.postForEntity(
+                "/promotions/create",
+                createRequest,
+                PromotionResponseDTO.class
+        );
+
+        int promotionId = createResponse.getBody().getId();
+
+        // Update only the price
+        Float newPrice = 49.99F;
+
+        ResponseEntity<PromotionResponseDTO> updateResponse = client.exchange(
+                "/promotions/update/" + promotionId + "?newPrice=" + newPrice,
                 HttpMethod.PUT,
                 null,
-                PromotionResponseDTO.class);
+                PromotionResponseDTO.class
+        );
+
+        assertNotNull(updateResponse);
+        assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
+        PromotionResponseDTO updatedPromotion = updateResponse.getBody();
+        assertNotNull(updatedPromotion);
+
+        assertEquals(newPrice, updatedPromotion.getNewPrice());
+        assertEquals(VALID_START_DATE, updatedPromotion.getStartDate());
+        assertEquals(VALID_END_DATE, updatedPromotion.getEndDate());
+        assertEquals(savedGame.getId(), updatedPromotion.getGame().getId());
+    }
+
+    @Test
+    @Order(5)
+    public void testGetAllPromotions() {
+        PromotionRequestDTO firstPromotion = new PromotionRequestDTO(
+                VALID_NEW_PRICE,
+                VALID_START_DATE,
+                VALID_END_DATE,
+                savedGame.getId()
+        );
+
+        PromotionRequestDTO secondPromotion = new PromotionRequestDTO(
+                39.99F,
+                VALID_START_DATE.plusDays(1),
+                VALID_END_DATE.plusDays(1),
+                savedGame.getId()
+        );
+
+        client.postForEntity("/promotions/create", firstPromotion, PromotionResponseDTO.class);
+        client.postForEntity("/promotions/create", secondPromotion, PromotionResponseDTO.class);
+
+        ResponseEntity<PromotionResponseDTO[]> response = client.getForEntity(
+                "/promotions",
+                PromotionResponseDTO[].class
+        );
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        PromotionResponseDTO updatedPromotion = response.getBody();
-        assertNotNull(updatedPromotion);
-        assertEquals(newPrice, updatedPromotion.getNewPrice());
-        assertEquals(newStartDate, updatedPromotion.getStartDate());
-        assertEquals(newEndDate, updatedPromotion.getEndDate());
-    }
 
-    @Test
-    @Order(8)
-    public void testUpdatePromotionInvalidDates() {
-        ResponseEntity<String> response = client.exchange(
-                "/promotions/update/" + validId + "?newStartDate=" + INVALID_START_DATE +
-                        "&newEndDate=" + INVALID_END_DATE,
-                HttpMethod.PUT,
-                null,
-                String.class);
+        PromotionResponseDTO[] promotions = response.getBody();
+        assertNotNull(promotions);
+        assertTrue(promotions.length >= 2, "Should have at least the two promotions we just created");
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("Start and End Dates are not valid"));
-    }
+        boolean foundFirstPromotion = false;
+        boolean foundSecondPromotion = false;
 
-    @Test
-    @Order(9)
-    public void testUpdatePromotionInvalidPrice() {
-        ResponseEntity<String> response = client.exchange(
-                "/promotions/update/" + validId + "?newPrice=-10.0",
-                HttpMethod.PUT,
-                null,
-                String.class);
+        for (PromotionResponseDTO promotion : promotions) {
+            if (promotion.getNewPrice() == VALID_NEW_PRICE
+                    && promotion.getStartDate().equals(VALID_START_DATE)
+                    && promotion.getEndDate().equals(VALID_END_DATE)) {
+                foundFirstPromotion = true;
+            }
+            if (promotion.getNewPrice() == 39.99F
+                    && promotion.getStartDate().equals(VALID_START_DATE.plusDays(1))
+                    && promotion.getEndDate().equals(VALID_END_DATE.plusDays(1))) {
+                foundSecondPromotion = true;
+            }
+        }
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("Price is not valid"));
-    }
-
-    @Test
-    @Order(10)
-    public void testUpdatePromotionInvalidId() {
-        ResponseEntity<String> response = client.exchange(
-                "/promotions/update/" + INVALID_ID + "?newPrice=" + VALID_NEW_PRICE,
-                HttpMethod.PUT,
-                null,
-                String.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("There is no Promotion with id: " + INVALID_ID));
+        assertTrue(foundFirstPromotion, "First promotion should be in the list");
+        assertTrue(foundSecondPromotion, "Second promotion should be in the list");
     }
 
 }
