@@ -8,7 +8,6 @@ public class GameCenterDTO {
     private Time close;
     private String storePolicy;
 
-    @SuppressWarnings("unused")
     public GameCenterDTO() {
     }
 

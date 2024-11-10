@@ -1,5 +1,4 @@
 package ca.mcgill.ecse321.gamecenter.dto.GameCategory;
-@SuppressWarnings("unused")
 public class GameCategoryRequestDTO {
     private String category;
 

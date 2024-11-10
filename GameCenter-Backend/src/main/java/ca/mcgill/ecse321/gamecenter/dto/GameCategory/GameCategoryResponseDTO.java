@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.dto.GameCategory;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
-@SuppressWarnings("unused")
 
 public class GameCategoryResponseDTO {
     private int id;
