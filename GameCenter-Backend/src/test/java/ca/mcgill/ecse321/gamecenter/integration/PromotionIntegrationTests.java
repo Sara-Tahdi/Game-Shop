@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -157,11 +158,19 @@ public class PromotionIntegrationTests {
 
         // Update only the price
         Float newPrice = 49.99F;
+        PromotionRequestDTO updateRequest = new PromotionRequestDTO(
+                newPrice,
+                VALID_START_DATE,
+                VALID_END_DATE,
+                savedGame.getId()
+        );
+
+        HttpEntity<PromotionRequestDTO> entity = new HttpEntity<>(updateRequest);
 
         ResponseEntity<PromotionResponseDTO> updateResponse = client.exchange(
-                "/promotions/update/" + promotionId + "?newPrice=" + newPrice,
+                "/promotions/update/" + promotionId,
                 HttpMethod.PUT,
-                null,
+                entity,
                 PromotionResponseDTO.class
         );
 

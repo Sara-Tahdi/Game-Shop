@@ -58,26 +58,14 @@ public class PromotionRestController {
     }
 
     @PutMapping("/promotions/update/{id}")
-    public PromotionResponseDTO updatePromotion(
-            @PathVariable int id,
-            @RequestParam(required = false) Float newPrice,
-            @RequestParam(required = false) LocalDate newStartDate,
-            @RequestParam(required = false) LocalDate newEndDate,
-            @RequestParam(required = false) Integer newGameId) {
-
-        Promotion existingPromotion = promotionService.getPromotionById(id);
-
-        Float priceToUpdate = newPrice != null ? newPrice : existingPromotion.getNewPrice();
-        LocalDate startDateToUpdate = newStartDate != null ? newStartDate : existingPromotion.getStartDate().toLocalDate();
-        LocalDate endDateToUpdate = newEndDate != null ? newEndDate : existingPromotion.getEndDate().toLocalDate();
-        Game gameToUpdate = newGameId != null ? gameService.getGameById(newGameId) : existingPromotion.getGame();
-
+    public PromotionResponseDTO updatePromotion(@Validated @RequestBody PromotionRequestDTO promotionToUpdate, @PathVariable int id) {
+        Game game = gameService.getGameById(promotionToUpdate.getGameId());
         Promotion promotion = promotionService.updatePromotion(
                 id,
-                priceToUpdate,
-                startDateToUpdate,
-                endDateToUpdate,
-                gameToUpdate
+                promotionToUpdate.getNewPrice(),
+                promotionToUpdate.getStartDate(),
+                promotionToUpdate.getEndDate(),
+                game
         );
         return new PromotionResponseDTO(promotion);
     }
