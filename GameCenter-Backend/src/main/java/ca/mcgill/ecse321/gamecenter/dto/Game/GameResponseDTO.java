@@ -30,8 +30,6 @@ public class GameResponseDTO {
         this.category = g.getCategory();
     }
 
-    public GameResponseDTO(){}
-
     public int getId() {
         return this.id;
     }

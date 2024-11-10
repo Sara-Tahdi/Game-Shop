@@ -193,16 +193,16 @@ public class GameService {
         Game game = gameRepository.findGameById(id)
                 .orElseThrow(() -> new IllegalArgumentException("There is no Game with id: " + id));
 
-        if (price != null && price < 0) {
+        if (price < 0) {
             throw new IllegalArgumentException("Price is not valid");
         }
-        if (rating != null && (rating < 0 || rating > 5)) {
+        if (rating < 0 || rating > 5) {
             throw new IllegalArgumentException("Rating is not valid");
         }
-        if (remainingQuantity != null && remainingQuantity < 0) {
+        if (remainingQuantity < 0) {
             throw new IllegalArgumentException("Remaining quantity is not valid");
         }
-        if (title != null && title.trim().isEmpty()) {
+        if (title.trim().isEmpty()) {
             throw new IllegalArgumentException("Title is not valid");
         }
 
