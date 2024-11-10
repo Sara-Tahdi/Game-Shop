@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.sql.Date;
-import java.util.Random;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +24,6 @@ public class PurchaseService {
     private AppUserRepository appUserRepository;
     @Autowired
     private GameRepository gameRepository;
-
-    private Random random = new Random();
 
     public Purchase createPurchase(int clientId, int gameId, int aCopies) {
         Client c = (Client) appUserRepository.findAppUserById(clientId).orElse(null);
