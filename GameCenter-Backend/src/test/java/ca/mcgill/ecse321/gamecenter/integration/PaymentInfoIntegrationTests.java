@@ -98,11 +98,24 @@ public class PaymentInfoIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<PaymentInfoResponseDTO> body = List.of(res.getBody());
+        assertNotNull(body);
         assertEquals(1, body.size());
         assertEquals(this.clientId, body.getFirst().getClient().getId());
         assertEquals(this.paymentInfoId, body.getFirst().getId());
     }
 
-//    @Test
-//    @Order(3)
+    @Test
+    @Order(3)
+    public void testDeletePaymentInfo() {
+        String url_1 = String.format("/paymentInfo/%d", this.paymentInfoId);
+        client.delete(url_1);
+
+        String url_2 = String.format("/paymentInfo/%d", this.clientId);
+        ResponseEntity<PaymentInfoResponseDTO[]> res_2 = client.getForEntity(url_2, PaymentInfoResponseDTO[].class);
+        assertNotNull(res_2);
+        assertEquals(HttpStatus.OK, res_2.getStatusCode());
+        List<PaymentInfoResponseDTO> body = List.of(res_2.getBody());
+        assertNotNull(body);
+        assertEquals(0, body.size());
+    }
 }
