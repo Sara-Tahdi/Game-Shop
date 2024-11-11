@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.RefundRequestDTO;
 import ca.mcgill.ecse321.gamecenter.service.PurchaseService;
+import ca.mcgill.ecse321.gamecenter.utilities.TrackingCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,9 @@ public class PurchaseRestController {
 
     @PostMapping("/purchases/place/{clientId}")
     public List<PurchaseResponseDTO> createPurchases(@Validated @RequestBody List<PurchaseRequestDTO> req, @PathVariable int clientId) {
+        String trackingCode = TrackingCode.nextCode();
         return req.stream()
-                .map(r -> new PurchaseResponseDTO(purchaseService.createPurchase(clientId, r.getGameId(), r.getCopies())))
+                .map(r -> new PurchaseResponseDTO(purchaseService.createPurchase(clientId, r.getGameId(), r.getCopies(), trackingCode)))
                 .collect(Collectors.toList());
     }
 

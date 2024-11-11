@@ -25,7 +25,7 @@ public class PurchaseService {
     @Autowired
     private GameRepository gameRepository;
 
-    public Purchase createPurchase(int clientId, int gameId, int aCopies) {
+    public Purchase createPurchase(int clientId, int gameId, int aCopies, String trackingCode) {
         Client c = (Client) appUserRepository.findAppUserById(clientId).orElse(null);
         if (c == null) {
             throw new IllegalArgumentException("There is no Client with id: " + clientId);
@@ -42,14 +42,12 @@ public class PurchaseService {
 
         float total = Round.round(g.getPrice() * aCopies);
         int copies = aCopies;
-        String trackingCode = TrackingCode.nextCode(); // avoid negative numbers
         Date purchaseDate = Date.valueOf(LocalDate.now());
 
         Purchase p = new Purchase(total, copies, trackingCode, purchaseDate, g, c);
-        p = purchaseRepository.save(p);
         g.setRemainingQuantity(g.getRemainingQuantity() - copies);
-        g = gameRepository.save(g);
-        return p;
+        gameRepository.save(g);
+        return purchaseRepository.save(p);
     }
 
     public Purchase returnGame(int purchaseId, String refundReason) {
