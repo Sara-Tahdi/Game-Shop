@@ -697,7 +697,7 @@ public class GameServiceTests {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 gameService.updateGame(23, title, price, description,
                         rating, -1, isOffered, category));
-        assertEquals("Remaining Quantity is not valid", e.getMessage());
+        assertEquals("Remaining quantity is not valid", e.getMessage());
     }
 
     @Test

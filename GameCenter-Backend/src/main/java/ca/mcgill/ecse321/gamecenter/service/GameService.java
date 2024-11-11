@@ -180,45 +180,45 @@ public class GameService {
     }
 
     @Transactional
-    public Game updateGame(Integer oldId, String newTitle, Float newPrice, String newDescription, Float newRating, Integer newRemainingQuantity, boolean newIsOffered, GameCategory newCategory) {
-        Game g = gameRepository.findGameById(oldId).orElse(null);
-        if (g == null) {
-            throw new IllegalArgumentException("There is no Game with id: " + oldId);
-        }
+    public Game updateGame(
+            Integer id,
+            String title,
+            Float price,
+            String description,
+            Float rating,
+            Integer remainingQuantity,
+            Boolean isOffered,
+            GameCategory category) {
 
-        Game testTitle = gameRepository.findGameByTitle(newTitle).orElse(null);
-        if (testTitle != null && testTitle.getId() != g.getId()) {
-            throw new IllegalArgumentException("There already exists a Game with title: " + newTitle);
-        }
+        Game game = gameRepository.findGameById(id)
+                .orElseThrow(() -> new IllegalArgumentException("There is no Game with id: " + id));
 
-        Game testDescription= gameRepository.findGameByDescription(newDescription).orElse(null);
-        if (testDescription != null && testDescription.getId() != g.getId()) {
-            throw new IllegalArgumentException("There already exists a Game with description: " + newDescription);
+        Game gameTitle = gameRepository.findGameByTitle(title).orElse(null);
+        if (gameTitle != null && gameTitle.getId() != id) {
+            throw new IllegalArgumentException("There already exists a Game with title: " + title);
         }
-
-        if (newPrice == null || newPrice <= 0.0) {
+        if (price < 0) {
             throw new IllegalArgumentException("Price is not valid");
         }
-
-        if (newRating == null
-                || newRating <= 0.0
-                || newRating >= 5.0) {
+        if (rating < 0 || rating > 5) {
             throw new IllegalArgumentException("Rating is not valid");
         }
-
-        if (newRemainingQuantity == null || newRemainingQuantity < 0) {
-            throw new IllegalArgumentException("Remaining Quantity is not valid");
+        if (remainingQuantity < 0) {
+            throw new IllegalArgumentException("Remaining quantity is not valid");
+        }
+        if (title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Title is not valid");
         }
 
-        g.setTitle(newTitle);
-        g.setPrice(newPrice);
-        g.setDescription(newDescription);
-        g.setRating(newRating);
-        g.setRemainingQuantity(newRemainingQuantity);
-        g.setIsOffered(newIsOffered);
-        g.setCategory(newCategory);
+        game.setTitle(title);
+        game.setPrice(price);
+        game.setDescription(description);
+        game.setRating(rating);
+        game.setRemainingQuantity(remainingQuantity);
+        game.setIsOffered(isOffered);
+        game.setCategory(category);
 
-        return gameRepository.save(g);
+        return gameRepository.save(game);
     }
 
     @Transactional

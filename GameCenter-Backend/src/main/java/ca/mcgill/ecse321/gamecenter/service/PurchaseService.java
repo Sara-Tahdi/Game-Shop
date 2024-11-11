@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.Purchase;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.sql.Date;
-import java.util.Random;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,9 +26,18 @@ public class PurchaseService {
     @Autowired
     private GameRepository gameRepository;
 
-    private Random random = new Random();
+    public List<Purchase> createPurchases(List<PurchaseRequestDTO> purchases, int clientId) {
+        String trackingCode = TrackingCode.nextCode();
+        while (!purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(List.of()).isEmpty()) {
+            trackingCode = TrackingCode.nextCode();
+        }
+        for (PurchaseRequestDTO p: purchases) {
+            createPurchase(clientId, p.getGameId(), p.getCopies(), trackingCode);
+        }
+        return getPurchaseByTrackingCode(trackingCode);
+    }
 
-    public Purchase createPurchase(int clientId, int gameId, int aCopies) {
+    public Purchase createPurchase(int clientId, int gameId, int aCopies, String trackingCode) {
         Client c = (Client) appUserRepository.findAppUserById(clientId).orElse(null);
         if (c == null) {
             throw new IllegalArgumentException("There is no Client with id: " + clientId);
@@ -45,14 +54,12 @@ public class PurchaseService {
 
         float total = Round.round(g.getPrice() * aCopies);
         int copies = aCopies;
-        String trackingCode = TrackingCode.nextCode(); // avoid negative numbers
         Date purchaseDate = Date.valueOf(LocalDate.now());
 
         Purchase p = new Purchase(total, copies, trackingCode, purchaseDate, g, c);
-        p = purchaseRepository.save(p);
         g.setRemainingQuantity(g.getRemainingQuantity() - copies);
-        g = gameRepository.save(g);
-        return p;
+        gameRepository.save(g);
+        return purchaseRepository.save(p);
     }
 
     public Purchase returnGame(int purchaseId, String refundReason) {
@@ -91,5 +98,9 @@ public class PurchaseService {
                 .filter(purchase -> purchase.getPurchaseDate().toLocalDate().isAfter(LocalDate.now().minusDays(90)))
                 .collect(Collectors.toList());
         return filteredPurchases;
+    }
+
+    public List<Purchase> getPurchaseByTrackingCode(String trackingCode) {
+        return purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(List.of());
     }
 }

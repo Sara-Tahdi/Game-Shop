@@ -66,6 +66,7 @@ public class PurchaseIntegrationTests {
     private int gameId_2;
     private int purchaseId_1;
     private int purchaseId_2;
+    private String trackingCode;
 
 
     @BeforeAll
@@ -141,8 +142,11 @@ public class PurchaseIntegrationTests {
         assertEquals(this.gameId_2, body.getLast().getGame().getId());
         assertEquals(VALID_PURCHASE_COPIES_2, body.getLast().getCopies());
 
+        assertEquals(body.getFirst().getTrackingCode(), body.getLast().getTrackingCode());
+
         this.purchaseId_1 = body.getFirst().getId();
         this.purchaseId_2 = body.getLast().getId();
+        this.trackingCode = body.getFirst().getTrackingCode();
     }
 
     @Test

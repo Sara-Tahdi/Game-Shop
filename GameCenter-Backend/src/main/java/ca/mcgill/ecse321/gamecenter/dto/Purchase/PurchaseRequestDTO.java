@@ -12,6 +12,8 @@ public class PurchaseRequestDTO {
     @Min(value = 1, message = "At least 1 copy")
     private int copies;
 
+    public PurchaseRequestDTO() {}
+
     public PurchaseRequestDTO(int clientId, int gameId, int copies) {
         this.clientId = clientId;
         this.gameId = gameId;
