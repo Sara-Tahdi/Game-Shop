@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +17,17 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
     @Autowired
     private GameRepository gameRepository;
+
+    private int ratingToNumber(Review.Rating rating) {
+        switch (rating) {
+            case ONE: {return 1;}
+            case TWO: {return 2;}
+            case THREE: {return 3;}
+            case FOUR: {return 4;}
+            case FIVE: {return 5;}
+            case null, default: {return 0;}
+        }
+    }
 
     public Review findReviewById(int id) {
         Review review = reviewRepository.findReviewById(id).orElse(null);
@@ -31,6 +43,11 @@ public class ReviewService {
             Game game)
     {
         Review review = new Review(author, reviewContent, null, stars, game);
+        float currRating = game.getRating();
+        float numReviews = (float) reviewRepository.findReviewsByGameId(game.getId()).orElse(new ArrayList<>()).size();
+        float newRating = ((currRating * numReviews) + ratingToNumber(stars))/(numReviews + 1);
+        game.setRating(newRating);
+        gameRepository.save(game);
         return reviewRepository.save(review);
     }
 
