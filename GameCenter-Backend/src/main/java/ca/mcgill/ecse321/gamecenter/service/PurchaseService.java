@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.Purchase;
@@ -24,6 +25,17 @@ public class PurchaseService {
     private AppUserRepository appUserRepository;
     @Autowired
     private GameRepository gameRepository;
+
+    public List<Purchase> createPurchases(List<PurchaseRequestDTO> purchases, int clientId) {
+        String trackingCode = TrackingCode.nextCode();
+        while (!purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(List.of()).isEmpty()) {
+            trackingCode = TrackingCode.nextCode();
+        }
+        for (PurchaseRequestDTO p: purchases) {
+            createPurchase(clientId, p.getGameId(), p.getCopies(), trackingCode);
+        }
+        return getPurchaseByTrackingCode(trackingCode);
+    }
 
     public Purchase createPurchase(int clientId, int gameId, int aCopies, String trackingCode) {
         Client c = (Client) appUserRepository.findAppUserById(clientId).orElse(null);
@@ -86,5 +98,9 @@ public class PurchaseService {
                 .filter(purchase -> purchase.getPurchaseDate().toLocalDate().isAfter(LocalDate.now().minusDays(90)))
                 .collect(Collectors.toList());
         return filteredPurchases;
+    }
+
+    public List<Purchase> getPurchaseByTrackingCode(String trackingCode) {
+        return purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(List.of());
     }
 }

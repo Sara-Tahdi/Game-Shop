@@ -13,4 +13,7 @@ public interface PurchaseRepository extends CrudRepository<Purchase, Integer> {
 
     @Query("SELECT p FROM Purchase p WHERE p.client.id = :clientId ORDER BY p.purchaseDate DESC")
     Optional<List<Purchase>> findPurchasesByClientId(@Param("clientId") int clientId);
+
+    @Query("SELECT p FROM Purchase p WHERE p.trackingCode = :trackingCode")
+    Optional<List<Purchase>> findPurchasesByTrackingCode(@Param("trackingCode") String trackingCode);
 }
