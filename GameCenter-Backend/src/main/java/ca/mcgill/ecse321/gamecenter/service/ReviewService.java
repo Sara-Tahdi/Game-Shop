@@ -42,4 +42,11 @@ public class ReviewService {
         if (reviews == null) {throw new IllegalArgumentException("Game with id: " + gameId + " has no reviews");}
         return reviews;
     }
+
+    public Review managerReplyToReview(int reviewId, String reply) {
+        Review r = reviewRepository.findReviewById(reviewId).orElse(null);
+        if (r == null) {throw new IllegalArgumentException("No review with id: " + reviewId);}
+        r.setManagerReply(reply);
+        return reviewRepository.save(r);
+    }
 }
