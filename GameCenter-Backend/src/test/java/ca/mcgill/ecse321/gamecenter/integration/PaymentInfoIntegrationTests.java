@@ -40,12 +40,12 @@ public class PaymentInfoIntegrationTests {
     private static final String VALID_CLIENT_CARDNUMBER = "1234567890123456";
     private static final int VALID_CLIENT_CARDEXPIRYMONTH = 5;
     private static final int VALID_CLIENT_CARDEXPIRYYEAR = 28;
-    private static final int VALID_CLIENT_CVV = 900;
+    private static final String VALID_CLIENT_CVV = "001";
 
     private int clientId;
     private int paymentInfoId;
 
-    @BeforeEach
+    @BeforeAll
     public void setup() {
         Client c = appUserRepository.save(new Client(
                 VALID_CLIENT_EMAIL,
@@ -66,7 +66,7 @@ public class PaymentInfoIntegrationTests {
     @Test
     @Order(1)
     public void testAddPaymentInfo() {
-        String url = String.format("/paymentInfo/add/%d", this.clientId);
+        String url = String.format("/paymentInfo/%d", this.clientId);
 
         PaymentInfoRequestDTO paymentInfoRequestDTO = new PaymentInfoRequestDTO(
             VALID_CLIENT_CARDNUMBER,
@@ -88,4 +88,21 @@ public class PaymentInfoIntegrationTests {
 
         this.paymentInfoId = createdPaymentInfoResponseDTO.getId();
     }
+
+    @Test
+    @Order(2)
+    public void testGetClientPaymentInfos() {
+        String url = String.format("/paymentInfo/%d", this.clientId);
+
+        ResponseEntity<PaymentInfoResponseDTO[]> res = client.getForEntity(url, PaymentInfoResponseDTO[].class);
+        assertNotNull(res);
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+        List<PaymentInfoResponseDTO> body = List.of(res.getBody());
+        assertEquals(1, body.size());
+        assertEquals(this.clientId, body.getFirst().getClient().getId());
+        assertEquals(this.paymentInfoId, body.getFirst().getId());
+    }
+
+//    @Test
+//    @Order(3)
 }
