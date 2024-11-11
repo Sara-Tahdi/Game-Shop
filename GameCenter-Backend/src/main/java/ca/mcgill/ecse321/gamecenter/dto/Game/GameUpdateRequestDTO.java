@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.dto.Game;
 
-import ca.mcgill.ecse321.gamecenter.model.Game;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class GameUpdateRequestDTO {
