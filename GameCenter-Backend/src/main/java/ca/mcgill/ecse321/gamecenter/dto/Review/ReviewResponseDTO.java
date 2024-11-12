@@ -5,6 +5,7 @@ import ca.mcgill.ecse321.gamecenter.model.Review;
 
 public class ReviewResponseDTO {
     private int id;
+    private String author;
     private String reviewMessage;
     private String managerReply;
     private Review.Rating rating;
@@ -14,6 +15,7 @@ public class ReviewResponseDTO {
 
     public ReviewResponseDTO(Review r) {
         this.id = r.getId();
+        this.author = r.getAuthor();
         this.reviewMessage = r.getReview();
         this.managerReply = r.getManagerReply();
         this.rating = r.getStars();
@@ -21,6 +23,7 @@ public class ReviewResponseDTO {
     }
 
     public int getId() { return this.id; }
+    public String getAuthor() { return this.author; }
     public String getReviewMessage() { return this.reviewMessage; }
     public String getManagerReply() { return this.managerReply; }
     public Review.Rating getRating() { return this.rating; }

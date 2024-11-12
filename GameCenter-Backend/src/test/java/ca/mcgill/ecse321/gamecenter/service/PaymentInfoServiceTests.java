@@ -122,11 +122,11 @@ public class PaymentInfoServiceTests {
         assertNotNull(savedPaymentInfo);
         assertEquals(savedPaymentInfo.getClient().getId(), createdClient.getId());
 
-        when(paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber)).thenReturn(Optional.of(paymentInfo));
-        doNothing().when(paymentInfoRepository).delete(paymentInfo);
+        when(paymentInfoRepository.findPaymentInfoById(paymentInfo.getId())).thenReturn(Optional.of(paymentInfo));
 
-        paymentInfoService.deletePaymentInfo(cardNumber);
+        paymentInfoService.deletePaymentInfo(paymentInfo.getId());
 
+        when(paymentInfoRepository.findPaymentInfoById(paymentInfo.getId())).thenReturn(Optional.empty());
         PaymentInfo deletedPaymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfo.getId()).orElse(null);
         assertNull(deletedPaymentInfo);
     }
@@ -152,9 +152,9 @@ public class PaymentInfoServiceTests {
         when(paymentInfoRepository.save(any(PaymentInfo.class))).thenReturn(paymentInfo);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-          paymentInfoService.deletePaymentInfo(cardNumber);
+          paymentInfoService.deletePaymentInfo(paymentInfo.getId());
         });
-        assertEquals(e.getMessage(), "No payment info with card number: " + cardNumber);
+        assertEquals(e.getMessage(), "No payment info with id: " + paymentInfo.getId());
     }
 
     @Test
