@@ -21,13 +21,15 @@ public class Purchase
   private int id;
   private float totalPrice;
   private int copies;
-  private int trackingCode;
+  private String trackingCode;
   private Date purchaseDate;
   private String refundReason;
 
   //Purchase Associations
   @ManyToOne
   private Game game;
+  @ManyToOne
+  private Client client;
 
   //------------------------
   // CONSTRUCTOR
@@ -35,7 +37,7 @@ public class Purchase
 
   public Purchase() {}
 
-  public Purchase(float aTotalPrice, int aCopies, int aTrackingCode, Date aPurchaseDate, Game aGame)
+  public Purchase(float aTotalPrice, int aCopies, String aTrackingCode, Date aPurchaseDate, Game aGame, Client aClient)
   {
     totalPrice = aTotalPrice;
     copies = aCopies;
@@ -44,6 +46,10 @@ public class Purchase
     if (!setGame(aGame))
     {
       throw new RuntimeException("Unable to create Purchase due to aGame. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setClient(aClient))
+    {
+      throw new RuntimeException("Unable to create Purchase due to aClient. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
@@ -75,7 +81,7 @@ public class Purchase
     return wasSet;
   }
 
-  public boolean setTrackingCode(int aTrackingCode)
+  public boolean setTrackingCode(String aTrackingCode)
   {
     boolean wasSet = false;
     trackingCode = aTrackingCode;
@@ -114,7 +120,7 @@ public class Purchase
     return copies;
   }
 
-  public int getTrackingCode()
+  public String getTrackingCode()
   {
     return trackingCode;
   }
@@ -133,6 +139,11 @@ public class Purchase
   {
     return game;
   }
+  /* Code from template association_GetOne */
+  public Client getClient()
+  {
+    return client;
+  }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setGame(Game aNewGame)
   {
@@ -144,10 +155,22 @@ public class Purchase
     }
     return wasSet;
   }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setClient(Client aNewClient)
+  {
+    boolean wasSet = false;
+    if (aNewClient != null)
+    {
+      client = aNewClient;
+      wasSet = true;
+    }
+    return wasSet;
+  }
 
   public void delete()
   {
     game = null;
+    client = null;
   }
 
 
@@ -161,6 +184,7 @@ public class Purchase
             "trackingCode" + ":" + getTrackingCode()+ "," +
             "refundReason" + ":" + getRefundReason()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "purchaseDate" + "=" + (getPurchaseDate() != null ? !getPurchaseDate().equals(this)  ? getPurchaseDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "game = "+(getGame()!=null?Integer.toHexString(System.identityHashCode(getGame())):"null");
+            "  " + "game = "+(getGame()!=null?Integer.toHexString(System.identityHashCode(getGame())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null");
   }
 }

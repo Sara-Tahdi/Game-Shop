@@ -24,6 +24,7 @@ public abstract class Request
   @GeneratedValue
   private int id;
   private Status status;
+  private String reason;
 
   //Request Associations
   @ManyToOne
@@ -34,9 +35,10 @@ public abstract class Request
   //------------------------
   public Request() {}
 
-  public Request(Status aStatus, Staff aCreatedRequest)
+  public Request(Status aStatus, String aReason, Staff aCreatedRequest)
   {
     status = aStatus;
+    reason = aReason;
     if (!setCreatedRequest(aCreatedRequest))
     {
       throw new RuntimeException("Unable to create Request due to aCreatedRequest. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -63,6 +65,14 @@ public abstract class Request
     return wasSet;
   }
 
+  public boolean setReason(String aReason)
+  {
+    boolean wasSet = false;
+    reason = aReason;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getId()
   {
     return id;
@@ -72,6 +82,8 @@ public abstract class Request
   {
     return status;
   }
+
+  public String getReason() { return reason; }
   /* Code from template association_GetOne */
   public Staff getCreatedRequest()
   {

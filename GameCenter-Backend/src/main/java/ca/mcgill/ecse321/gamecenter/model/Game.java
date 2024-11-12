@@ -4,8 +4,6 @@
 package ca.mcgill.ecse321.gamecenter.model;
 import jakarta.persistence.*;
 
-import java.util.*;
-
 // line 50 "../../../../../../GameCenter.ump"
 @Entity
 public class Game
@@ -33,17 +31,6 @@ public class Game
   private boolean isOffered;
   private GeneralFeeling publicOpinion;
 
-  //Game Associations
-  @OneToMany(
-          cascade = CascadeType.ALL,
-          fetch = FetchType.EAGER
-  )
-  private List<Review> reviews;
-  @OneToMany(
-          cascade = CascadeType.ALL,
-          fetch = FetchType.EAGER
-  )
-  private List<Promotion> promotions;
   @ManyToOne
   private GameCategory category;
 
@@ -62,8 +49,6 @@ public class Game
     remainingQuantity = aRemainingQuantity;
     isOffered = aIsOffered;
     publicOpinion = aPublicOpinion;
-    reviews = new ArrayList<Review>();
-    promotions = new ArrayList<Promotion>();
     if (!setCategory(aCategory))
     {
       throw new RuntimeException("Unable to create Game due to aCategories. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -182,185 +167,16 @@ public class Game
   {
     return isOffered;
   }
-  /* Code from template association_GetMany */
-  public Review getReview(int index)
-  {
-    Review aReview = reviews.get(index);
-    return aReview;
-  }
 
-  public List<Review> getReviews()
-  {
-    List<Review> newReviews = Collections.unmodifiableList(reviews);
-    return newReviews;
-  }
 
-  public int numberOfReviews()
-  {
-    int number = reviews.size();
-    return number;
-  }
 
-  public boolean hasReviews()
-  {
-    boolean has = reviews.size() > 0;
-    return has;
-  }
 
-  public int indexOfReview(Review aReview)
-  {
-    int index = reviews.indexOf(aReview);
-    return index;
-  }
-  /* Code from template association_GetMany */
-  public Promotion getPromotion(int index)
-  {
-    Promotion aPromotion = promotions.get(index);
-    return aPromotion;
-  }
-
-  public List<Promotion> getPromotions()
-  {
-    List<Promotion> newPromotions = Collections.unmodifiableList(promotions);
-    return newPromotions;
-  }
-
-  public int numberOfPromotions()
-  {
-    int number = promotions.size();
-    return number;
-  }
-
-  public boolean hasPromotions()
-  {
-    boolean has = promotions.size() > 0;
-    return has;
-  }
-
-  public int indexOfPromotion(Promotion aPromotion)
-  {
-    int index = promotions.indexOf(aPromotion);
-    return index;
-  }
   /* Code from template association_GetOne */
   public GameCategory getCategory()
   {
     return category;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfReviews()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addReview(Review aReview)
-  {
-    boolean wasAdded = false;
-    if (reviews.contains(aReview)) { return false; }
-    reviews.add(aReview);
-    wasAdded = true;
-    return wasAdded;
-  }
 
-  public boolean removeReview(Review aReview)
-  {
-    boolean wasRemoved = false;
-    if (reviews.contains(aReview))
-    {
-      reviews.remove(aReview);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addReviewAt(Review aReview, int index)
-  {
-    boolean wasAdded = false;
-    if(addReview(aReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReviews()) { index = numberOfReviews() - 1; }
-      reviews.remove(aReview);
-      reviews.add(index, aReview);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveReviewAt(Review aReview, int index)
-  {
-    boolean wasAdded = false;
-    if(reviews.contains(aReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReviews()) { index = numberOfReviews() - 1; }
-      reviews.remove(aReview);
-      reviews.add(index, aReview);
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = addReviewAt(aReview, index);
-    }
-    return wasAdded;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfPromotions()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addPromotion(Promotion aPromotion)
-  {
-    boolean wasAdded = false;
-    if (promotions.contains(aPromotion)) { return false; }
-    promotions.add(aPromotion);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removePromotion(Promotion aPromotion)
-  {
-    boolean wasRemoved = false;
-    if (promotions.contains(aPromotion))
-    {
-      promotions.remove(aPromotion);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addPromotionAt(Promotion aPromotion, int index)
-  {
-    boolean wasAdded = false;
-    if(addPromotion(aPromotion))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfPromotions()) { index = numberOfPromotions() - 1; }
-      promotions.remove(aPromotion);
-      promotions.add(index, aPromotion);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMovePromotionAt(Promotion aPromotion, int index)
-  {
-    boolean wasAdded = false;
-    if(promotions.contains(aPromotion))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfPromotions()) { index = numberOfPromotions() - 1; }
-      promotions.remove(aPromotion);
-      promotions.add(index, aPromotion);
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = addPromotionAt(aPromotion, index);
-    }
-    return wasAdded;
-  }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setCategory(GameCategory aNewCategory)
   {
@@ -375,8 +191,6 @@ public class Game
 
   public void delete()
   {
-    reviews.clear();
-    promotions.clear();
     category = null;
   }
 

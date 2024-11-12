@@ -36,10 +36,10 @@ public class ClientTests {
     @BeforeEach
     @AfterEach
     public void clear() {
+        purchaseRepository.deleteAll();
+        paymentInfoRepository.deleteAll();
         clientRepository.deleteAll();
         gameRepository.deleteAll();
-        paymentInfoRepository.deleteAll();
-        purchaseRepository.deleteAll();
     }
 
     @Test
@@ -145,7 +145,7 @@ public class ClientTests {
 
         PaymentInfo masterCard = new PaymentInfo();
         masterCard.setCardNumber("1622249210243832");
-        masterCard.setCvv(942);
+        masterCard.setCvv("942");
         masterCard.setExpiryMonth(11);
         masterCard.setExpiryYear(2026);
         masterCard = paymentInfoRepository.save(masterCard);
@@ -153,19 +153,19 @@ public class ClientTests {
 
         PaymentInfo visa = new PaymentInfo();
         visa.setCardNumber("7295710471937431");
-        visa.setCvv(135);
+        visa.setCvv("135");
         visa.setExpiryMonth(4);
         visa.setExpiryYear(2027);
         visa = paymentInfoRepository.save(visa);
         assertNotNull(visa);
 
-        client.addPaymentInformation(masterCard);
+        masterCard.setClient(client);
 
-        client = clientRepository.save(client);
+        masterCard = paymentInfoRepository.save(masterCard);
 
         Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
         assertNotNull(clientFromDb);
-        List<PaymentInfo> infos = clientFromDb.getPaymentInformations();
+        List<PaymentInfo> infos = paymentInfoRepository.findPaymentInfosByClientId(clientFromDb.getId()).orElse(null);
         assertNotNull(infos);
 
         assertEquals(masterCard.getId(), infos.getFirst().getId());
@@ -191,7 +191,7 @@ public class ClientTests {
         purchase.setTotalPrice(game.getPrice());
         purchase.setCopies(1);
         purchase.setPurchaseDate(Date.valueOf(LocalDate.now()));
-        purchase.setTrackingCode(3513531);
+        purchase.setTrackingCode("a3451n14m2");
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
 
@@ -200,15 +200,15 @@ public class ClientTests {
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
 
-        client.addPurchaseHistory(purchase);
+        purchase.setClient(client);
 
-        client = clientRepository.save(client);
+        purchase = purchaseRepository.save(purchase);
         assertNotNull(client);
 
         Client clientFromDb = clientRepository.findClientById(client.getId()).orElse(null);
         assertNotNull(clientFromDb);
 
-        List<Purchase> purchaseFromClientFromDb = clientFromDb.getPurchaseHistory();
+        List<Purchase> purchaseFromClientFromDb = purchaseRepository.findPurchasesByClientId(clientFromDb.getId()).orElse(null);
 
         assertEquals(1, purchaseFromClientFromDb.size());
         assertEquals(purchase.getId(), purchaseFromClientFromDb.getFirst().getId());

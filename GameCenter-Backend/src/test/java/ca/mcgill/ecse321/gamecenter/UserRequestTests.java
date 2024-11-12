@@ -49,14 +49,13 @@ public class UserRequestTests {
         "testuser",            
         "password123",        
         "123-456-7890",       
-        "123 Main St",           
-        0                        
+        "123 Main St"
         );
         userFacingJudgement = ClientRepo.save(userFacingJudgement);
 
         // Create a user request
         Request.Status status = Request.Status.PENDING;
-        UserRequest userRequest = new UserRequest(status, createdRequest, userFacingJudgement);
+        UserRequest userRequest = new UserRequest(status, "",createdRequest, userFacingJudgement);
         userRequest = UserRequestRepo.save(userRequest);
 
         // Retrieve the UserRequest, check that it was successfully retrieved, validate the attributes.
@@ -78,6 +77,5 @@ public class UserRequestTests {
         assertEquals(userFacingJudgement.getUsername(), userRequestFromDb.getUserFacingJudgement().getUsername());
         assertEquals(userFacingJudgement.getPhoneNumber(), userRequestFromDb.getUserFacingJudgement().getPhoneNumber());
         assertEquals(userFacingJudgement.getDeliveryAddress(), userRequestFromDb.getUserFacingJudgement().getDeliveryAddress());
-        assertEquals(userFacingJudgement.getNumberOfFlags(), userRequestFromDb.getUserFacingJudgement().getNumberOfFlags());
     }
 }
