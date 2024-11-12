@@ -35,7 +35,7 @@ public class ReviewRestController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/reviews/{reviewId}/managerReply")
+    @PutMapping("/reviews/{reviewId}/managerReply")
     public ReviewResponseDTO managerReplyToReview(@Validated @RequestBody ManagerReplyRequestDTO req, @PathVariable int reviewId) {
         Review r = reviewService.managerReplyToReview(reviewId, req.getReply());
         return new ReviewResponseDTO(r);

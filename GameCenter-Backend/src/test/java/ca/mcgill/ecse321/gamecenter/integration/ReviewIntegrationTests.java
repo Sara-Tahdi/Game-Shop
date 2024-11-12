@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.integration;
 
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.RefundRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Review.ManagerReplyRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Review.ReviewRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Review.ReviewResponseDTO;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -76,7 +79,7 @@ public class ReviewIntegrationTests {
     private static final Game.GeneralFeeling VALID_GAME_PUBLIC_OPINION_2 = Game.GeneralFeeling.VERYPOSITIVE;
 
     private static final String VALID_GAME_REVIEW_1 = "good game. i like";
-    private static final Review.Rating VALID_GAME_REVIEW_RATING_1 = Review.Rating.FIVE;
+    private static final Review.Rating VALID_GAME_REVIEW_RATING_1 = Review.Rating.FOUR;
     private static final String VALID_GAME_REVIEW_2 = "bad game. no like";
     private static final Review.Rating VALID_GAME_REVIEW_RATING_2 = Review.Rating.ONE;
     private static final String VALID_REVIEW_MANAGER_REPLY = "thanks a 1000kg";
@@ -169,10 +172,17 @@ public class ReviewIntegrationTests {
     @Order(3)
     public void managerReplyToReview() {
         ManagerReplyRequestDTO managerReplyRequestDTO = new ManagerReplyRequestDTO(VALID_REVIEW_MANAGER_REPLY);
+        HttpEntity<ManagerReplyRequestDTO> managerReplyRequest = new HttpEntity<>(managerReplyRequestDTO);
 
         String url = String.format("/reviews/%d/managerReply", this.reviewId_1);
 
-        ResponseEntity<ReviewResponseDTO> res = client.postForEntity(url, managerReplyRequestDTO, ReviewResponseDTO.class);
+        ResponseEntity<ReviewResponseDTO> res = client.exchange(
+                url,
+                HttpMethod.PUT,
+                managerReplyRequest,
+                ReviewResponseDTO.class
+        );
+
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         ReviewResponseDTO createdReviewResponseDTO = res.getBody();
