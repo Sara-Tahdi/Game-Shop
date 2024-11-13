@@ -8,12 +8,12 @@ Our application GameCenter will be a Full Stack application which is built upon 
 ## Team Overview
 | Name|Role|
 | :--- |:---:|
-|Naji El Khouri | Software Engineer|
-|Laurier Gauvin| Project Manager|
-|Manuel Hanna| Frontend Developer| 
-|Arjun Sharma | Backend Developer|
-|Sara Tahdi | Software Engineer|
-|Justin Tremellen| Testing Engineer|
+|Naji El Khouri (NEKFromLEB)| Software Engineer|
+|Laurier Gauvin (Dummdood)| Project Manager|
+|Manuel Hanna (ItJustWorks)| Frontend Developer| 
+|Arjun Sharma (arj25)| Backend Developer|
+|Sara Tahdi (Sara-Tahdi)| Software Engineer|
+|Justin Tremellen (tremj)| Testing Engineer|
 
 ## Deliverable 1
 Here are all the tasks and logged hours for our team in Deliverable 1
@@ -22,10 +22,19 @@ Here are all the tasks and logged hours for our team in Deliverable 1
 |Naji El Khouri | <ul><li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Wrote JPA Annotations<li>Wrote tests for Game Persistence<li>Wrote tests for GameCategory Persistence</ul>| 22|
 |Laurier Gauvin| <ul><li>Write meeting minutes<li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Created issues<li>Wrote JPA Annotations<li>Wrote tests for GameRequest Persistence<li>Wrote tests for UserRequest Persistence</ul>| 25|
 |Manuel Hanna| <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Wrote JPA Annotations<li>Wrote tests for Owner Persistence<li>Wrote tests for Promotion Persistence<li>Wrote tests for Purchase Persistence</ul>| 22|
-<<<<<<< HEAD
 |Arjun Sharma | <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Created Use Case Diagram<li>Wrote JPA Annotations<li>Wrote tests for GameCenter Persistence<li>Wrote tests for Review Persistence</ul>| |
-=======
 |Arjun Sharma | <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Created Use Case Diagram<li>Wrote JPA Annotations<li>Wrote tests for GameCenter Persistence<li>Wrote tests for Review Persistence</ul>| 25|
 >>>>>>> origin/deliverable-2
 |Sara Tahdi | <ul><li>Wrote Requirements<li>Wrote 1 Use Case Specification<li>Created Use Case Diagram<li>Created issues<li>Created Milestones<li>Wrote JPA Annotations<li>Wrote tests for PaymentInfo Persistence<li>Wrote tests for Request Persistence</ul>| 18|
 |Justin Tremellen| <ul><li>Design Domain Model<li>Wrote 1 Use Case Specification<li>Created Issue Boards<li>Wrote JPA Annotations<li>Wrote tests for AppUser Persistence<li>Wrote tests for Staff Persistence<li>Wrote tests for Employee Persistence<li>Wrote tests for Client Persistence<li>Wrote tests for Cart Persistence<li>Wrote tests for Wishlist Persistence</ul>| 35|
+
+## Deliverable 2
+Here are all the tasks and logged for our team in Deliverable 2
+| Name | Tasks | Time Logged |
+| :--- |:---|:---:|
+|Naji El Khouri | <ul><li></ul> | |
+|Laurier Gauvin | <ul><li></ul> | |
+|Manuel Hanna | <ul><li></ul> | |
+|Arjun Sharma | <ul><li></ul> | |
+|Sara Tahdi | <ul><li></ul> | |
+|Justin Tremellen | <ul><li>Reworked the model & changed the model upon team request<li>Wrote the service methods and unit tests for the AppUser inheritance structure<li>Wrote the service methods and unit tests for the Purchase class<li>Wrote the controller methods and integration tests for the AppUser inheritance structure<li>Wrote the controller methods and integration tests for the Purchase class<li>Wrote the API documentation for the AppUser inheritance structure endpoints<li>Wrote the API documentation for the Purchase endpoint</ul> | 40|
