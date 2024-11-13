@@ -35,7 +35,7 @@ public class PaymentInfoIntegrationTests {
     private static final String VALID_CLIENT_DELIVERYADDRESS = "122 John Street";
     private static final String VALID_CLIENT_CARDNUMBER = "1234567890123456";
     private static final int VALID_CLIENT_CARDEXPIRYMONTH = 5;
-    private static final int VALID_CLIENT_CARDEXPIRYYEAR = 28;
+    private static final int VALID_CLIENT_CARDEXPIRYYEAR = 2028;
     private static final String VALID_CLIENT_CVV = "001";
 
     private int clientId;
