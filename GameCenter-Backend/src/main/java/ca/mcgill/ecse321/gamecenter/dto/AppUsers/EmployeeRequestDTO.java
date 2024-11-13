@@ -12,13 +12,19 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
-    public EmployeeRequestDTO(String email, String username, String password) {
+    private String oldPassword;
+
+    public EmployeeRequestDTO() {}
+
+    public EmployeeRequestDTO(String email, String username, String password, String oldPassword) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.oldPassword = oldPassword;
     }
 
     public String getUsername() { return this.username; }
     public String getEmail() { return this.email; }
     public String getPassword() { return this.password; }
+    public String getOldPassword() { return this.oldPassword; }
 }

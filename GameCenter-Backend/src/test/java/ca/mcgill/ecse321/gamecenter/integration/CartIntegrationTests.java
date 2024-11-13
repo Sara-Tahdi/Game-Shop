@@ -46,7 +46,6 @@ public class CartIntegrationTests {
 
     private int clientId;
     private int gameId_1;
-    private int cartId_1;
 
     @BeforeAll
     public void setupDatabase() {
@@ -103,7 +102,6 @@ public class CartIntegrationTests {
         assertEquals(this.clientId, body.getClientId());
         assertEquals(this.gameId_1, body.getGameId());
 
-        this.cartId_1 = body.getId();  // Save the cart ID for later test
     }
 
     @Test

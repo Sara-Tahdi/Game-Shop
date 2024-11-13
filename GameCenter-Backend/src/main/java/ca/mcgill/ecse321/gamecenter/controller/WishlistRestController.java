@@ -1,20 +1,10 @@
 package ca.mcgill.ecse321.gamecenter.controller;
-
 import ca.mcgill.ecse321.gamecenter.dto.Wishlist.*;
 import ca.mcgill.ecse321.gamecenter.model.Wishlist;
 import ca.mcgill.ecse321.gamecenter.service.WishlistService;
-import ca.mcgill.ecse321.gamecenter.dto.AppUsers.*;
-import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.service.AppUserService;
-import ca.mcgill.ecse321.gamecenter.dto.Game.*;
-import ca.mcgill.ecse321.gamecenter.model.Game;
-import ca.mcgill.ecse321.gamecenter.service.GameCategoryService;
-import ca.mcgill.ecse321.gamecenter.service.GameService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +15,6 @@ public class WishlistRestController {
 
     @Autowired
     private WishlistService wishlistService;
-    private AppUserService appUserService;
-    private GameService gameService;
 
     @PostMapping(value = "/wishlists/create")
     public WishlistResponseDto createWishlist(@RequestBody WishlistRequestDto request) {

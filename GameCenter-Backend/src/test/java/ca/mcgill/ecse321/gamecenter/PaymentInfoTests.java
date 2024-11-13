@@ -27,14 +27,14 @@ public class PaymentInfoTests {
         // Create the payment information
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
-        paymentInfo.setCvv(123);
+        paymentInfo.setCvv("123");
         paymentInfo.setExpiryMonth(12);
         paymentInfo.setExpiryYear(2025);
 
         paymentInfo = paymentInfoRepository.save(paymentInfo);
         assertNotNull(paymentInfo);
         assertEquals("1234567890123456", paymentInfo.getCardNumber());
-        assertEquals(123, paymentInfo.getCvv());
+        assertEquals("123", paymentInfo.getCvv());
         assertEquals(12, paymentInfo.getExpiryMonth());
         assertEquals(2025, paymentInfo.getExpiryYear());
 
@@ -45,7 +45,7 @@ public class PaymentInfoTests {
 
         assertEquals(id, paymentInfoFromDb.getId());
         assertEquals("1234567890123456", paymentInfoFromDb.getCardNumber());
-        assertEquals(123, paymentInfoFromDb.getCvv());
+        assertEquals("123", paymentInfoFromDb.getCvv());
         assertEquals(12, paymentInfoFromDb.getExpiryMonth());
         assertEquals(2025, paymentInfoFromDb.getExpiryYear());
     }
@@ -55,7 +55,7 @@ public class PaymentInfoTests {
         // Create the payment information
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
-        paymentInfo.setCvv(123);
+        paymentInfo.setCvv("123");
         paymentInfo.setExpiryMonth(12);
         paymentInfo.setExpiryYear(2025);
 
@@ -64,13 +64,13 @@ public class PaymentInfoTests {
 
         // Update the info and save again
         paymentInfo.setCardNumber("6543210987654321");
-        paymentInfo.setCvv(321);
+        paymentInfo.setCvv("321");
         paymentInfo.setExpiryMonth(6);
         paymentInfo.setExpiryYear(2024);
         paymentInfo = paymentInfoRepository.save(paymentInfo);
         assertNotNull(paymentInfo);
         assertEquals("6543210987654321", paymentInfo.getCardNumber());
-        assertEquals(321, paymentInfo.getCvv());
+        assertEquals("321", paymentInfo.getCvv());
         assertEquals(6, paymentInfo.getExpiryMonth());
         assertEquals(2024, paymentInfo.getExpiryYear());
 
@@ -79,7 +79,7 @@ public class PaymentInfoTests {
         assertNotNull(paymentInfoFromDb);
 
         assertEquals("6543210987654321", paymentInfoFromDb.getCardNumber());
-        assertEquals(321, paymentInfoFromDb.getCvv());
+        assertEquals("321", paymentInfoFromDb.getCvv());
         assertEquals(6, paymentInfoFromDb.getExpiryMonth());
         assertEquals(2024, paymentInfoFromDb.getExpiryYear());
     }
@@ -89,7 +89,7 @@ public class PaymentInfoTests {
         // Create payment info and save
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
-        paymentInfo.setCvv(123);
+        paymentInfo.setCvv("123");
         paymentInfo.setExpiryMonth(12);
         paymentInfo.setExpiryYear(2025);
         paymentInfo = paymentInfoRepository.save(paymentInfo);
@@ -108,7 +108,7 @@ public class PaymentInfoTests {
         // Create payment inforfamtion and save
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCardNumber("1234567890123456");
-        paymentInfo.setCvv(123);
+        paymentInfo.setCvv("123");
         paymentInfo.setExpiryMonth(12);
         paymentInfo.setExpiryYear(2025);
         paymentInfo = paymentInfoRepository.save(paymentInfo);

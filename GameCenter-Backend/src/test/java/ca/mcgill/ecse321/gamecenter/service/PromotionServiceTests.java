@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class PromotionServiceTests {
         expectedPromotion.setId(1);
         when(promotionRepository.save(any(Promotion.class))).thenReturn(expectedPromotion);
 
-        Promotion createdPromotion = promotionService.createPromotion(newPrice, startDate, endDate, game);
+        Promotion createdPromotion = promotionService.createPromotion(newPrice, startDate.toLocalDate(), endDate.toLocalDate(), game);
 
         assertNotNull(createdPromotion);
         assertEquals(1, createdPromotion.getId());
@@ -63,7 +64,7 @@ public class PromotionServiceTests {
         game.setId(23);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                promotionService.createPromotion(-10.0F, startDate, endDate, game));
+                promotionService.createPromotion(-10.0F, startDate.toLocalDate(), endDate.toLocalDate(), game));
         assertEquals("New price is not valid", e.getMessage());
     }
 
@@ -76,7 +77,7 @@ public class PromotionServiceTests {
         game.setId(23);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                promotionService.createPromotion(newPrice, startDate, endDate, game));
+                promotionService.createPromotion(newPrice, startDate.toLocalDate(), endDate.toLocalDate(), game));
         assertEquals("Start and End Dates are not valid", e.getMessage());
     }
 
@@ -91,7 +92,7 @@ public class PromotionServiceTests {
         when(gameRepository.findGameById(999)).thenReturn(Optional.empty());
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                promotionService.createPromotion(newPrice, startDate, endDate, game));
+                promotionService.createPromotion(newPrice, startDate.toLocalDate(), endDate.toLocalDate(), game));
         assertEquals("Game does not exist in the database", e.getMessage());
     }
 
@@ -153,29 +154,26 @@ public class PromotionServiceTests {
 
     @Test
     void testGetPromotionByGameIdFail() {
-        when(promotionRepository.findPromotionsByGameId(999)).thenReturn(Optional.empty());
-
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                promotionService.getPromotionByGameId(999));
-        assertEquals("There is no Promotion for Game with id: 999", e.getMessage());
+        when(promotionRepository.findPromotionsByGameId(1290483579)).thenReturn(Optional.empty());
+        assertNull(promotionService.getPromotionByGameId(1290483579));
     }
 
     @Test
     void testUpdatePromotionSuccess() {
         int id = 23;
         float oldPrice = 79.99F;
-        Date oldStartDate = Date.valueOf("2024-01-01");
-        Date oldEndDate = Date.valueOf("2024-12-31");
+        LocalDate oldStartDate = Date.valueOf("2024-01-01").toLocalDate();
+        LocalDate oldEndDate = Date.valueOf("2024-12-31").toLocalDate();
         Game oldGame = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
                 Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
         oldGame.setId(23);
 
-        Promotion originalPromotion = new Promotion(oldPrice, oldStartDate, oldEndDate, oldGame);
+        Promotion originalPromotion = new Promotion(oldPrice, Date.valueOf(oldStartDate), Date.valueOf(oldEndDate), oldGame);
         originalPromotion.setId(id);
 
         Float newPrice = 69.99F;
-        Date newStartDate = Date.valueOf("2024-02-01");
-        Date newEndDate = Date.valueOf("2024-11-30");
+        LocalDate newStartDate = Date.valueOf("2024-02-01").toLocalDate();
+        LocalDate newEndDate = Date.valueOf("2024-11-30").toLocalDate();
         Game newGame = new Game("Mario Odyssey", 89.99F, "A 3D platformer!", 4.9F, 15, true,
                 Game.GeneralFeeling.POSITIVE, new GameCategory("3D Platformer"));
         newGame.setId(24);
@@ -189,8 +187,8 @@ public class PromotionServiceTests {
         assertNotNull(updatedPromotion);
         assertEquals(id, updatedPromotion.getId());
         assertEquals(newPrice, updatedPromotion.getNewPrice());
-        assertEquals(newStartDate, updatedPromotion.getStartDate());
-        assertEquals(newEndDate, updatedPromotion.getEndDate());
+        assertEquals(newStartDate, updatedPromotion.getStartDate().toLocalDate());
+        assertEquals(newEndDate, updatedPromotion.getEndDate().toLocalDate());
         assertEquals(newGame.getId(), updatedPromotion.getGame().getId());
     }
 
@@ -228,7 +226,7 @@ public class PromotionServiceTests {
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 promotionService.updatePromotion(id, -69.99F, null, null, null));
-        assertEquals("Price is not valid", e.getMessage());
+        assertEquals("Price must be positive", e.getMessage());
     }
 
     @Test
@@ -241,9 +239,9 @@ public class PromotionServiceTests {
         when(promotionRepository.findPromotionById(id)).thenReturn(Optional.of(promotion));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                promotionService.updatePromotion(id, null, Date.valueOf("2024-12-31"),
-                        Date.valueOf("2024-01-01"), null));
-        assertEquals("Start and End Dates are not valid", e.getMessage());
+                promotionService.updatePromotion(id, null, Date.valueOf("2024-12-31").toLocalDate(),
+                        Date.valueOf("2024-01-01").toLocalDate(), null));
+        assertEquals("Start date must be before end date", e.getMessage());
     }
 
     @Test
@@ -261,6 +259,6 @@ public class PromotionServiceTests {
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
                 promotionService.updatePromotion(id, null, null, null, newGame));
-        assertEquals("Game does not exist in the database", e.getMessage());
+        assertEquals("Game not found with id: 999", e.getMessage());
     }
 }

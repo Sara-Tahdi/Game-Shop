@@ -2,8 +2,10 @@ package ca.mcgill.ecse321.gamecenter.controller;
 
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Game.GameResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Game.GameUpdateRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
+import ca.mcgill.ecse321.gamecenter.service.GameCategoryService;
 import ca.mcgill.ecse321.gamecenter.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -16,9 +18,12 @@ import java.util.stream.Collectors;
 public class GameRestController {
     @Autowired
     private GameService gameService;
+    @Autowired
+    private GameCategoryService gameCategoryService;
 
     @PostMapping(value = "/games/create")
     public GameResponseDTO createGame(@Validated @RequestBody GameRequestDTO gameToCreate) {
+        GameCategory c = gameCategoryService.getGameCategoryById(gameToCreate.getCategoryId());
         Game g = gameService.createGame(
                 gameToCreate.getTitle(),
                 gameToCreate.getPrice(),
@@ -27,24 +32,25 @@ public class GameRestController {
                 gameToCreate.getRemainingQuantity(),
                 gameToCreate.getIsOffered(),
                 gameToCreate.getPublicOpinion(),
-                gameToCreate.getCategory()
+                c
         );
         return new GameResponseDTO(g);
     }
 
-    @PutMapping(value = "/games/update")
-    public GameResponseDTO updateGame(@Validated @RequestBody GameRequestDTO gameToUpdate) {
-        Game g = gameService.createGame(
+    @PutMapping("/games/update/{id}")
+    public GameResponseDTO updateGame(@Validated @RequestBody GameUpdateRequestDTO gameToUpdate, @PathVariable int id) {
+        GameCategory categoryToUpdate =  gameCategoryService.getGameCategoryById(gameToUpdate.getCategoryId());
+        Game game = gameService.updateGame(
+                id,
                 gameToUpdate.getTitle(),
                 gameToUpdate.getPrice(),
                 gameToUpdate.getDescription(),
                 gameToUpdate.getRating(),
                 gameToUpdate.getRemainingQuantity(),
                 gameToUpdate.getIsOffered(),
-                gameToUpdate.getPublicOpinion(),
-                gameToUpdate.getCategory()
+                categoryToUpdate
         );
-        return new GameResponseDTO(g);
+        return new GameResponseDTO(game);
     }
 
     @GetMapping(value = "/games")
@@ -55,25 +61,25 @@ public class GameRestController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(value = "/games/{id}")
+    @GetMapping(value = "/games/id/{id}")
     public GameResponseDTO getGameById(@PathVariable int id) {
         Game g = gameService.getGameById(id);
         return new GameResponseDTO(g);
     }
 
-    @GetMapping(value = "/games/{title}")
+    @GetMapping(value = "/games/title/{title}")
     public GameResponseDTO getGameByTitle(@PathVariable String title) {
         Game g = gameService.getGameByTitle(title);
         return new GameResponseDTO(g);
     }
 
-    @GetMapping(value = "/games/{description}")
+    @GetMapping(value = "/games/description/{description}")
     public GameResponseDTO getGameByDescription(@PathVariable String description) {
         Game g = gameService.getGameByDescription(description);
         return new GameResponseDTO(g);
     }
 
-    @GetMapping(value = "/games/{category}")
+    @GetMapping(value = "/games/category/{category}")
     public List<GameResponseDTO> getGamesByCategory(@PathVariable GameCategory category) {
         List<Game> games = gameService.getGameByCategory(category.getCategory());
         return games.stream()

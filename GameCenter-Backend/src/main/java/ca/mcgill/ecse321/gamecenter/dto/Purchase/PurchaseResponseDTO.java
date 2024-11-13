@@ -10,7 +10,7 @@ public class PurchaseResponseDTO {
     private int id;
     private float totalPrice;
     private int copies;
-    private int trackingCode;
+    private String trackingCode;
     private Date purchaseDate;
     private String refundReason;
     private ClientResponseDTO client;
@@ -32,7 +32,7 @@ public class PurchaseResponseDTO {
     public int getId() { return this.id; }
     public float getTotalPrice() { return this.totalPrice; }
     public int getCopies() { return this.copies; }
-    public int getTrackingCode() { return this.trackingCode; }
+    public String getTrackingCode() { return this.trackingCode; }
     public Date getPurchaseDate() { return this.purchaseDate; }
     public String getRefundReason() { return this.refundReason; }
     public ClientResponseDTO getClient() { return this.client; }

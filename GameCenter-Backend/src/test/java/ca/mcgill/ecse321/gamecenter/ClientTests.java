@@ -145,7 +145,7 @@ public class ClientTests {
 
         PaymentInfo masterCard = new PaymentInfo();
         masterCard.setCardNumber("1622249210243832");
-        masterCard.setCvv(942);
+        masterCard.setCvv("942");
         masterCard.setExpiryMonth(11);
         masterCard.setExpiryYear(2026);
         masterCard = paymentInfoRepository.save(masterCard);
@@ -153,7 +153,7 @@ public class ClientTests {
 
         PaymentInfo visa = new PaymentInfo();
         visa.setCardNumber("7295710471937431");
-        visa.setCvv(135);
+        visa.setCvv("135");
         visa.setExpiryMonth(4);
         visa.setExpiryYear(2027);
         visa = paymentInfoRepository.save(visa);
@@ -191,7 +191,7 @@ public class ClientTests {
         purchase.setTotalPrice(game.getPrice());
         purchase.setCopies(1);
         purchase.setPurchaseDate(Date.valueOf(LocalDate.now()));
-        purchase.setTrackingCode(3513531);
+        purchase.setTrackingCode("a3451n14m2");
         purchase = purchaseRepository.save(purchase);
         assertNotNull(purchase);
 
