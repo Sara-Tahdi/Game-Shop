@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import ca.mcgill.ecse321.gamecenter.dto.GameCategory.GameCategoryRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.GameCategory.GameCategoryResponseDTO;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

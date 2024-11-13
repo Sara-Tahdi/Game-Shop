@@ -30,9 +30,9 @@ Here are all the tasks and logged hours for our team in Deliverable 1
 Here are all the tasks and logged for our team in Deliverable 2
 | Name | Tasks | Time Logged |
 | :--- |:---|:---:|
-|Naji El Khouri | <ul><li></ul> | |
-|Laurier Gauvin | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Requests, User Requests, and Game Requests.</ul> | 35|
+|Naji El Khouri | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Game and Promotions.</ul> | 30|
+|Laurier Gauvin | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Requests, User Requests, and Game Requests.<li>Proofread and wrote the QA Report document</ul> | 35|
 |Manuel Hanna | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Reviews and Payment Info.</ul> | 25|
-|Arjun Sharma | <ul><li></ul> | |
-|Sara Tahdi | <ul><li></ul> | |
-|Justin Tremellen | <ul><li>Reworked the model & changed the model upon team request<li>Wrote the service methods and unit tests for the AppUser inheritance structure<li>Wrote the service methods and unit tests for the Purchase class<li>Wrote the controller methods and integration tests for the AppUser inheritance structure<li>Wrote the controller methods and integration tests for the Purchase class<li>Wrote the API documentation for the AppUser inheritance structure endpoints<li>Wrote the API documentation for the Purchase endpoint</ul> | 40|
+|Arjun Sharma | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for GameCategory and GameCenter.<li>Write the QA Report document</ul> | 17|
+|Sara Tahdi | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Cart and Wishlist.</ul> | 25|
+|Justin Tremellen | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Client, Employee, Owner, and Purchase.<li>Wrote the QA Report document</ul>  | 40|
