@@ -79,6 +79,8 @@ public class ReviewIntegrationTests {
     private Client client_2;
     private int reviewId_1;
     private int reviewId_2;
+    private float gameRating_1;
+    private float gameRating_2;
 
     @BeforeAll
     public void setup() {
@@ -121,6 +123,7 @@ public class ReviewIntegrationTests {
         assertEquals(createdReviewResponseDTO1.getReviewMessage(), VALID_GAME_REVIEW_1);
         assertEquals(createdReviewResponseDTO1.getRating(), VALID_GAME_REVIEW_RATING_1);
         this.reviewId_1 = createdReviewResponseDTO1.getId();
+        this.gameRating_1 = (0 * 0 + 4)/(0 + 1);
 
         ReviewRequestDTO reviewRequestDTO2 = new ReviewRequestDTO(client_2.getUsername(), VALID_GAME_REVIEW_2, VALID_GAME_REVIEW_RATING_2);
         ResponseEntity<ReviewResponseDTO> res_2 = client.postForEntity(url, reviewRequestDTO2, ReviewResponseDTO.class);
@@ -135,6 +138,7 @@ public class ReviewIntegrationTests {
         assertEquals(createdReviewResponseDTO2.getReviewMessage(), VALID_GAME_REVIEW_2);
         assertEquals(createdReviewResponseDTO2.getRating(), VALID_GAME_REVIEW_RATING_2);
         this.reviewId_2 = createdReviewResponseDTO2.getId();
+        this.gameRating_2 = (this.gameRating_1 * 1 + 1)/(1 + 1);
     }
 
     @Test
@@ -151,6 +155,7 @@ public class ReviewIntegrationTests {
 
         assertEquals(this.reviewId_1, body.getFirst().getId());
         assertEquals(this.reviewId_2, body.getLast().getId());
+        assertEquals(this.gameRating_2, body.getFirst().getGame().getRating());
     }
 
     @Test
