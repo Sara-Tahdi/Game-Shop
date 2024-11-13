@@ -48,7 +48,7 @@ public class CartService {
         cart.setClient(client);
         cart.setGame(game);
 
-        // Persist the entities
+        // Persist
         clientRepository.save(client);
         gameRepository.save(game);
         return cartRepository.save(cart);

@@ -53,7 +53,7 @@ public class WishlistIntegrationTests {
 
     @BeforeAll
     public void setupDatabase() {
-        // Create the owner and client
+        //  Create owner and client
         appUserRepository.save(new Owner(VALID_OWNER_EMAIL, VALID_OWNER_USERNAME, VALID_OWNER_PASSWORD));
         Client c = appUserRepository.save(new Client(
                 VALID_CLIENT_EMAIL,
@@ -68,7 +68,6 @@ public class WishlistIntegrationTests {
         GameCategory gameCategory = new GameCategory(VALID_GAME_CATEGORY);
         gameCategoryRepository.save(gameCategory);
 
-        // Create only 1 game
         Game g1 = gameRepository.save(new Game(
                 VALID_GAME_NAME,
                 VALID_GAME_PRICE,
@@ -106,7 +105,7 @@ public class WishlistIntegrationTests {
         assertEquals(this.clientId, body.getClientId());
         assertEquals(this.gameId_1, body.getGameId());
 
-        this.wishlistId_1 = body.getId();  // Save the wishlist ID for later tests
+        this.wishlistId_1 = body.getId();
     }
 
     @Test
@@ -119,7 +118,7 @@ public class WishlistIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<WishlistResponseDto> body = List.of(res.getBody());
-        assertTrue(body.size() >= 1);  // We expect at least 1 game in the wishlist (as only 1 game is created)
+        assertTrue(body.size() >= 1);
     }
 
     @Test
