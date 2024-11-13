@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.integration;
 
-import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
-import ca.mcgill.ecse321.gamecenter.dto.Purchase.RefundRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Review.ManagerReplyRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Review.ReviewRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Review.ReviewResponseDTO;
@@ -10,7 +8,6 @@ import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.ReviewRepository;
-import ca.mcgill.ecse321.gamecenter.service.ReviewService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,7 +57,6 @@ public class ReviewIntegrationTests {
     private static final String VALID_CLIENT_DELIVERYADDRESS_2 = "1337 Epic Street, United States of Epic";
 
     private static final String VALID_GAME_CATEGORY_1 = "Action";
-    private static final String VALID_GAME_CATEGORY_2 = "Adventure";
 
     private static final String VALID_GAME_TITLE_1 = "Fortnite";
     private static final float VALID_GAME_PRICE_1 = 39.99f;
@@ -70,24 +66,13 @@ public class ReviewIntegrationTests {
     private static final boolean VALID_GAME_IS_OFFERED_1 = true;
     private static final Game.GeneralFeeling VALID_GAME_PUBLIC_OPINION_1 = Game.GeneralFeeling.POSITIVE;
 
-    private static final String VALID_GAME_TITLE_2 = "Minecraft";
-    private static final float VALID_GAME_PRICE_2 = 29.99f;
-    private static final String VALID_GAME_DESCRIPTION_2 = "Sandbox";
-    private static final float VALID_GAME_RATING_2 = 4.8f;
-    private static final int VALID_GAME_REMAINING_QUANTITY_2 = 50;
-    private static final boolean VALID_GAME_IS_OFFERED_2 = false;
-    private static final Game.GeneralFeeling VALID_GAME_PUBLIC_OPINION_2 = Game.GeneralFeeling.VERYPOSITIVE;
+
 
     private static final String VALID_GAME_REVIEW_1 = "good game. i like";
     private static final Review.Rating VALID_GAME_REVIEW_RATING_1 = Review.Rating.FOUR;
     private static final String VALID_GAME_REVIEW_2 = "bad game. no like";
     private static final Review.Rating VALID_GAME_REVIEW_RATING_2 = Review.Rating.ONE;
     private static final String VALID_REVIEW_MANAGER_REPLY = "thanks a 1000kg";
-
-
-    private static final String VALID_GAME_REQUEST_REASON_1 = "I want to play this game, so would our customers.";
-    private static final String VALID_GAME_REQUEST_REASON_2 = "No one is buying this game, this should go!";
-    private static final String VALID_USER_REQUEST_REASON = "This user leaves rude comments!";
 
     private int gameId;
     private Client client_1;

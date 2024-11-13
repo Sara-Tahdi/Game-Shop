@@ -66,7 +66,6 @@ public class PurchaseIntegrationTests {
     private int gameId_2;
     private int purchaseId_1;
     private int purchaseId_2;
-    private String trackingCode;
 
 
     @BeforeAll
@@ -146,7 +145,6 @@ public class PurchaseIntegrationTests {
 
         this.purchaseId_1 = body.getFirst().getId();
         this.purchaseId_2 = body.getLast().getId();
-        this.trackingCode = body.getFirst().getTrackingCode();
     }
 
     @Test
