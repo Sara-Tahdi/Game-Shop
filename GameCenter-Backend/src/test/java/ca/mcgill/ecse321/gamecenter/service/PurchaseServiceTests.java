@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
-import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
@@ -16,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.sound.midi.Track;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;

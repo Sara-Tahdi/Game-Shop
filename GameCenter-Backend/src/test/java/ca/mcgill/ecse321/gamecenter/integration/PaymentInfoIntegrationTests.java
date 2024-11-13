@@ -2,11 +2,7 @@ package ca.mcgill.ecse321.gamecenter.integration;
 
 import ca.mcgill.ecse321.gamecenter.dto.PaymentInfo.PaymentInfoRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.PaymentInfo.PaymentInfoResponseDTO;
-import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
-import ca.mcgill.ecse321.gamecenter.model.Owner;
-import ca.mcgill.ecse321.gamecenter.model.PaymentInfo;
-import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.ClientRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
 import org.junit.jupiter.api.*;
