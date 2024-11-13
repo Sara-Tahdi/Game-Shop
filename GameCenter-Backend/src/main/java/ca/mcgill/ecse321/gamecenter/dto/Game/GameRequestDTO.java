@@ -1,24 +1,25 @@
 package ca.mcgill.ecse321.gamecenter.dto.Game;
 
 import ca.mcgill.ecse321.gamecenter.model.Game;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class GameRequestDTO {
     @NotNull(message = "Title is required")
     private String title;
-    @NotNull(message = "Price is required")
+    @Min(value = 0, message = "Price is required")
     private float price;
     @NotNull(message = "Description is required")
     private String description;
-    @NotNull(message = "Rating is required")
+    @Min(value = 0, message = "Rating is required")
     private float rating;
-    @NotNull(message = "Remaining quantity is required")
+    @Min(value = 0, message = "Remaining quantity is required")
     private int remainingQuantity;
     @NotNull(message = "Availability status is required")
     private boolean isOffered;
     @NotNull(message = "Public Opinion is required")
     private Game.GeneralFeeling publicOpinion;
-    @NotNull(message = "Category ID is required")
+    @Min(value = 1, message = "Category ID is required")
     private int categoryId;
 
     public GameRequestDTO(String title, float price, String description, float rating, int remainingQuantity, boolean isOffered, Game.GeneralFeeling publicOpinion, int categoryId) {

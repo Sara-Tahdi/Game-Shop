@@ -13,6 +13,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -55,7 +57,7 @@ public class GameCenterIntegrationTests {
         gameCenterDTO.setStorePolicy(VALID_STORE_POLICY);
 
         // Act
-        ResponseEntity<GameCenterDTO> response = restTemplate.postForEntity("/gamecenter/createGameCenter", gameCenterDTO, GameCenterDTO.class);
+        ResponseEntity<GameCenterDTO> response = restTemplate.exchange("/gamecenter/createGameCenter",HttpMethod.PUT, new HttpEntity<>(gameCenterDTO), GameCenterDTO.class);
 
         // Assert
         assertNotNull(response);
