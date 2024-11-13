@@ -53,7 +53,6 @@ public class CartServiceTests {
         Client mockClient = new Client();
         Game mockGame = new Game();
 
-        // Mock the repository methods
         when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.of(mockClient));
         when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.of(mockGame));
         when(mockCartRepo.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
