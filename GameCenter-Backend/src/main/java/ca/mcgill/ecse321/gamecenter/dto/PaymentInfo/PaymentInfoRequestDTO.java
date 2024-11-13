@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.dto.PaymentInfo;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -11,9 +13,10 @@ public class PaymentInfoRequestDTO {
     @NotBlank(message = "CVV is required")
     @Length(min = 3, max = 3, message = "CVV must be 3 digits")
     private String cvv;
-    @NotNull(message = "Expiry month is required")
+    @Min(value = 1, message = "Please enter a valid expiry month")
+    @Max(value = 12, message = "Please enter a valid expiry month")
     private int expiryMonth;
-    @NotNull(message = "Expiry year is required")
+    @Min(value = 2024, message = "Please enter a valid expiry year")
     private int expiryYear;
 
     public PaymentInfoRequestDTO(String cardNumber, String cvv, int expiryMonth, int expiryYear) {

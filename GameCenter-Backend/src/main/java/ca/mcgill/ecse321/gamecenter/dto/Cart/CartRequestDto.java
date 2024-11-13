@@ -1,13 +1,12 @@
 package ca.mcgill.ecse321.gamecenter.dto.Cart;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 
 public class CartRequestDto {
-
-    @NotNull(message = "Game is required.")
+    @Min(value = 1, message = "GameId is required")
     private int gameId;
 
-    @NotNull(message = "Client is required.")
+    @Min(value = 1, message = "Client is required.")
     private int clientId;
 
     public CartRequestDto(int gameId, int clientId) {
