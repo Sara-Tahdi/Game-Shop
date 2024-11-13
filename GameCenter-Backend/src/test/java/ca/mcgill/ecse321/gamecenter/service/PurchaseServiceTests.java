@@ -8,6 +8,8 @@ import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Round;
+import ca.mcgill.ecse321.gamecenter.utilities.TrackingCode;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -72,12 +74,12 @@ public class PurchaseServiceTests {
         Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory);
 
         int copies = 2;
-        float total = purchaseService.round(copies * g.getPrice());
-        int trackingCode = 3513;
+        float total = Round.round(copies * g.getPrice());
+        String trackingCode = "a3451n14m2";
         Date date = Date.valueOf(LocalDate.now());
         Purchase p = new Purchase(total, copies, trackingCode, date, g, c);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p);
-        Purchase createdPurchase = purchaseService.createPurchase(c.getId(), g.getId(), 2);
+        Purchase createdPurchase = purchaseService.createPurchase(c.getId(), g.getId(), 2, trackingCode);
 
         assertEquals(createdClient.getId(), createdPurchase.getClient().getId());
         assertEquals(createdGame.getId(), createdPurchase.getGame().getId());
@@ -109,7 +111,7 @@ public class PurchaseServiceTests {
         int copies = 2;
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.createPurchase(c.getId(), g.getId(), copies));
+                purchaseService.createPurchase(c.getId(), g.getId(), copies, "38ha8b4v0l"));
         assertEquals("There is no Client with id: " + c.getId(), e.getMessage());
     }
 
@@ -125,7 +127,7 @@ public class PurchaseServiceTests {
         int copies = 34;
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.createPurchase(c.getId(), g.getId(), copies));
+                purchaseService.createPurchase(c.getId(), g.getId(), copies, "38ha8b4v0l"));
         assertEquals("There is no Game with id: " + g.getId(), e.getMessage());
     }
 
@@ -143,7 +145,7 @@ public class PurchaseServiceTests {
         int tooManyCopies = 1351;
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.createPurchase(c.getId(), g.getId(), tooManyCopies));
+                purchaseService.createPurchase(c.getId(), g.getId(), tooManyCopies, "38ha8b4v0l"));
         assertEquals("Attempting to purchase more copies than available, copies left: " + g.getRemainingQuantity(), e.getMessage());
     }
 
@@ -215,20 +217,20 @@ public class PurchaseServiceTests {
         when(gameRepository.findGameById(g2.getId())).thenReturn(Optional.of(g2));
 
         int copies1 = 3;
-        float total1 = purchaseService.round(g1.getPrice() * copies1);
-        int trackingNumber1 = 391;
+        float total1 = Round.round(g1.getPrice() * copies1);
+        String trackingNumber1 = "a3451n14m2";
         Purchase p1 = new Purchase(total1, copies1, trackingNumber1, Date.valueOf(LocalDate.now()), g1, c);
         p1.setId(7);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p1);
-        purchaseService.createPurchase(c.getId(), g1.getId(), copies1);
+        purchaseService.createPurchase(c.getId(), g1.getId(), copies1, trackingNumber1);
 
         int copies2 = 2;
-        float total2 = purchaseService.round(g2.getPrice() * copies2);
-        int trackingNumber2 = 57539;
+        float total2 = Round.round(g2.getPrice() * copies2);
+        String trackingNumber2 = "38aojvq9d2";
         Purchase p2 = new Purchase(total2, copies2, trackingNumber2, Date.valueOf(LocalDate.now().minusDays(100)), g2, c);
         p2.setId(47381);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p2);
-        purchaseService.createPurchase(c.getId(), g2.getId(), copies2);
+        purchaseService.createPurchase(c.getId(), g2.getId(), copies2, trackingNumber2);
 
         when(purchaseRepository.findPurchasesByClientId(c.getId())).thenReturn(Optional.of(List.of(p1, p2)));
         List<Purchase> purchases = purchaseService.getClientPurchaseHistory(c.getId());
@@ -278,20 +280,20 @@ public class PurchaseServiceTests {
         when(gameRepository.findGameById(g2.getId())).thenReturn(Optional.of(g2));
 
         int copies1 = 3;
-        float total1 = purchaseService.round(g1.getPrice() * copies1);
-        int trackingNumber1 = 391;
+        float total1 = Round.round(g1.getPrice() * copies1);
+        String trackingNumber1 = "a3451n14m2";
         Purchase p1 = new Purchase(total1, copies1, trackingNumber1, Date.valueOf(LocalDate.now()), g1, c);
         p1.setId(7);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p1);
-        purchaseService.createPurchase(c.getId(), g1.getId(), copies1);
+        purchaseService.createPurchase(c.getId(), g1.getId(), copies1, trackingNumber1);
 
         int copies2 = 2;
-        float total2 = purchaseService.round(g2.getPrice() * copies2);
-        int trackingNumber2 = 57539;
+        float total2 = Round.round(g2.getPrice() * copies2);
+        String trackingNumber2 = "38aojvq9d2";
         Purchase p2 = new Purchase(total2, copies2, trackingNumber2, Date.valueOf(LocalDate.now().minusDays(100)), g2, c);
         p2.setId(47381);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(p2);
-        purchaseService.createPurchase(c.getId(), g2.getId(), copies2);
+        purchaseService.createPurchase(c.getId(), g2.getId(), copies2, trackingNumber2);
 
         when(purchaseRepository.findPurchasesByClientId(c.getId())).thenReturn(Optional.of(List.of(p1, p2)));
         List<Purchase> purchases = purchaseService.getClientPurchaseHistory90Days(c.getId());
@@ -299,5 +301,29 @@ public class PurchaseServiceTests {
 
         assertEquals(1, purchases.size());
         assertEquals(p1.getId(), purchases.getFirst().getId());
+    }
+
+    @Test
+    public void testGetPurchaseByTrackingCode() {
+        String track = TrackingCode.nextCode();
+        Purchase p1 = new Purchase(); p1.setTrackingCode(track);
+        Purchase p2 = new Purchase(); p2.setTrackingCode(track);
+
+        when(purchaseRepository.findPurchasesByTrackingCode(track)).thenReturn(Optional.of(List.of(p1, p2)));
+
+        List<Purchase> purchases = purchaseService.getPurchaseByTrackingCode(track);
+
+        assertNotNull(purchases);
+        assertEquals(2, purchases.size());
+    }
+
+    @Test
+    public void testGetPurchaseByTrackingCodeNoPurchases() {
+        String track = TrackingCode.nextCode();
+
+        List<Purchase> purchases = purchaseService.getPurchaseByTrackingCode(track);
+
+        assertNotNull(purchases);
+        assertEquals(0, purchases.size());
     }
 }

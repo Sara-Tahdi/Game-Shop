@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentInfoService {
     @Autowired
@@ -21,13 +23,31 @@ public class PaymentInfoService {
     @Transactional
     public PaymentInfo savePaymentInfo(
         String cardNumber,
-        Integer cvv,
+        String cvv,
         Integer expiryMonth,
         Integer expiryYear,
         Client client)
     {
         PaymentInfo paymentInfo = new PaymentInfo(cardNumber, cvv, expiryMonth, expiryYear, client);
+
+        PaymentInfo paymentInfoFromRepo = paymentInfoRepository.findPaymentInfoByCardNumber(cardNumber).orElse(null);
+        if (paymentInfoFromRepo != null) {
+            throw new IllegalArgumentException("A payment info with card number "+cardNumber+" already exists in the system.");
+        }
         return paymentInfoRepository.save(paymentInfo);
+    }
+
+    @Transactional
+    public void deletePaymentInfo(int paymentInfoId) {
+        PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoById(paymentInfoId).orElse(null);
+        if (paymentInfo == null) {throw new IllegalArgumentException("No payment info with id: " + paymentInfoId);}
+        paymentInfoRepository.delete(paymentInfo);
+    }
+
+    public List<PaymentInfo> getPaymentInfosByClient(int clientId) {
+        List<PaymentInfo> paymentInfos = paymentInfoRepository.findPaymentInfosByClientId(clientId).orElse(null);
+        if (paymentInfos == null) {throw new IllegalArgumentException("Client: " + clientId + "has no payment infos");}
+        return paymentInfos;
     }
 
 }

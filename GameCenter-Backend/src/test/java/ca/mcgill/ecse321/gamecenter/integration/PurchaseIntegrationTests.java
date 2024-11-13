@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.gamecenter.integration;
 
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.RefundRequestDTO;
 import ca.mcgill.ecse321.gamecenter.model.*;
 import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -139,6 +141,8 @@ public class PurchaseIntegrationTests {
         assertEquals(this.gameId_2, body.getLast().getGame().getId());
         assertEquals(VALID_PURCHASE_COPIES_2, body.getLast().getCopies());
 
+        assertEquals(body.getFirst().getTrackingCode(), body.getLast().getTrackingCode());
+
         this.purchaseId_1 = body.getFirst().getId();
         this.purchaseId_2 = body.getLast().getId();
     }
@@ -166,12 +170,16 @@ public class PurchaseIntegrationTests {
     @Test
     @Order(3)
     public void testRefundGame() {
-        String url = String.format("/purchases/%d/refund/%s", this.purchaseId_1, VALID_REFUND_REASON);
+        String url = String.format("/purchases/refund/%d", this.purchaseId_1);
+
+        RefundRequestDTO refund = new RefundRequestDTO(VALID_REFUND_REASON);
+
+        HttpEntity<RefundRequestDTO> refundRequest = new HttpEntity<>(refund);
 
         ResponseEntity<PurchaseResponseDTO> res = client.exchange(
                 url,
                 HttpMethod.PUT,
-                null,
+                refundRequest,
                 PurchaseResponseDTO.class
         );
 

@@ -18,13 +18,13 @@ public class AppUserRestController {
     @Autowired
     private AppUserService appUserService;
 
-    @PutMapping(value = "/users/owner/update/{oldPassword}")
-    public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate, @PathVariable String oldPassword) {
+    @PutMapping(value = "/users/owner/update")
+    public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate) {
         Owner o = appUserService.updateOwnerAccount(
                 ownerToUpdate.getEmail(),
                 ownerToUpdate.getUsername(),
-                ownerToUpdate.getPassword(),
-                oldPassword
+                ownerToUpdate.getNewPassword(),
+                ownerToUpdate.getPassword()
         );
         return new OwnerResponseDTO(o);
     }
@@ -39,13 +39,13 @@ public class AppUserRestController {
         return new EmployeeResponseDTO(e);
     }
 
-    @PutMapping(value = "/users/employee/update/{oldPassword}")
-    public EmployeeResponseDTO updateEmployee(@Validated @RequestBody EmployeeRequestDTO employeeToUpdate, @PathVariable String oldPassword) {
+    @PutMapping(value = "/users/employee/update")
+    public EmployeeResponseDTO updateEmployee(@Validated @RequestBody EmployeeRequestDTO employeeToUpdate) {
         Employee e = appUserService.updateEmployeeAccount(
                 employeeToUpdate.getEmail(),
                 employeeToUpdate.getUsername(),
                 employeeToUpdate.getPassword(),
-                oldPassword
+                employeeToUpdate.getOldPassword()
         );
         return new EmployeeResponseDTO(e);
     }
@@ -94,15 +94,15 @@ public class AppUserRestController {
         return new ClientResponseDTO(c);
     }
 
-    @PutMapping(value = "/users/client/update/{oldPassword}")
-    public ClientResponseDTO updateClientAccount(@Validated @RequestBody ClientRequestDTO clientToUpdate, @PathVariable String oldPassword) {
+    @PutMapping(value = "/users/client/update")
+    public ClientResponseDTO updateClientAccount(@Validated @RequestBody ClientRequestDTO clientToUpdate) {
         Client c = appUserService.updateClientAccount(
                 clientToUpdate.getEmail(),
                 clientToUpdate.getUsername(),
                 clientToUpdate.getPassword(),
                 clientToUpdate.getPhoneNumber(),
                 clientToUpdate.getDeliveryAddress(),
-                oldPassword
+                clientToUpdate.getOldPassword()
         );
         return new ClientResponseDTO(c);
     }

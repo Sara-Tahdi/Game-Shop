@@ -1,31 +1,38 @@
 package ca.mcgill.ecse321.gamecenter.dto.Promotion;
 
-import ca.mcgill.ecse321.gamecenter.model.Game;
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class PromotionRequestDTO {
-    @NotBlank(message = "New Price is required")
+    @NotNull(message = "New Price is required")
+    @Min(0)
     private float newPrice;
-    @NotBlank(message = "Start Date is required")
-    private Date startDate;
-    @NotBlank(message = "End Date is required")
-    private Date endDate;
-    @NotBlank(message = "Game is required")
-    private Game game;
+    @NotNull(message = "Start Date is required")
+    @JsonFormat(pattern = "yyyy-MM-dd")  // Add format annotation
+    private LocalDate startDate;
+    @NotNull(message = "End Date is required")
+    @JsonFormat(pattern = "yyyy-MM-dd")  // Add format annotation
+    private LocalDate endDate;
+    @NotNull(message = "Game ID is required")
+    @Min(1)
+    private int gameId;
 
 
-    public PromotionRequestDTO(float newPrice, Date startDate, Date endDate, Game game) {
+    public PromotionRequestDTO(float newPrice, LocalDate startDate, LocalDate endDate, int gameId) {
         this.newPrice = newPrice;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.game = game;
+        this.gameId = gameId;
     }
 
+    public PromotionRequestDTO(){}
+
     public float getNewPrice() {return this.newPrice;}
-    public Date getStartDate() {return this.startDate;}
-    public Date getEndDate() {return this.endDate;}
-    public Game getGame() {return this.game;}
+    public LocalDate getStartDate() {return this.startDate;}
+    public LocalDate getEndDate() {return this.endDate;}
+    public int getGameId() {return this.gameId;}
 
 }

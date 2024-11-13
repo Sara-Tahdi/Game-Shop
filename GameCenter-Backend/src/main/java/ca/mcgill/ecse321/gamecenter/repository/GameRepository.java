@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GameRepository extends CrudRepository<Game, Integer> {
+    @Query("SELECT g FROM Game g WHERE g.id = :id")
     Optional<Game> findGameById(int id);
     Optional<Game> findGameByTitle(String title);
     Optional<Game> findGameByDescription(String description);

@@ -52,7 +52,6 @@ public class CartServiceTests {
         // Arrange
         Client mockClient = new Client();
         Game mockGame = new Game();
-        Cart cart = new Cart();
 
         when(mockClientRepo.findById(VALID_CLIENT_ID)).thenReturn(Optional.of(mockClient));
         when(mockGameRepo.findById(VALID_GAME_ID)).thenReturn(Optional.of(mockGame));

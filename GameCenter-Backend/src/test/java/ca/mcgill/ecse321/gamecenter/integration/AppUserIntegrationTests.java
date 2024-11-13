@@ -58,7 +58,7 @@ public class AppUserIntegrationTests {
     @Test
     @Order(1)
     public void testCreateValidEmployee() {
-        EmployeeRequestDTO kleenex = new EmployeeRequestDTO(VALID_EMPLOYEE_EMAIL, VALID_EMPLOYEE_USERNAME, VALID_EMPLOYEE_PASSWORD);
+        EmployeeRequestDTO kleenex = new EmployeeRequestDTO(VALID_EMPLOYEE_EMAIL, VALID_EMPLOYEE_USERNAME, VALID_EMPLOYEE_PASSWORD, VALID_EMPLOYEE_PASSWORD);
 
         ResponseEntity<EmployeeResponseDTO> res = client.postForEntity("/users/employee/create", kleenex, EmployeeResponseDTO.class);
 
@@ -119,16 +119,15 @@ public class AppUserIntegrationTests {
     @Test
     @Order(5)
     public void testUpdateValidEmployeeWithNewUsernameAndPassword() {
-        String url = String.format("/users/employee/update/%s", VALID_EMPLOYEE_PASSWORD);
         String newUsername = "AmongUs";
         String newPassword = "reehheeehee";
 
-        EmployeeRequestDTO update = new EmployeeRequestDTO(this.appUserEmail, newUsername, newPassword);
+        EmployeeRequestDTO update = new EmployeeRequestDTO(this.appUserEmail, newUsername, newPassword, VALID_EMPLOYEE_PASSWORD);
 
         HttpEntity<EmployeeRequestDTO> updateEntity = new HttpEntity<>(update);
 
         ResponseEntity<EmployeeResponseDTO> res = client.exchange(
-                url,
+                "/users/employee/update",
                 HttpMethod.PUT,
                 updateEntity,
                 EmployeeResponseDTO.class
@@ -188,7 +187,8 @@ public class AppUserIntegrationTests {
                 VALID_CLIENT_USERNAME,
                 VALID_CLIENT_PASSWORD,
                 VALID_CLIENT_PHONENUMBER,
-                VALID_CLIENT_DELIVERYADDRESS
+                VALID_CLIENT_DELIVERYADDRESS,
+                VALID_CLIENT_PASSWORD
         );
 
         ResponseEntity<ClientResponseDTO> res = client.postForEntity("/users/client/create", noob, ClientResponseDTO.class);
@@ -252,16 +252,15 @@ public class AppUserIntegrationTests {
     @Test
     @Order(12)
     public void testUpdateValidClientWithNewUsernameAndPassword() {
-        String url = String.format("/users/client/update/%s", VALID_CLIENT_PASSWORD);
         String newUsername = "Skibidi";
         String newPassword = "reehheeehee";
 
-        ClientRequestDTO update = new ClientRequestDTO(this.appUserEmail, newUsername, newPassword, VALID_CLIENT_PHONENUMBER, VALID_CLIENT_DELIVERYADDRESS);
+        ClientRequestDTO update = new ClientRequestDTO(this.appUserEmail, newUsername, newPassword, VALID_CLIENT_PHONENUMBER, VALID_CLIENT_DELIVERYADDRESS, VALID_CLIENT_PASSWORD);
 
         HttpEntity<ClientRequestDTO> updateEntity = new HttpEntity<>(update);
 
         ResponseEntity<ClientResponseDTO> res = client.exchange(
-                url,
+                "/users/client/update",
                 HttpMethod.PUT,
                 updateEntity,
                 ClientResponseDTO.class
@@ -336,15 +335,14 @@ public class AppUserIntegrationTests {
         OwnerRequestDTO ownerRequestDTO = new OwnerRequestDTO(
                 VALID_OWNER_EMAIL,
                 VALID_OWNER_USERNAME,
-                newPassword
+                newPassword,
+                VALID_OWNER_PASSWORD
         );
-
-        String url = String.format("/users/owner/update/%s", VALID_OWNER_PASSWORD);
 
         HttpEntity<OwnerRequestDTO> updateEntity = new HttpEntity<>(ownerRequestDTO);
 
         ResponseEntity<OwnerResponseDTO> res = client.exchange(
-                url,
+                "/users/owner/update",
                 HttpMethod.PUT,
                 updateEntity,
                 OwnerResponseDTO.class

@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.dto.Cart;
 
 import ca.mcgill.ecse321.gamecenter.model.Cart;
-import ca.mcgill.ecse321.gamecenter.model.Game;
-import ca.mcgill.ecse321.gamecenter.model.Client;
 
 public class CartResponseDto {
 

@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.http.HttpStatus;
 
 import ca.mcgill.ecse321.gamecenter.model.Wishlist;
 import ca.mcgill.ecse321.gamecenter.model.Client;
@@ -24,7 +23,6 @@ import ca.mcgill.ecse321.gamecenter.repository.ClientRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.List;
 

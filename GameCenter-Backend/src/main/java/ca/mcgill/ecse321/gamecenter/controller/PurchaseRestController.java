@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.gamecenter.controller;
 
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseResponseDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.RefundRequestDTO;
 import ca.mcgill.ecse321.gamecenter.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -16,15 +17,15 @@ public class PurchaseRestController {
     private PurchaseService purchaseService;
 
     @PostMapping("/purchases/place/{clientId}")
-    public List<PurchaseResponseDTO> createPurchases(@Validated @RequestBody List<PurchaseRequestDTO> req, @PathVariable int clientId) {
-        return req.stream()
-                .map(r -> new PurchaseResponseDTO(purchaseService.createPurchase(clientId, r.getGameId(), r.getCopies())))
+    public List<PurchaseResponseDTO> createPurchases(@Validated @RequestBody List<PurchaseRequestDTO> purchases, @PathVariable int clientId) {
+        return purchaseService.createPurchases(purchases, clientId).stream()
+                .map(p -> new PurchaseResponseDTO(p))
                 .collect(Collectors.toList());
     }
 
-    @PutMapping("/purchases/{purchaseId}/refund/{reason}")
-    public PurchaseResponseDTO refundPurchase(@PathVariable int purchaseId, @PathVariable String reason) {
-        return new PurchaseResponseDTO(purchaseService.returnGame(purchaseId, reason));
+    @PutMapping("/purchases/refund/{purchaseId}")
+    public PurchaseResponseDTO refundPurchase(@Validated @RequestBody RefundRequestDTO refundReason, @PathVariable int purchaseId) {
+        return new PurchaseResponseDTO(purchaseService.returnGame(purchaseId, refundReason.getReason()));
     }
 
     @GetMapping("/purchases/{clientId}")
@@ -37,6 +38,13 @@ public class PurchaseRestController {
     @GetMapping("/purchases/recent/{clientId}")
     public List<PurchaseResponseDTO> getPurchaseHistory90Days(@PathVariable int clientId) {
         return purchaseService.getClientPurchaseHistory90Days(clientId).stream()
+                .map(p -> new PurchaseResponseDTO(p))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/purchases/group/{trackingCode}")
+    public List<PurchaseResponseDTO> getPurchaseByTrackingCode(@PathVariable String trackingCode) {
+        return purchaseService.getPurchaseByTrackingCode(trackingCode).stream()
                 .map(p -> new PurchaseResponseDTO(p))
                 .collect(Collectors.toList());
     }
