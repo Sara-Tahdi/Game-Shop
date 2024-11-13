@@ -30,9 +30,9 @@ Here are all the tasks and logged hours for our team in Deliverable 1
 Here are all the tasks and logged for our team in Deliverable 2
 | Name | Tasks | Time Logged |
 | :--- |:---|:---:|
-|Naji El Khouri | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Game and Promotion</ul> | |
+|Naji El Khouri | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Game and Promotions.</ul> | 30|
 |Laurier Gauvin | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Requests, User Requests, and Game Requests.</ul> | 35|
 |Manuel Hanna | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Reviews and Payment Info.</ul> | 25|
-|Arjun Sharma | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for GameCategory and GameCenter</ul> | |
-|Sara Tahdi | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Cart and Wishlist</ul> | 25|
+|Arjun Sharma | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for GameCategory and GameCenter.</ul> | |
+|Sara Tahdi | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Cart and Wishlist.</ul> | 25|
 |Justin Tremellen | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Client, Employee, Owner, and Purchase.</ul>  | 40|
