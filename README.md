@@ -31,7 +31,7 @@ Here are all the tasks and logged for our team in Deliverable 2
 | Name | Tasks | Time Logged |
 | :--- |:---|:---:|
 |Naji El Khouri | <ul><li></ul> | |
-|Laurier Gauvin | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Requests, User Requests, and Game Requests.</ul> | |
+|Laurier Gauvin | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Requests, User Requests, and Game Requests.</ul> | 35|
 |Manuel Hanna | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Reviews and Payment Info.</ul> | 25|
 |Arjun Sharma | <ul><li></ul> | |
 |Sara Tahdi | <ul><li></ul> | |
