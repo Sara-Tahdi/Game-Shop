@@ -7,6 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.mcgill.ecse321.gamecenter.dto.GameCategory.GameCategoryRequestDTO;
 import ca.mcgill.ecse321.gamecenter.dto.GameCategory.GameCategoryResponseDTO;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
 import ca.mcgill.ecse321.gamecenter.service.GameCategoryService;
@@ -27,7 +34,7 @@ public class GameCategoryController {
     }
 
     // Endpoint to update an existing GameCategory
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public GameCategoryResponseDTO updateGameCategory(@PathVariable int id, @RequestBody GameCategoryRequestDTO gameCategoryRequestDTO) {
         GameCategory updatedGameCategory = gameCategoryService.updateGameCategory(id, gameCategoryRequestDTO.getCategory());
         return new GameCategoryResponseDTO(updatedGameCategory);

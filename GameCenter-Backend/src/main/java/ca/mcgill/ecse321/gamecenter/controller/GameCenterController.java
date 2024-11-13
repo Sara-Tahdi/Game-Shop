@@ -11,7 +11,7 @@ public class GameCenterController {
     @Autowired
     private GameCenterService gameCenterService;
 
-    @PostMapping(value = {"/createGameCenter", "/createGameCenter/"})
+    @PutMapping(value = {"/createGameCenter", "/createGameCenter/"})
     public GameCenterDTO createorUpdateGameCenter(@RequestBody GameCenterDTO gameCenterDTO) {
         GameCenter gameCenter=convertToModel(gameCenterDTO);
         return new GameCenterDTO(gameCenterService.saveOrUpdateGameCenter(gameCenter));
