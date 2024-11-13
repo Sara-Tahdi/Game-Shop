@@ -32,7 +32,7 @@ Here are all the tasks and logged for our team in Deliverable 2
 | :--- |:---|:---:|
 |Naji El Khouri | <ul><li></ul> | |
 |Laurier Gauvin | <ul><li>Wrote the service methods, unit tests, controller methods, and API documentation for Requests, User Requests, and Game Requests.</ul> | |
-|Manuel Hanna | <ul><li></ul> | |
+|Manuel Hanna | <ul><li>Wrote the service methods, unit tests, controller methods, REST endpoints, integration tests, and API documentation for Reviews and Payment Info.</ul> | |
 |Arjun Sharma | <ul><li></ul> | |
 |Sara Tahdi | <ul><li></ul> | |
 |Justin Tremellen | <ul><li>Reworked the model & changed the model upon team request<li>Wrote the service methods and unit tests for the AppUser inheritance structure<li>Wrote the service methods and unit tests for the Purchase class<li>Wrote the controller methods and integration tests for the AppUser inheritance structure<li>Wrote the controller methods and integration tests for the Purchase class<li>Wrote the API documentation for the AppUser inheritance structure endpoints<li>Wrote the API documentation for the Purchase endpoint</ul> | 40|
