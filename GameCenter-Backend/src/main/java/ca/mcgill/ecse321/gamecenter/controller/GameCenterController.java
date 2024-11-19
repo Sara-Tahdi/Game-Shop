@@ -16,13 +16,18 @@ public class GameCenterController {
         GameCenter gameCenter=convertToModel(gameCenterDTO);
         return new GameCenterDTO(gameCenterService.saveOrUpdateGameCenter(gameCenter));
     }
-    
+
+    @GetMapping(value="")
+    public GameCenterDTO getStoreInfo() {
+        return new GameCenterDTO(gameCenterService.getGameCenter());
+    }
+
 
     // Helper methods to convert between model and DTO
     private GameCenter convertToModel(GameCenterDTO dto) {
         return new GameCenter(dto.getName(), dto.getOpen(), dto.getClose(), dto.getStorePolicy());
     }
 
-   
-    
+
+
 }
