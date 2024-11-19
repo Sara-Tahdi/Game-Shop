@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  * Controller for managing cart
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class CartRestController {
 
     @Autowired

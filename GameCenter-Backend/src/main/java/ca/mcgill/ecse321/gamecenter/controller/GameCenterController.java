@@ -6,6 +6,7 @@ import ca.mcgill.ecse321.gamecenter.dto.GameCenterDTO;
 import ca.mcgill.ecse321.gamecenter.model.GameCenter;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/gamecenter")
 public class GameCenterController {
     @Autowired
@@ -16,13 +17,18 @@ public class GameCenterController {
         GameCenter gameCenter=convertToModel(gameCenterDTO);
         return new GameCenterDTO(gameCenterService.saveOrUpdateGameCenter(gameCenter));
     }
-    
+
+    @GetMapping(value="")
+    public GameCenterDTO getStoreInfo() {
+        return new GameCenterDTO(gameCenterService.getGameCenter());
+    }
+
 
     // Helper methods to convert between model and DTO
     private GameCenter convertToModel(GameCenterDTO dto) {
         return new GameCenter(dto.getName(), dto.getOpen(), dto.getClose(), dto.getStorePolicy());
     }
 
-   
-    
+
+
 }
