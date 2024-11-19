@@ -6,6 +6,7 @@ import ca.mcgill.ecse321.gamecenter.dto.GameCenterDTO;
 import ca.mcgill.ecse321.gamecenter.model.GameCenter;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/gamecenter")
 public class GameCenterController {
     @Autowired

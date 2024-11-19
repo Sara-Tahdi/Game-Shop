@@ -7,7 +7,7 @@
 
         <div v-if="storeInfo && !loading" class="store-info">
             <header class="store-header">
-                <h1>{{ storeInfo.name }}</h1>
+                <h1>{{ storeInfo["name"] }}</h1>
             </header>
 
             <section class="business-hours">
@@ -44,6 +44,7 @@ const apiClient = axios.create({
     baseURL: "http://localhost:8080",
     headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://localhost:8080",
     },
 });
 
