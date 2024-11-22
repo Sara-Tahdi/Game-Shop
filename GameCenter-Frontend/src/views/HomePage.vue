@@ -7,7 +7,7 @@
 
         <div v-if="storeInfo && !loading" class="store-info">
             <header class="store-header">
-                <h1>{{ storeInfo["name"] }}</h1>
+                <h1>Welcome to {{ storeInfo.name }}!</h1>
             </header>
 
             <section class="business-hours">
@@ -78,7 +78,9 @@ export default {
             }
         },
         formatTime(time) {
-            return time;
+            const [h, m, s] = time.split(":");
+            const h_parsed = parseInt(h);
+            return `${h_parsed}:${m}`;
         },
     },
     created() {
@@ -89,9 +91,19 @@ export default {
 
 <style>
 .store-home {
+    width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.store-info {
+    width: 100%;
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .loading {
@@ -101,13 +113,14 @@ export default {
     color: #666;
 }
 
-.error-message {
+.error {
     color: #dc3545;
     text-align: center;
     padding: 20px;
     margin: 20px 0;
     background-color: #ffe6e6;
     border-radius: 4px;
+    width: 100%;
 }
 
 .store-header {
@@ -161,5 +174,12 @@ h2 {
     line-height: 1.6;
     color: #555;
     white-space: pre-line;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .store-info {
+        padding: 20px;
+    }
 }
 </style>
