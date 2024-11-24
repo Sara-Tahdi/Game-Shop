@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class RequestRestController {
     @Autowired
     private RequestService requestService;
@@ -166,5 +168,5 @@ public class RequestRestController {
     public RequestResponseDTO denyRequest(@PathVariable int id) {
         Request r = requestService.handleRequestApproval(id, false);
         return new RequestResponseDTO(r);
-    } 
+    }
 }
