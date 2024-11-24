@@ -13,12 +13,24 @@
                 </div>
 
                 <div class="auth">
-                    <button
-                        @click="$emit('showLoginModal')"
-                        class="login-button"
-                    >
-                        <span class="login-icon">Login</span>
-                    </button>
+                    <div v-if="!userType" class="auth-buttons">
+                        <button
+                            @click="$emit('showLoginModal')"
+                            class="login-button"
+                        >
+                            <span class="login-icon">Login</span>
+                        </button>
+                    </div>
+
+                    <div v-else class="user">
+                        <RouterLink
+                            :to="getUserProfileRoute"
+                            class="user-button"
+                            :title="getUserLabel"
+                        >
+                            <span class="user-icon">👤</span>
+                        </RouterLink>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -28,9 +40,43 @@
 <script>
 export default {
     name: "Header",
+    props: {
+        userType: {
+            type: String,
+            default: null,
+            validator: (value) => {
+                return ["client", "employee", "owner", null].includes(value);
+            },
+        },
+    },
+    computed: {
+        getUserProfileRoute() {
+            switch (this.userType) {
+                case "client":
+                    return "/client-profile";
+                case "employee":
+                    return "/employee-profile";
+                case "owner":
+                    return "/owner-profile";
+                default:
+                    return "/";
+            }
+        },
+        getUserLabel() {
+            switch (this.userType) {
+                case "client":
+                    return "My Account";
+                case "employee":
+                    return "Employee Dashboard";
+                case "owner":
+                    return "Owner Dashboard";
+                default:
+                    return "Login";
+            }
+        },
+    },
     methods: {
         showLoginModal() {
-            console.log("Show login modal");
             this.$emit("show-login-modal");
         },
     },
@@ -72,10 +118,6 @@ export default {
     justify-self: center;
     font-size: 1.2rem;
     font-weight: 300;
-}
-
-.auth {
-    justify-self: end;
 }
 
 .link {
@@ -121,6 +163,55 @@ export default {
     font-size: 1.1rem;
 }
 
+.auth {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+}
+
+.user-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    color: #333;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
+
+.user-button:hover {
+    background-color: #e9ecef;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-icon {
+    font-size: 1.2rem;
+}
+
+.user-type {
+    display: inline-block;
+}
+
 @media (max-width: 768px) {
     .header-content {
         padding: 1rem;
@@ -136,6 +227,14 @@ export default {
     .login-button {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+    }
+
+    .user-type {
+        display: none;
+    }
+
+    .user-button {
+        padding: 0.5rem;
     }
 }
 </style>
