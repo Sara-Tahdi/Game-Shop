@@ -1,9 +1,10 @@
 <template>
   <div class="catalog">
+    <!-- No changes to the header and search sections -->
     <h1 class="catalog-title">Game Catalog</h1>
 
-    <!-- Horizontal Search Bar -->
     <div class="search-bar-container">
+      <!-- No changes to search bar content -->
       <div class="search-bar-wrapper">
         <div class="search-input">
           <input
@@ -75,7 +76,6 @@
     </div>
 
     <div v-if="!loading && !error" class="catalog-container">
-      <!-- Games Grid -->
       <section class="games-grid">
         <div v-if="filteredGames.length === 0" class="no-results">
           No games found matching your criteria.
@@ -90,6 +90,20 @@
             </div>
             <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
               {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
+            </div>
+            <div class="action-buttons">
+              <button
+                  @click="addToWishlist(game)"
+                  class="wishlist-button"
+                  :disabled="game.remainingQuantity === 0">
+                Add to Wishlist
+              </button>
+              <button
+                  @click="addToCart(game)"
+                  class="cart-button"
+                  :disabled="game.remainingQuantity === 0">
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>
@@ -198,6 +212,14 @@ export default {
 
         return matchesSearch && matchesPrice && matchesRating;
       });
+    },
+    addToWishlist(game) {
+      // TODO: Implement wishlist functionality
+      console.log('Adding to wishlist:', game.title);
+    },
+    addToCart(game) {
+      // TODO: Implement cart functionality
+      console.log('Adding to cart:', game.title);
     }
   },
   created() {
@@ -207,6 +229,51 @@ export default {
 </script>
 
 <style scoped>
+/* ... Keep all existing styles ... */
+
+/* Add new styles for the buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.wishlist-button,
+.cart-button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.wishlist-button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.wishlist-button:hover:not(:disabled) {
+  background-color: #d0d0d0;
+}
+
+.cart-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cart-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.wishlist-button:disabled,
+.cart-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Keep all existing styles below */
 .catalog-title {
   color: #000000;
   font-size: 2.5em;
