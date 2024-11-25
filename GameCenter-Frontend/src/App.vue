@@ -1,36 +1,17 @@
+<template>
+    <Layout />
+</template>
+
 <script>
-import { RouterLink, RouterView } from "vue-router";
-import Header from "./components/Header.vue";
+import Layout from "@/layouts/Layout.vue";
 
 export default {
+    name: "App",
     components: {
-        Header,
-    },
-    data() {
-        return {
-            currentUserType: null,
-        };
-    },
-    methods: {
-        handleLoginModal() {},
-        updateUserType(type) {
-            this.currentUserType = type;
-        },
+        Layout,
     },
 };
 </script>
-
-<template>
-    <div id="app">
-        <Header
-            :userType="currentUserType"
-            @showLoginModal="handleLoginModal"
-        />
-        <div class="content">
-            <RouterView />
-        </div>
-    </div>
-</template>
 
 <style>
 * {
