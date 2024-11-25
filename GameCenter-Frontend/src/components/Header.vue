@@ -14,15 +14,15 @@
 
                 <div class="auth">
                     <div v-if="!userType" class="auth-buttons">
-                        <button
-                            @click="$emit('showLoginModal')"
-                            class="login-button"
-                        >
+                        <button @click="showLoginModal" class="login-button">
                             <span class="login-icon">Login</span>
                         </button>
                     </div>
 
                     <div v-else class="user">
+                        <button @click="$emit('logout')" class="login-button">
+                            <span class="login-icon">Login</span>
+                        </button>
                         <RouterLink
                             :to="getUserProfileRoute"
                             class="user-button"
@@ -38,6 +38,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { userService } from "@/services/userService";
+
 export default {
     name: "Header",
     props: {
@@ -47,6 +50,10 @@ export default {
             validator: (value) => {
                 return ["client", "employee", "owner", null].includes(value);
             },
+        },
+        userDetails: {
+            type: JSON,
+            default: null,
         },
     },
     computed: {
@@ -77,7 +84,20 @@ export default {
     },
     methods: {
         showLoginModal() {
-            this.$emit("show-login-modal");
+            const response = axios({
+                method: "post",
+                url: "http://localhost:8080/users/login",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "http://localhost:8080",
+                },
+                data: {
+                    email: "owner@owner.com",
+                    password: "verySecure",
+                },
+            });
+            userService.saveUserType(response.data.userType);
+            userService.saveUserDetails(response.data);
         },
     },
 };

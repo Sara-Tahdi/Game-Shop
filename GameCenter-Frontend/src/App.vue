@@ -1,6 +1,7 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import Header from "./components/Header.vue";
+import { userService } from "./services/userService";
 
 export default {
     components: {
@@ -9,12 +10,18 @@ export default {
     data() {
         return {
             currentUserType: null,
+            currentUserDetails: null,
         };
     },
     methods: {
-        handleLoginModal() {},
-        updateUserType(type) {
-            this.currentUserType = type;
+        updateUser() {
+            this.currentUserType = userService.getUserType();
+            this.currentUserDetails = userService.getUserDetails();
+        },
+        logout() {
+            userService.clear();
+            updateUser();
+            this.$router.push("/");
         },
     },
 };
@@ -22,12 +29,12 @@ export default {
 
 <template>
     <div id="app">
-        <Header
-            :userType="currentUserType"
-            @showLoginModal="handleLoginModal"
-        />
+        <Header :userType="currentUserType" :userDetails="currentUserDetails" />
         <div class="content">
-            <RouterView />
+            <RouterView
+                :userType="currentUserType"
+                :userDetails="currentUserDetails"
+            />
         </div>
     </div>
 </template>

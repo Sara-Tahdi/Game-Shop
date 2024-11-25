@@ -19,6 +19,16 @@ public class AppUserRestController {
     @Autowired
     private AppUserService appUserService;
 
+    @PostMapping(value = "/users/owner/create")
+    public OwnerResponseDTO createOwnerAccount(@Validated @RequestBody OwnerCreateRequestDTO ownerToCreate) {
+        Owner o = appUserService.createOwnerAccount(
+                ownerToCreate.getEmail(),
+                ownerToCreate.getUsername(),
+                ownerToCreate.getPassword()
+        );
+        return new OwnerResponseDTO(o);
+    }
+
     @PutMapping(value = "/users/owner/update")
     public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate) {
         Owner o = appUserService.updateOwnerAccount(
