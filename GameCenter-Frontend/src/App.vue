@@ -1,16 +1,17 @@
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
-import Header from "./components/Header.vue";
-</script>
-
 <template>
-    <div id="app">
-        <Header @showLoginModal="handle" />
-        <div class="content">
-            <RouterView />
-        </div>
-    </div>
+    <Layout />
 </template>
+
+<script>
+import Layout from "@/layouts/Layout.vue";
+
+export default {
+    name: "App",
+    components: {
+        Layout,
+    },
+};
+</script>
 
 <style>
 * {
