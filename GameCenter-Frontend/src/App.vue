@@ -1,47 +1,17 @@
+<template>
+    <Layout />
+</template>
+
 <script>
-import { RouterLink, RouterView } from "vue-router";
-import Header from "./components/Header.vue";
-import { userService } from "./services/userService";
+import Layout from "@/layouts/Layout.vue";
 
 export default {
+    name: "App",
     components: {
-        Header,
-    },
-    data() {
-        return {
-            currentUserType: null,
-            currentUserDetails: null,
-        };
-    },
-    methods: {
-        updateUser() {
-            this.currentUserType = userService.getUserType();
-            this.currentUserDetails = userService.getUserDetails();
-        },
-        logout() {
-            userService.clear();
-            updateUser();
-            this.$router.push("/");
-        },
+        Layout,
     },
 };
 </script>
-
-<template>
-    <div id="app">
-        <Header
-            :userType="currentUserType"
-            :userDetails="currentUserDetails"
-            @update-user="updateUser"
-        />
-        <div class="content">
-            <RouterView
-                :userType="currentUserType"
-                :userDetails="currentUserDetails"
-            />
-        </div>
-    </div>
-</template>
 
 <style>
 * {
