@@ -21,7 +21,7 @@
 
                     <div v-else class="user">
                         <button @click="$emit('logout')" class="login-button">
-                            <span class="login-icon">Login</span>
+                            <span class="login-icon">Logout</span>
                         </button>
                         <RouterLink
                             :to="getUserProfileRoute"
@@ -83,8 +83,8 @@ export default {
         },
     },
     methods: {
-        showLoginModal() {
-            const response = axios({
+        async showLoginModal() {
+            const response = await axios({
                 method: "post",
                 url: "http://localhost:8080/users/login",
                 headers: {
@@ -98,6 +98,8 @@ export default {
             });
             userService.saveUserType(response.data.userType);
             userService.saveUserDetails(response.data);
+
+            this.$emit("update-user");
         },
     },
 };

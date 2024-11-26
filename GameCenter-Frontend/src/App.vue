@@ -29,7 +29,11 @@ export default {
 
 <template>
     <div id="app">
-        <Header :userType="currentUserType" :userDetails="currentUserDetails" />
+        <Header
+            :userType="currentUserType"
+            :userDetails="currentUserDetails"
+            @update-user="updateUser"
+        />
         <div class="content">
             <RouterView
                 :userType="currentUserType"
