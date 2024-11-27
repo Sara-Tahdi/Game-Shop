@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
+import GameDetails from "@/views/GameDetails.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,6 +14,12 @@ const router = createRouter({
       path: "/catalog",
       name: "Catalog",
       component: () => import("../views/Catalog.vue"),
+    },
+    {
+      path: "/game/:id",
+      name: "Game Details",
+      component: GameDetails,
+      props: true,
     },
     {
       path: "/client-profile",
