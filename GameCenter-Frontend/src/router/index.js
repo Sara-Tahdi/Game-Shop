@@ -29,6 +29,10 @@ const router = createRouter({
       component: () => import("@/views/OwnerDashboard.vue"),
       meta: { requiresAuth: true, userType: "owner" },
     },
+    {
+      path: "/account",
+      component: () => import("@/views/Account.vue"),
+    },
   ],
 });
 
