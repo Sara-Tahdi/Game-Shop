@@ -1,21 +1,31 @@
 <template>
   <div class="catalog">
-    <!-- No changes to the header and search sections -->
     <h1 class="catalog-title">Game Catalog</h1>
 
     <div class="search-bar-container">
-      <!-- No changes to search bar content -->
       <div class="search-bar-wrapper">
         <div class="search-input">
           <input
               type="text"
               v-model="searchQuery"
               placeholder="Search games by title or description..."
-              @input="filterGames"
+              @keyup.enter="applyFilters"
           >
+          <button @click="applyFilters" class="search-button">
+            Search
+          </button>
         </div>
 
         <div class="filter-group">
+          <div class="category-filter">
+            <select v-model="selectedCategory" @change="applyFilters">
+              <option value="">All Categories</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id">
+                {{ category.category }}
+              </option>
+            </select>
+          </div>
+
           <div class="price-filter">
             <input
                 type="number"
@@ -23,7 +33,7 @@
                 placeholder="Min $"
                 min="0"
                 step="0.01"
-                @input="validatePriceRange"
+                @keyup.enter="applyFilters"
             >
             <span class="separator">-</span>
             <input
@@ -32,7 +42,7 @@
                 placeholder="Max $"
                 min="0"
                 step="0.01"
-                @input="validatePriceRange"
+                @keyup.enter="applyFilters"
             >
           </div>
 
@@ -44,7 +54,7 @@
                 min="0"
                 max="5"
                 step="0.5"
-                @input="validateRatingRange"
+                @keyup.enter="applyFilters"
             >
             <span class="separator">-</span>
             <input
@@ -54,10 +64,13 @@
                 min="0"
                 max="5"
                 step="0.5"
-                @input="validateRatingRange"
+                @keyup.enter="applyFilters"
             >
           </div>
         </div>
+        <button @click="applyFilters" class="apply-filters-button">
+          Apply Filters
+        </button>
       </div>
       <div class="error-messages">
         <span v-if="priceError" class="error-message">{{ priceError }}</span>
@@ -80,33 +93,14 @@
         <div v-if="filteredGames.length === 0" class="no-results">
           No games found matching your criteria.
         </div>
-        <div v-else class="game-cards">
-          <div v-for="game in filteredGames" :key="game.id" class="game-card">
-            <h3>{{ game.title }}</h3>
-            <p class="description">{{ game.description }}</p>
-            <div class="game-details">
-              <span class="price">${{ game.price.toFixed(2) }}</span>
-              <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
-            </div>
-            <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
-              {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
-            </div>
-            <div class="action-buttons">
-              <button
-                  @click="addToWishlist(game)"
-                  class="wishlist-button"
-                  :disabled="game.remainingQuantity === 0">
-                Add to Wishlist
-              </button>
-              <button
-                  @click="addToCart(game)"
-                  class="cart-button"
-                  :disabled="game.remainingQuantity === 0">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
+        <GameCard
+            v-else
+            v-for="game in filteredGames"
+            :key="game.id"
+            :game="game"
+            @add-to-wishlist="addToWishlist"
+            @add-to-cart="addToCart"
+        />
       </section>
     </div>
   </div>
@@ -114,6 +108,7 @@
 
 <script>
 import axios from 'axios';
+import GameCard from '@/components/GameCard.vue';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080',
@@ -124,13 +119,18 @@ const apiClient = axios.create({
 
 export default {
   name: 'Catalog',
+  components: {
+    GameCard
+  },
   data() {
     return {
       games: [],
       filteredGames: [],
+      categories: [],
       loading: true,
       error: null,
       searchQuery: '',
+      selectedCategory: '',
       minPrice: null,
       maxPrice: null,
       minRating: null,
@@ -156,6 +156,15 @@ export default {
         this.loading = false;
       }
     },
+    async fetchCategories() {
+      try {
+        const response = await apiClient.get('/gameCategory');
+        console.log('Fetched categories:', response.data);
+        this.categories = response.data;
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    },
     validatePriceRange() {
       this.priceError = '';
 
@@ -168,7 +177,6 @@ export default {
         return false;
       }
 
-      this.filterGames();
       return true;
     },
     validateRatingRange() {
@@ -189,14 +197,16 @@ export default {
         return false;
       }
 
-      this.filterGames();
       return true;
     },
-    filterGames() {
+    applyFilters() {
       if (!this.validatePriceRange() || !this.validateRatingRange()) {
         return;
       }
 
+      this.filterGames();
+    },
+    filterGames() {
       this.filteredGames = this.games.filter(game => {
         const matchesSearch = !this.searchQuery ||
             game.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -210,7 +220,10 @@ export default {
             (!this.minRating || game.rating >= this.minRating) &&
             (!this.maxRating || game.rating <= this.maxRating);
 
-        return matchesSearch && matchesPrice && matchesRating;
+        const matchesCategory = !this.selectedCategory ||
+            (game.category && game.category.id === parseInt(this.selectedCategory));
+
+        return matchesSearch && matchesPrice && matchesRating && matchesCategory;
       });
     },
     addToWishlist(game) {
@@ -224,56 +237,12 @@ export default {
   },
   created() {
     this.fetchGames();
+    this.fetchCategories();
   }
 };
 </script>
 
 <style scoped>
-/* ... Keep all existing styles ... */
-
-/* Add new styles for the buttons */
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.wishlist-button,
-.cart-button {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.2s;
-}
-
-.wishlist-button {
-  background-color: #e0e0e0;
-  color: #333;
-}
-
-.wishlist-button:hover:not(:disabled) {
-  background-color: #d0d0d0;
-}
-
-.cart-button {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.cart-button:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-.wishlist-button:disabled,
-.cart-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Keep all existing styles below */
 .catalog-title {
   color: #000000;
   font-size: 2.5em;
@@ -314,20 +283,51 @@ export default {
 .search-input {
   flex: 1;
   min-width: 200px;
+  display: flex;
+  gap: 10px;
 }
 
 .search-input input {
-  width: 100%;
+  flex: 1;
   padding: 10px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1em;
 }
 
+.search-button,
+.apply-filters-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover,
+.apply-filters-button:hover {
+  background-color: #45a049;
+}
+
 .filter-group {
   display: flex;
   gap: 15px;
   align-items: center;
+}
+
+.category-filter {
+  min-width: 150px;
+}
+
+.category-filter select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+  background-color: white;
 }
 
 .price-filter, .rating-filter {
@@ -415,51 +415,6 @@ export default {
   gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   width: 100%;
-}
-
-.game-card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.game-card h3 {
-  margin: 0 0 10px 0;
-  color: #333;
-}
-
-.description {
-  color: #666;
-  margin-bottom: 10px;
-  font-size: 0.9em;
-}
-
-.game-details {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.price {
-  color: #2c3e50;
-  font-weight: bold;
-}
-
-.rating {
-  color: #f1c40f;
-}
-
-.stock-status {
-  padding: 5px 10px;
-  border-radius: 4px;
-  text-align: center;
-  background-color: #e74c3c;
-  color: white;
-}
-
-.stock-status.in-stock {
-  background-color: #2ecc71;
 }
 
 .no-results {
