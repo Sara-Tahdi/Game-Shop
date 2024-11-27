@@ -17,6 +17,15 @@
         </div>
 
         <div class="filter-group">
+          <div class="category-filter">
+            <select v-model="selectedCategory" @change="applyFilters">
+              <option value="">All Categories</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id">
+                {{ category.category }}
+              </option>
+            </select>
+          </div>
+
           <div class="price-filter">
             <input
                 type="number"
@@ -117,9 +126,11 @@ export default {
     return {
       games: [],
       filteredGames: [],
+      categories: [],
       loading: true,
       error: null,
       searchQuery: '',
+      selectedCategory: '',
       minPrice: null,
       maxPrice: null,
       minRating: null,
@@ -143,6 +154,15 @@ export default {
         this.error = 'Failed to load games catalog. Please try again.';
       } finally {
         this.loading = false;
+      }
+    },
+    async fetchCategories() {
+      try {
+        const response = await apiClient.get('/gameCategory');
+        console.log('Fetched categories:', response.data);
+        this.categories = response.data;
+      } catch (err) {
+        console.error('Error fetching categories:', err);
       }
     },
     validatePriceRange() {
@@ -200,7 +220,10 @@ export default {
             (!this.minRating || game.rating >= this.minRating) &&
             (!this.maxRating || game.rating <= this.maxRating);
 
-        return matchesSearch && matchesPrice && matchesRating;
+        const matchesCategory = !this.selectedCategory ||
+            (game.category && game.category.id === parseInt(this.selectedCategory));
+
+        return matchesSearch && matchesPrice && matchesRating && matchesCategory;
       });
     },
     addToWishlist(game) {
@@ -214,6 +237,7 @@ export default {
   },
   created() {
     this.fetchGames();
+    this.fetchCategories();
   }
 };
 </script>
@@ -291,6 +315,19 @@ export default {
   display: flex;
   gap: 15px;
   align-items: center;
+}
+
+.category-filter {
+  min-width: 150px;
+}
+
+.category-filter select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+  background-color: white;
 }
 
 .price-filter, .rating-filter {
