@@ -40,6 +40,7 @@ import axios from 'axios';
 
 const axiosClient = axios.create({
   baseURL: 'http://localhost:3000',
+  timeout: 5000
 });
 
 export default {
@@ -49,17 +50,25 @@ export default {
       wishlist: [],
       loading: false,
       error: null,
+      clientId: null
     };
   },
   methods: {
     async fetchWishlist() {
+      if (!this.clientId) {
+        this.error = 'No client ID available';
+        return;
+      }
+      
       this.loading = true;
+      this.error = null;
+      
       try {
         const response = await axiosClient.get(`/wishlists/client/${this.clientId}`);
         this.wishlist = response.data;
       } catch (err) {
-        this.error = 'Failed to load wishlist. Please try again.';
-        console.error(err);
+        console.error('Wishlist fetch error:', err);
+        this.error = err.response?.data?.message || 'Failed to load wishlist. Please try again.';
       } finally {
         this.loading = false;
       }
@@ -67,23 +76,36 @@ export default {
 
     async removeFromWishlist(gameId) {
       try {
-        await axiosClient.delete(`/wishlists/remove?clientId=${this.clientId}&gameId=${gameId}`);
-        this.wishlist = this.wishlist.filter(game => game.game.id !== gameId);
+        await axiosClient.delete(`/wishlists/remove`, {
+          params: {
+            clientId: this.clientId,
+            gameId: gameId
+          }
+        });
+        this.wishlist = this.wishlist.filter(game => game.id !== gameId);
       } catch (err) {
-        this.error = 'Failed to remove game from wishlist. Please try again.';
-        console.error(err);
+        console.error('Remove from wishlist error:', err);
+        this.error = err.response?.data?.message || 'Failed to remove game from wishlist. Please try again.';
       }
     },
   },
   created() {
-  this.clientId = this.$store.state.clientId;
-  console.log('Client ID:', this.clientId);
-  if (this.clientId) {
-    this.fetchWishlist();
-  } else {
-    console.error('Client ID is missing!');
+
+    localStorage.setItem('clientId', 'test-client-123');
+    try {
+      this.clientId = this.$store?.state?.clientId || localStorage.getItem('clientId');
+      
+      if (this.clientId) {
+        this.fetchWishlist();
+      } else {
+        this.error = 'No client ID found. Please log in.';
+        console.warn('Client ID is missing');
+      }
+    } catch (err) {
+      console.error('Error in created hook:', err);
+      this.error = 'An unexpected error occurred';
+    }
   }
-}
 };
 </script>
 
