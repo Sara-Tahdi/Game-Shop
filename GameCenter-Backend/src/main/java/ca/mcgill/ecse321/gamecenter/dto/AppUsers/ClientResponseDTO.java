@@ -9,6 +9,8 @@ public class ClientResponseDTO {
     private String phoneNumber;
     private String deliveryAddress;
     private boolean isActive;
+    private String userType;
+
 
     public ClientResponseDTO() {}
 
@@ -19,6 +21,7 @@ public class ClientResponseDTO {
         this.phoneNumber = client.getPhoneNumber();
         this.deliveryAddress = client.getDeliveryAddress();
         this.isActive = client.getIsActive();
+        this.userType = "Client";
     }
 
     public int getId() { return this.id; }

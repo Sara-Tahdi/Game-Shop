@@ -42,10 +42,22 @@
                   userState.userInfo.userType === 'Owner'
                 "
               >
-                <RouterLink to="/store">Manage Store</RouterLink>
+                <RouterLink
+                  v-if="userState.userInfo.userType === 'Employee'"
+                  to="/employee-dashboard"
+                  >Manage Store</RouterLink
+                >
+                <RouterLink
+                  v-else-if="userState.userInfo.userType === 'Owner'"
+                  to="/owner-dashboard"
+                  >Manage Store</RouterLink
+                >
               </li>
               <li v-if="userState.userInfo.userType === 'Client'">
                 <RouterLink to="/checkout">Check Out</RouterLink>
+              </li>
+              <li v-if="userState.userInfo.userType === 'Client'">
+                <RouterLink to="/purchase-history">Purchase History</RouterLink>
               </li>
               <li>
                 <RouterLink @click="logout" to="/" class="logout-link"

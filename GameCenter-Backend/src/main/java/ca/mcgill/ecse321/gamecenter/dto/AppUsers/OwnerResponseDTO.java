@@ -7,6 +7,7 @@ public class OwnerResponseDTO {
     private String username;
     private String email;
     private boolean isActive;
+    private String userType;
 
     public OwnerResponseDTO() {
     }
@@ -16,10 +17,12 @@ public class OwnerResponseDTO {
         this.username = owner.getUsername();
         this.email = owner.getEmail();
         this.isActive = owner.getIsActive();
+        this.userType = "Owner";
     }
 
     public int getId() { return this.id; }
     public String getUsername() { return this.username; }
     public String getEmail() { return this.email; }
     public boolean getIsActive() { return this.isActive; }
+    public String getUserType() { return this.userType; }
 }

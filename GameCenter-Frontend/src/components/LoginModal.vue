@@ -166,13 +166,23 @@ export default {
         console.log(userData.userType);
         console.log(userData.id);
         // Update the reactive state
-        userState.setUser({
-          id: userData.id,
-          username: userData.username,
-          email: userData.email,
-          userType: userData.userType,
-        });
-
+        if (userData.userType === "Client") {
+          userState.setUser({
+            id: userData.id,
+            username: userData.username,
+            email: userData.email,
+            deliveryAddress: userData.deliveryAddress,
+            phoneNumber: userData.phoneNumber,
+            userType: userData.userType,
+          });
+        } else {
+          userState.setUser({
+            id: userData.id,
+            username: userData.username,
+            email: userData.email,
+            userType: userData.userType,
+          });
+        }
         this.closeModal();
       } catch (err) {
         this.error =
