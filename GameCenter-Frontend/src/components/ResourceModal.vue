@@ -1,52 +1,50 @@
 <template>
-    <div class="modal-overlay" @click="closeModal">
-      <div class="modal-box" @click.stop>
-        <div class="modal-header">
-          <h3>{{ title }}</h3>
-          <button class="close-button" @click="closeModal">×</button>
-        </div>
-        <div class="modal-body">
-          <!-- Error Message -->
-          <div v-if="error" class="error-message">{{ error }}</div>
-  
-          <!-- Dynamic Form -->
-          <form @submit.prevent="handleSubmit">
-            <div
-              class="form-group"
-              v-for="(field, index) in fields"
-              :key="index"
-            >
-              <label :for="field.name">{{ field.label }}</label>
-              <input
-                v-if="field.type !== 'textarea'"
-                :type="field.type || 'text'"
-                :id="field.name"
-                v-model="formData[field.name]"
-                :readonly="!field.editable"
-                :placeholder="field.placeholder"
-                @input="clearError"
-                required
-              />
-              <textarea
-                v-else
-                :id="field.name"
-                v-model="formData[field.name]"
-                :readonly="!field.editable"
-                :placeholder="field.placeholder"
-                @input="clearError"
-                required
-              ></textarea>
-            </div>
-            <button type="submit" class="submit-button">{{ submitButtonText }}</button>
-          </form>
-        </div>
+  <div class="modal-overlay" @click="closeModal">
+    <div class="modal-box" @click.stop>
+      <div class="modal-header">
+        <h3>{{ title }}</h3>
+        <button class="close-button" @click="closeModal">×</button>
+      </div>
+      <div class="modal-body">
+        <!-- Error Message -->
+        <div v-if="error" class="error-message">{{ error }}</div>
+
+        <!-- Dynamic Form -->
+        <form @submit.prevent="handleSubmit">
+          <div class="form-group" v-for="(field, index) in fields" :key="index">
+            <label :for="field.name">{{ field.label }}</label>
+            <input
+              v-if="field.type !== 'textarea'"
+              :type="field.type || 'text'"
+              :id="field.name"
+              v-model="formData[field.name]"
+              :readonly="!field.editable"
+              :placeholder="field.placeholder"
+              @input="clearError"
+              required
+            />
+            <textarea
+              v-else
+              :id="field.name"
+              v-model="formData[field.name]"
+              :readonly="!field.editable"
+              :placeholder="field.placeholder"
+              @input="clearError"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="submit-button">
+            {{ submitButtonText }}
+          </button>
+        </form>
       </div>
     </div>
-  </template>
-  
-  <script>
+  </div>
+</template>
+
+<script>
 export default {
-  name: 'ResourceModal',
+  name: "ResourceModal",
   props: {
     isVisible: {
       type: Boolean,
@@ -54,7 +52,7 @@ export default {
     },
     title: {
       type: String,
-      default: 'Modal Title',
+      default: "Modal Title",
     },
     fields: {
       type: Array,
@@ -67,7 +65,7 @@ export default {
     },
     submitButtonText: {
       type: String,
-      default: 'Submit',
+      default: "Submit",
     },
   },
   data() {
@@ -89,11 +87,11 @@ export default {
   },
   methods: {
     closeModal() {
-      this.$emit('close');
+      this.$emit("close");
     },
     handleSubmit() {
       // Validate data if needed
-      this.$emit('submit', { ...this.formData });
+      this.$emit("submit", { ...this.formData });
     },
     clearError() {
       this.error = null;
