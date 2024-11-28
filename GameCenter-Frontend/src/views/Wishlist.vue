@@ -55,9 +55,8 @@ export default {
     async fetchWishlist() {
       this.loading = true;
       try {
-        // Correct usage of template literal for dynamic URL
         const response = await axiosClient.get(`/wishlists/client/${this.clientId}`);
-        this.wishlist = response.data;  // Store the fetched wishlist
+        this.wishlist = response.data;
       } catch (err) {
         this.error = 'Failed to load wishlist. Please try again.';
         console.error(err);
@@ -68,9 +67,8 @@ export default {
 
     async removeFromWishlist(gameId) {
       try {
-        // Correct usage of template literal for dynamic URL
         await axiosClient.delete(`/wishlists/remove?clientId=${this.clientId}&gameId=${gameId}`);
-        this.wishlist = this.wishlist.filter(game => game.game.id !== gameId); // Remove from local state
+        this.wishlist = this.wishlist.filter(game => game.game.id !== gameId);
       } catch (err) {
         this.error = 'Failed to remove game from wishlist. Please try again.';
         console.error(err);
@@ -79,7 +77,7 @@ export default {
   },
   created() {
   this.clientId = this.$store.state.clientId;
-  console.log('Client ID:', this.clientId);  // Check clientId
+  console.log('Client ID:', this.clientId);
   if (this.clientId) {
     this.fetchWishlist();
   } else {

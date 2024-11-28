@@ -60,7 +60,7 @@ export default {
       this.loading = true;
       try {
         const response = await axiosClient.get(`/carts/client/${this.clientId}`);
-        this.cart = response.data;  // Store the fetched cart
+        this.cart = response.data;
       } catch (err) {
         this.error = 'Failed to load cart. Please try again.';
         console.error(err);
@@ -72,7 +72,7 @@ export default {
     async removeFromCart(gameId) {
       try {
         await axiosClient.delete(`/carts/remove?clientId=${this.clientId}&gameId=${gameId}`);
-        this.cart = this.cart.filter(game => game.game.id !== gameId); // Remove from local state
+        this.cart = this.cart.filter(game => game.game.id !== gameId);
       } catch (err) {
         this.error = 'Failed to remove game from cart. Please try again.';
         console.error(err);
@@ -81,7 +81,7 @@ export default {
   },
   created() {
     this.clientId = this.$store.state.clientId;
-    console.log('Client ID:', this.clientId);  // Check clientId
+    console.log('Client ID:', this.clientId);
     if (this.clientId) {
       this.fetchCart();
     } else {
