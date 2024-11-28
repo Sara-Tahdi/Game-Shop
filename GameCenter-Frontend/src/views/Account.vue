@@ -1,6 +1,6 @@
 <template>
   <div class="account-container">
-    <h1>Update your account</h1>
+    <h1 style="color: black">Update your account</h1>
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
@@ -45,8 +45,8 @@
         />
       </div>
       <div class="form-group">
-        <label for="phone-number">Password to Confirm:</label>
-        <input type="text" id="phone-number" v-model="formData.password" />
+        <label for="password">Password to Confirm:</label>
+        <input type="text" id="password" v-model="formData.password" />
       </div>
       <button type="submit" class="update-button">Submit</button>
     </form>
@@ -86,7 +86,10 @@ export default {
   methods: {
     async updateAccount() {
       this.error = null;
-
+      if (this.formData.password === "") {
+        this.error = "Password to confirm changes is required.";
+        return;
+      }
       if (
         this.formData.newPassword &&
         this.formData.confirmPassword &&
@@ -97,21 +100,25 @@ export default {
       }
 
       const body = {};
-      body.username = this.formData.username
-        ? this.formData.username
-        : userState.userInfo.username;
+      body.username =
+        this.formData.username !== ""
+          ? this.formData.username
+          : userState.userInfo.username;
       body.email = userState.userInfo.email;
-      body.password = this.formData.password;
-      body.newPassword = this.formData.newPassword
-        ? this.formData.newPassword
-        : this.formData.password;
+      body.oldPassword = this.formData.password;
+      body.password =
+        this.formData.newPassword !== ""
+          ? this.formData.newPassword
+          : this.formData.password;
       if (userState.userInfo.userType === "Client") {
-        body.deliveryAddress = this.formData.deliveryAddress
-          ? this.formData.deliveryAddress
-          : "";
-        body.phoneNumber = this.formData.phoneNumber
-          ? this.formData.deliveryAddress
-          : "";
+        body.deliveryAddress =
+          this.formData.deliveryAddress !== ""
+            ? this.formData.deliveryAddress
+            : userState.userInfo.deliveryAddress;
+        body.phoneNumber =
+          this.formData.phoneNumber !== ""
+            ? this.formData.phoneNumber
+            : userState.userInfo.phoneNumber;
       }
 
       try {
@@ -128,14 +135,24 @@ export default {
             username: data.username,
             deliveryAddress: data.deliveryAddress,
             phoneNumber: data.phoneNumber,
+            userType: userState.userInfo.userType,
           });
         } else {
           userState.setUser({
             id: data.id,
             email: data.email,
             username: data.username,
+            userType: userState.userInfo.userType,
           });
         }
+        this.formData = {
+          username: "",
+          newPassword: "",
+          confirmPassword: "",
+          deliveryAddress: "",
+          phoneNumber: "",
+          password: "",
+        };
         console.log("success");
       } catch (err) {
         this.error = err;
