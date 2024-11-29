@@ -25,7 +25,7 @@
               :key="colIndex"
               :style="{ width: column.width }"
             >
-              {{ item[column.field] }}
+              {{ getValue(item, column.field) }}
             </td>
           </tr>
         </tbody>
@@ -91,6 +91,13 @@ export default {
           ? this.data[this.selectedItemIndex]
           : null;
       this.$emit(action, selectedItem);
+    },
+    getValue(row, field) {
+      const parts = field.split("."); // Handle nested fields using dot-notation
+      return parts.reduce(
+        (value, key) => (value && value[key] !== undefined ? value[key] : ""),
+        row
+      );
     },
   },
 };

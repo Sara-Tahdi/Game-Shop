@@ -171,7 +171,7 @@ export default {
           if (index !== -1) {
             this.resourceData.splice(index, 1, response.data); // Reactive update
           }
-          this.selectedItem = null;
+          this.selectedItem = response.data; // Reassign selectedItem to the updated row
           this.closeModal();
         } catch (error) {
           console.error("Error updating category:", error.response.data);
