@@ -54,10 +54,7 @@
                 >
               </li>
               <li v-if="userState.userInfo.userType === 'Client'">
-                <RouterLink to="/checkout">Check Out</RouterLink>
-              </li>
-              <li v-if="userState.userInfo.userType === 'Client'">
-                <RouterLink to="/purchase-history">Purchase History</RouterLink>
+                <RouterLink to="/client-profile">Account Info</RouterLink>
               </li>
               <li>
                 <RouterLink @click="logout" to="/" class="logout-link"

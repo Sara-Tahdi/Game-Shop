@@ -90,16 +90,6 @@ public class PurchaseService {
         return purchases;
     }
 
-    public List<Purchase> getClientPurchaseHistory90Days(int clientId) {
-        List<Purchase> purchases = getClientPurchaseHistory(clientId);
-        // checking if purchases == null is useless
-        // because it is already checked in the full history
-        List<Purchase> filteredPurchases = purchases.stream()
-                .filter(purchase -> purchase.getPurchaseDate().toLocalDate().isAfter(LocalDate.now().minusDays(90)))
-                .collect(Collectors.toList());
-        return filteredPurchases;
-    }
-
     public List<Purchase> getPurchaseByTrackingCode(String trackingCode) {
         return purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(List.of());
     }
