@@ -20,7 +20,7 @@
       :initialData="modalInitialData"
       :submitButtonText="modalSubmitButtonText"
       @close="closeModal"
-      @submit="handleModalSubmit"
+      @formSubmit="handleModalSubmit"
     />
   </div>
 </template>
@@ -41,9 +41,11 @@ const categoryService = {
     return apiClient.get("/gameCategory");
   },
   createCategory(data) {
+    console.log("So far so good");
     return apiClient.post("/gameCategory/create", data);
   },
   updateCategory(id, data) {
+    console.log("So far so good 2");
     return apiClient.put(`/gameCategory/${id}`, data);
   },
 };
@@ -150,7 +152,7 @@ export default {
           this.resourceData.push(response.data); // Add the new category to the table
           this.closeModal();
         } catch (error) {
-          console.error("Error adding category:", error);
+          console.error("Error adding category:", error.response.data);
           // Handle error (e.g., display error message)
         }
       } else if (this.currentAction === "update") {
@@ -168,7 +170,7 @@ export default {
           this.selectedItem = null;
           this.closeModal();
         } catch (error) {
-          console.error("Error updating category:", error);
+          console.error("Error updating category:", error.response.data);
           // Handle error (e.g., display error message)
         }
       }

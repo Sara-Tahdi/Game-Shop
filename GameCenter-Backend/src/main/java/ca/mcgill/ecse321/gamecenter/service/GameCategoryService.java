@@ -19,7 +19,11 @@ public class GameCategoryService {
         if (category == null || category.trim().isEmpty()) {
             throw new IllegalArgumentException("Category name cannot be null or empty.");
         }
-        
+
+        // Check to see if category with the same name already exists
+        if (gameCategoryRepository.findGameCategoryByCategory(category).isPresent()) {
+            throw new IllegalArgumentException("Category with name " + category + " already exists.");
+        }
         
         GameCategory gameCategory = new GameCategory(category);
         return gameCategoryRepository.save(gameCategory);
@@ -30,7 +34,10 @@ public class GameCategoryService {
         if (category == null || category.trim().isEmpty()) {
             throw new IllegalArgumentException("Category name cannot be null or empty.");
         }
-        
+        // Check to see if category with the same name already exists
+        if (gameCategoryRepository.findGameCategoryByCategory(category).isPresent()) {
+            throw new IllegalArgumentException("Category with name " + category + " already exists.");
+        }
         
         Optional<GameCategory> existingCategory = gameCategoryRepository.findById(id);
         

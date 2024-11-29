@@ -10,7 +10,7 @@
         <div v-if="error" class="error-message">{{ error }}</div>
 
         <!-- Dynamic Form -->
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="handleFormSubmit">
           <div class="form-group" v-for="(field, index) in fields" :key="index">
             <label :for="field.name">{{ field.label }}</label>
             <input
@@ -89,9 +89,9 @@ export default {
     closeModal() {
       this.$emit("close");
     },
-    handleSubmit() {
+    handleFormSubmit() {
       // Validate data if needed
-      this.$emit("submit", { ...this.formData });
+      this.$emit("formSubmit", { ...this.formData });
     },
     clearError() {
       this.error = null;
