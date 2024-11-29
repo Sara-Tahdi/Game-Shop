@@ -19,6 +19,7 @@
       :fields="modalFields"
       :initialData="modalInitialData"
       :submitButtonText="modalSubmitButtonText"
+      :error="error"
       @close="closeModal"
       @formSubmit="handleModalSubmit"
     />
@@ -75,6 +76,7 @@ export default {
       modalInitialData: {},
       modalSubmitButtonText: "",
       currentAction: "", // "add" or "update"
+      error: null,
     };
   },
   methods: {
@@ -141,6 +143,7 @@ export default {
       this.isModalVisible = false;
       this.modalInitialData = {};
       this.currentAction = "";
+      this.error = null;
     },
 
     // Handle form submission from the modal
@@ -154,6 +157,7 @@ export default {
         } catch (error) {
           console.error("Error adding category:", error.response.data);
           // Handle error (e.g., display error message)
+          this.error = error.response?.data || "Failed to add category.";
         }
       } else if (this.currentAction === "update") {
         // Handle Update
@@ -172,6 +176,7 @@ export default {
         } catch (error) {
           console.error("Error updating category:", error.response.data);
           // Handle error (e.g., display error message)
+          this.error = error.response?.data || "Failed to update category.";
         }
       }
     },

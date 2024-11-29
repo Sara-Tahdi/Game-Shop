@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <!-- Error Message -->
-        <div v-if="error" class="error-message">{{ error }}</div>
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
         <!-- Dynamic Form -->
         <form @submit.prevent="handleFormSubmit">
@@ -67,21 +67,28 @@ export default {
       type: String,
       default: "Submit",
     },
+    error: {
+      type: String,
+      default: null, // Accept error from parent
+    },
   },
   data() {
     return {
       formData: { ...this.initialData },
-      error: null,
+      errorMessage: this.error, // Local copy of the error prop
     };
   },
   watch: {
+    error(newError) {
+      this.errorMessage = newError; // Sync with the parent prop
+    },
     initialData(newData) {
       this.formData = { ...newData };
     },
     isVisible(newVal) {
       if (newVal) {
         this.formData = { ...this.initialData };
-        this.error = null;
+        this.errorMessage = this.error; // Reset error when modal opens
       }
     },
   },
@@ -90,11 +97,10 @@ export default {
       this.$emit("close");
     },
     handleFormSubmit() {
-      // Validate data if needed
       this.$emit("formSubmit", { ...this.formData });
     },
     clearError() {
-      this.error = null;
+      this.errorMessage = null; // Reset local error message
     },
   },
 };
