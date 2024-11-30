@@ -112,11 +112,16 @@ public class RequestService {
     }
 
     public List<GameRequest> getAllGameRequests() {
-        List<Request> a = requestRepository.findRequestsByRequestType(GameRequest.class).orElse(null);
-        if (a == null) {
+        List<Request> requests = requestRepository.findRequestsByRequestType(GameRequest.class).orElse(null);
+        if (requests == null) {
             throw new IllegalArgumentException("There are no GameRequests");
         }
-        return Arrays.asList(a.toArray(new GameRequest[a.size()]));
+    
+        // Sort the list by ID
+        return requests.stream()
+                       .map(request -> (GameRequest) request)
+                       .sorted(Comparator.comparing(GameRequest::getId))
+                       .collect(Collectors.toList());
     }
 
     public List<UserRequest> getAllUserRequests() {
