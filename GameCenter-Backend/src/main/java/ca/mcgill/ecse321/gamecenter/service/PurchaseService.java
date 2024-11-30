@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
 import ca.mcgill.ecse321.gamecenter.dto.Purchase.PurchaseRequestDTO;
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.SimplePurchaseResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.Purchase;
@@ -62,19 +63,25 @@ public class PurchaseService {
         return purchaseRepository.save(p);
     }
 
-    public Purchase returnGame(int purchaseId, String refundReason) {
-        Purchase p = purchaseRepository.findPurchaseById(purchaseId).orElse(null);
-        if (p == null) {
-            throw new IllegalArgumentException("There is no Purchase with id: " + purchaseId);
+    public SimplePurchaseResponseDTO returnGame(String trackingCode, String refundReason) {
+        List<Purchase> purchases = purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(null);
+        if (purchases == null) {
+            throw new IllegalArgumentException("There is no Purchase with trackingCode: " + trackingCode);
         }
 
         // check if refund request is within valid time
-        if (p.getPurchaseDate().toLocalDate().isBefore(LocalDate.now().minusDays(7))) {
+        if (purchases.getFirst().getPurchaseDate().toLocalDate().isBefore(LocalDate.now().minusDays(7))) {
             throw new IllegalArgumentException("Refund request DENIED!! Refund period is over.");
         }
 
-        p.setRefundReason(refundReason);
-        return purchaseRepository.save(p);
+        Float total = 0f;
+        for (Purchase p: purchases) {
+            p.setRefundReason(refundReason);
+            purchaseRepository.save(p);
+            total += p.getTotalPrice();
+        }
+
+        return new SimplePurchaseResponseDTO(trackingCode, Round.round(total), refundReason);
     }
 
     public List<Purchase> getClientPurchaseHistory(int clientId) {
@@ -88,16 +95,6 @@ public class PurchaseService {
             throw new IllegalArgumentException("Client with id " + clientId + " has no purchases");
         }
         return purchases;
-    }
-
-    public List<Purchase> getClientPurchaseHistory90Days(int clientId) {
-        List<Purchase> purchases = getClientPurchaseHistory(clientId);
-        // checking if purchases == null is useless
-        // because it is already checked in the full history
-        List<Purchase> filteredPurchases = purchases.stream()
-                .filter(purchase -> purchase.getPurchaseDate().toLocalDate().isAfter(LocalDate.now().minusDays(90)))
-                .collect(Collectors.toList());
-        return filteredPurchases;
     }
 
     public List<Purchase> getPurchaseByTrackingCode(String trackingCode) {

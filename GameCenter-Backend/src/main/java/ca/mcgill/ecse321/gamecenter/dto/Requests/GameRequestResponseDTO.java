@@ -24,7 +24,6 @@ public class GameRequestResponseDTO {
         this.requestType = request.getType().toString();
         this.createdRequest = new AppUserResponseDTO(request.getCreatedRequest());
         this.game = new GameResponseDTO(request.getGame());
-
     }
 
     public int getId() { return this.id; }

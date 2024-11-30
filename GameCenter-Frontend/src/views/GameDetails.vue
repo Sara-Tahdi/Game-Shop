@@ -1,7 +1,9 @@
 <template>
   <div class="game-details-page">
     <div class="back-link">
-      <router-link to="/" class="back-button">← Back to Catalog</router-link>
+      <router-link to="/catalog" class="back-button"
+        >← Back to Catalog</router-link
+      >
     </div>
 
     <div v-if="loading" class="loading">
@@ -41,7 +43,10 @@
 
             <div class="detail-row">
               <span class="label">Status:</span>
-              <span class="value stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
+              <span
+                class="value stock-status"
+                :class="{ 'in-stock': game.remainingQuantity > 0 }"
+              >
                 {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
               </span>
             </div>
@@ -59,16 +64,16 @@
 
           <div class="action-buttons">
             <button
-                @click="addToWishlist"
-                class="wishlist-button"
-                :disabled="game.remainingQuantity === 0"
+              @click="addToWishlist"
+              class="wishlist-button"
+              :disabled="game.remainingQuantity === 0"
             >
               Add to Wishlist
             </button>
             <button
-                @click="addToCart"
-                class="cart-button"
-                :disabled="game.remainingQuantity === 0"
+              @click="addToCart"
+              class="cart-button"
+              :disabled="game.remainingQuantity === 0"
             >
               Add to Cart
             </button>
@@ -99,18 +104,18 @@
 </template>
 
 <script>
-import axios from 'axios';
-import GameReview from '../components/GameReview.vue';
+import axios from "axios";
+import GameReview from "../components/GameReview.vue";
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: "http://localhost:8080",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 export default {
-  name: 'GameDetails',
+  name: "GameDetails",
   components: {
     GameReview,
   },
@@ -120,46 +125,50 @@ export default {
       reviews: [],
       loading: true,
       error: null,
-      areReviewsVisible: false
+      areReviewsVisible: false,
     };
   },
   methods: {
     async fetchGameDetails() {
       try {
         this.loading = true;
-        const response = await apiClient.get(`/games/id/${this.$route.params.id}`);
+        const response = await apiClient.get(
+          `/games/id/${this.$route.params.id}`,
+        );
         this.game = response.data;
-        console.log('Game details:', this.game);
+        console.log("Game details:", this.game);
       } catch (err) {
-        this.error = err.response?.data || 'Error loading game details';
-        console.error('Error fetching game details:', err);
+        this.error = err.response?.data || "Error loading game details";
+        console.error("Error fetching game details:", err);
       } finally {
         this.loading = false;
       }
     },
     async fetchGameReviews() {
       try {
-        const response = await apiClient.get(`/reviews/${this.$route.params.id}`);
+        const response = await apiClient.get(
+          `/reviews/${this.$route.params.id}`,
+        );
         this.reviews = response.data;
-        console.log('Reviews:', this.reviews);
+        console.log("Reviews:", this.reviews);
       } catch (err) {
-        console.error('Error fetching reviews:', err);
+        console.error("Error fetching reviews:", err);
       }
     },
     toggleReviewsVisibility() {
       this.areReviewsVisible = !this.areReviewsVisible;
     },
     addToWishlist() {
-      console.log('Adding to wishlist:', this.game.title);
+      console.log("Adding to wishlist:", this.game.title);
     },
     addToCart() {
-      console.log('Adding to cart:', this.game.title);
-    }
+      console.log("Adding to cart:", this.game.title);
+    },
   },
   created() {
     this.fetchGameDetails();
     this.fetchGameReviews();
-  }
+  },
 };
 </script>
 
@@ -176,7 +185,7 @@ export default {
 }
 
 .back-button {
-  color: #4CAF50;
+  color: #4caf50;
   text-decoration: none;
   font-weight: 500;
 }
@@ -289,7 +298,7 @@ export default {
 }
 
 .cart-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -362,8 +371,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
