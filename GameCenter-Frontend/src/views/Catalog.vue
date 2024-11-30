@@ -93,14 +93,19 @@
         <div v-if="filteredGames.length === 0" class="no-results">
           No games found matching your criteria.
         </div>
-        <GameCard
+        <router-link
             v-else
             v-for="game in filteredGames"
             :key="game.id"
-            :game="game"
-            @add-to-wishlist="addToWishlist"
-            @add-to-cart="addToCart"
-        />
+            :to="`/game/${game.id}`"
+            class="game-card-link"
+        >
+          <GameCard
+              :game="game"
+              @add-to-wishlist="addToWishlist"
+              @add-to-cart="addToCart"
+          />
+        </router-link>
       </section>
     </div>
   </div>
@@ -171,32 +176,31 @@ export default {
       if (this.minPrice !== null && this.minPrice < 0) {
         this.minPrice = 0;
       }
+      if (this.maxPrice !== null && this.maxPrice < 0) {
+        this.maxPrice = 0;
+      }
 
       if (this.minPrice !== null && this.maxPrice !== null && this.minPrice > this.maxPrice) {
         this.priceError = 'Minimum price cannot be greater than maximum price';
         return false;
       }
-
       return true;
     },
     validateRatingRange() {
       this.ratingError = '';
 
-      if (this.minRating !== null) {
-        if (this.minRating < 0) this.minRating = 0;
-        if (this.minRating > 5) this.minRating = 5;
+      if (this.minRating !== null && (this.minRating < 0 || this.minRating > 5)) {
+        this.ratingError = 'Rating must be between 0 and 5';
+        return false;
       }
-
-      if (this.maxRating !== null) {
-        if (this.maxRating < 0) this.maxRating = 0;
-        if (this.maxRating > 5) this.maxRating = 5;
+      if (this.maxRating !== null && (this.maxRating < 0 || this.maxRating > 5)) {
+        this.ratingError = 'Rating must be between 0 and 5';
+        return false;
       }
-
       if (this.minRating !== null && this.maxRating !== null && this.minRating > this.maxRating) {
         this.ratingError = 'Minimum rating cannot be greater than maximum rating';
         return false;
       }
-
       return true;
     },
     applyFilters() {
@@ -204,9 +208,6 @@ export default {
         return;
       }
 
-      this.filterGames();
-    },
-    filterGames() {
       this.filteredGames = this.games.filter(game => {
         const matchesSearch = !this.searchQuery ||
             game.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -227,11 +228,9 @@ export default {
       });
     },
     addToWishlist(game) {
-      // TODO: Implement wishlist functionality
       console.log('Adding to wishlist:', game.title);
     },
     addToCart(game) {
-      // TODO: Implement cart functionality
       console.log('Adding to cart:', game.title);
     }
   },
@@ -243,37 +242,23 @@ export default {
 </script>
 
 <style scoped>
-.catalog-title {
-  color: #000000;
-  font-size: 2.5em;
-  text-align: center;
-  margin: 20px 0;
-  font-weight: bold;
-}
-
 .catalog {
   padding: 20px;
-  width: 100%;
-  margin: 0 auto;
+  background-color: white;
   min-height: 100vh;
-  background-color: #f5f5f5;
+}
+
+.catalog-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
 }
 
 .search-bar-container {
-  position: sticky;
-  top: 0;
-  background: white;
-  padding: 15px 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 100;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  width: 100%;
+  margin-bottom: 30px;
 }
 
 .search-bar-wrapper {
-  width: 100%;
-  margin: 0 auto;
   display: flex;
   gap: 20px;
   align-items: center;
@@ -415,6 +400,12 @@ export default {
   gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   width: 100%;
+}
+
+.game-card-link {
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
 }
 
 .no-results {

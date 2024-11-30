@@ -14,18 +14,6 @@
           :placeholder="userState.userInfo.username"
         />
       </div>
-      <div class="form-group">
-        <label for="new-password">New Password:</label>
-        <input type="text" id="new-password" v-model="formData.newPassword" />
-      </div>
-      <div class="form-group">
-        <label for="confirm-password">Confirm Password:</label>
-        <input
-          type="text"
-          id="confirm-password"
-          v-model="formData.confirmPassword"
-        />
-      </div>
       <div v-if="userState.userInfo.userType === 'Client'" class="form-group">
         <label for="phone-number">Phone Number:</label>
         <input
@@ -45,8 +33,24 @@
         />
       </div>
       <div class="form-group">
-        <label for="password">Password to Confirm:</label>
-        <input type="text" id="password" v-model="formData.password" />
+        <label for="new-password">New Password:</label>
+        <input
+          type="password"
+          id="new-password"
+          v-model="formData.newPassword"
+        />
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm New Password:</label>
+        <input
+          type="password"
+          id="confirm-password"
+          v-model="formData.confirmPassword"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Current Password:</label>
+        <input type="password" id="password" v-model="formData.password" />
       </div>
       <button type="submit" class="update-button">Submit</button>
     </form>
@@ -155,7 +159,7 @@ export default {
         };
         console.log("success");
       } catch (err) {
-        this.error = err;
+        this.error = err.response.data;
         console.log(this.error);
       }
     },

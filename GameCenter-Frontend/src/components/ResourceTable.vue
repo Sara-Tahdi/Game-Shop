@@ -25,7 +25,11 @@
               :key="colIndex"
               :style="{ width: column.width }"
             >
-              {{ getValue(item, column.field) }}
+              {{
+                column.formatter
+                  ? column.formatter(item[column.field])
+                  : item[column.field]
+              }}
             </td>
           </tr>
         </tbody>
@@ -188,7 +192,9 @@ tbody tr:hover {
   border-radius: 4px;
   background-color: #007bff; /* Blue background color */
   color: white; /* White text */
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .button-container button:hover {
