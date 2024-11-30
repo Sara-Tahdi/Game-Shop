@@ -37,6 +37,10 @@
       </section>
     </div>
 
+    <div v-if="!loading && cart.length > 0" style="padding: 10px">
+      <RouterLink to="/checkout" class="submit-button">Checkout</RouterLink>
+    </div>
+
     <!-- Empty Cart State -->
     <div v-if="cart.length === 0" class="no-items">Your cart is empty.</div>
   </div>
@@ -75,7 +79,6 @@ export default {
           console.log(item);
           const itemData = await axiosClient.get(`/games/id/${item.gameId}`);
           this.cart.push(itemData.data);
-          console.log(this.cart);
         });
         this.loading = false;
       } catch (err) {
@@ -185,6 +188,7 @@ export default {
 
 .remove-btn {
   padding: 8px 16px;
+  width: 100%;
   background-color: #e74c3c;
   color: white;
   border: none;
@@ -254,5 +258,20 @@ export default {
   text-align: center;
   padding: 40px;
   color: #666;
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  text-align: center;
 }
 </style>
