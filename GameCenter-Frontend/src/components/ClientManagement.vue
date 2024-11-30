@@ -106,7 +106,7 @@ export default {
         this.modalInitialData = { ...this.selectedItem };
         this.isModalVisible = true;
       } else {
-        alert("Please select a game to remove.");
+        alert("Please select a user to flag.");
       }
     },
     closeModal() {

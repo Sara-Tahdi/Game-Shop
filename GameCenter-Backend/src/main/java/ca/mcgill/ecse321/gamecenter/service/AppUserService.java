@@ -149,7 +149,7 @@ public class AppUserService {
                   .map(client -> (Client) client) // Cast to Client
                   .sorted(Comparator.comparing(Client::getId)) // Sort by ID
                   .collect(Collectors.toList());
-}
+    }
 
     @Transactional
     public Owner createOwnerAccount(String aEmail, String aUsername, String aPassword) {
@@ -258,7 +258,18 @@ public class AppUserService {
     }
 
     public List<AppUser> getAllEmployee() {
-        return appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
+        List<AppUser> employees = appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
+
+        if (employees == null) {
+            throw new IllegalArgumentException("There are no employees.");
+        }
+
+        // Sort the list by ID
+        return employees.stream()
+                    .map(employee -> (Employee) employee) // Cast to Employee
+                    .sorted(Comparator.comparing(Employee::getId)) // Sort by ID
+                    .collect(Collectors.toList());
+        
     }
 
     @Transactional

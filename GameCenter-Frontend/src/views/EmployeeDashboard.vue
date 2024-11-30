@@ -14,12 +14,14 @@
         <ClientFlaggingRequestManagement />
       </section>
       <section class="management-section">
+        <EmployeeManagement />
+      </section>
+      <section class="management-section">
         <GameRequestManagement />
       </section>
     </div>
   </div>
 </template>
-
 
 <script>
 import GameCategoryManagement from "../components/GameCategoryManagement.vue";
@@ -27,6 +29,7 @@ import GameManagement from "../components/GameManagement.vue";
 import ClientManagement from "../components/ClientManagement.vue";
 import ClientFlaggingRequestManagement from "../components/ClientFlaggingRequestManagement.vue";
 import GameRequestManagement from "../components/GameRequestManagement.vue";
+import EmployeeManagement from "../components/EmployeeManagement.vue";
 
 export default {
   name: "EmployeeDashboard",
@@ -35,6 +38,7 @@ export default {
     GameManagement,
     ClientManagement,
     ClientFlaggingRequestManagement,
+    EmployeeManagement,
     GameRequestManagement,
   },
 };
