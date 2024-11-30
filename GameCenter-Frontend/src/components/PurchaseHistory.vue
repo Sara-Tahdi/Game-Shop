@@ -9,7 +9,7 @@
       :width="'100%'"
       itemKey="id"
       @rowSelected="handleRowSelected"
-      @updateItem="handleRefundPurchase"
+      @refundPurchase="handleRefundPurchase"
     />
     <ResourceModal
       v-if="isModalVisible"
@@ -39,11 +39,11 @@ const apiClient = axios.create({
 });
 
 const purchaseService = {
-  getAllPurchases() {
-    return apiClient.get(`purchases/${userState.userInfo.id}`);
+  async getAllPurchases() {
+    return await apiClient.get(`purchases/${userState.userInfo.id}`);
   },
-  refundPurchase(trackingCode, data) {
-    return apiClient.put(`purchases/refund/${trackingCode}`, data);
+  async refundPurchase(trackingCode, data) {
+    return await apiClient.put(`purchases/refund/${trackingCode}`, data);
   },
 };
 
@@ -92,7 +92,10 @@ export default {
     },
     handleRefundPurchase() {
       if (this.selectedItem) {
-        console.log("here");
+        if (this.selectedItem.refundReason) {
+          alert("Purchase has already been refunded");
+          return;
+        }
         this.currentAction = "refundPurchase";
         this.modalTitle = "Refund Purchase";
         this.modalSubmitButtonText = "Confirm Refund";
@@ -121,25 +124,33 @@ export default {
       this.currentAction = "";
     },
     async handleModalSubmit(formData) {
-      if (this.currentAction === "refundPurchase") {
-        // Handle Add
-        try {
-          const response = purchaseService.refundPurchase(
+      try {
+        if (this.currentAction === "refundPurchase") {
+          const response = await purchaseService.refundPurchase(
             this.selectedItem.trackingCode,
             { refundReason: formData.refundReason },
           );
-          this.resourceData.push(response.data); // Add the new category to the table
+
+          const index = this.resourceData.findIndex(
+            (purchase) =>
+              purchase.trackingCode === this.selectedItem.trackingCode,
+          );
+
+          if (index !== -1) {
+            this.resourceData.splice(index, 1, response.data);
+          }
+
           this.closeModal();
-        } catch (error) {
-          console.error("Error adding category:", error);
-          // Handle error (e.g., display error message)
+          this.selectedItem = null;
         }
+      } catch (error) {
+        console.error("Error adding refund reason:", error);
+        // Handle error (e.g., display error message)
       }
     },
   },
   created() {
     this.getPurchases();
-    console.log(this.resourceData);
   },
 };
 </script>

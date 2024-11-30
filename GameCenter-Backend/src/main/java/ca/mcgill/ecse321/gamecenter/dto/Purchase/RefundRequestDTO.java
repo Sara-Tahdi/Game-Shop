@@ -4,15 +4,15 @@ import jakarta.validation.constraints.NotBlank;
 
 public class RefundRequestDTO {
     @NotBlank(message = "Refund reason is required")
-    private String reason;
+    private String refundReason;
 
     public RefundRequestDTO() {}
 
     public RefundRequestDTO(String reason) {
-        this.reason = reason;
+        this.refundReason = reason;
     }
 
     public String getReason() {
-        return this.reason;
+        return this.refundReason;
     }
 }

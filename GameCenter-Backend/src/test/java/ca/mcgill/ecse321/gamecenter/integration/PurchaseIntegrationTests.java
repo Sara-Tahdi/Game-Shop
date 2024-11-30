@@ -66,6 +66,7 @@ public class PurchaseIntegrationTests {
     private int gameId_2;
     private int purchaseId_1;
     private int purchaseId_2;
+    private String trackingCode_1;
 
 
     @BeforeAll
@@ -145,27 +146,28 @@ public class PurchaseIntegrationTests {
 
         this.purchaseId_1 = body.getFirst().getId();
         this.purchaseId_2 = body.getLast().getId();
+        this.trackingCode_1 = body.getFirst().getTrackingCode();
     }
 
     @Test
     @Order(2)
     public void testRefundGame() {
-        String url = String.format("/purchases/refund/%d", this.purchaseId_1);
+        String url = String.format("/purchases/refund/%s", this.trackingCode_1);
 
         RefundRequestDTO refund = new RefundRequestDTO(VALID_REFUND_REASON);
 
         HttpEntity<RefundRequestDTO> refundRequest = new HttpEntity<>(refund);
 
-        ResponseEntity<PurchaseResponseDTO> res = client.exchange(
+        ResponseEntity<SimplePurchaseResponseDTO> res = client.exchange(
                 url,
                 HttpMethod.PUT,
                 refundRequest,
-                PurchaseResponseDTO.class
+                SimplePurchaseResponseDTO.class
         );
 
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        PurchaseResponseDTO body = res.getBody();
+        SimplePurchaseResponseDTO body = res.getBody();
         assertNotNull(body.getRefundReason());
         assertEquals(VALID_REFUND_REASON, body.getRefundReason());
     }

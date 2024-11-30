@@ -33,10 +33,11 @@ public class PurchaseRestController {
         }
     }
 
-    @PutMapping("/purchases/refund/{purchaseId}")
-    public ResponseEntity<?> refundPurchase(@Validated @RequestBody RefundRequestDTO refundReason, @PathVariable int purchaseId) {
+    @PutMapping("/purchases/refund/{trackingCode}")
+    public ResponseEntity<?> refundPurchase(@Validated @RequestBody RefundRequestDTO refundReason, @PathVariable String trackingCode) {
         try {
-            return ResponseEntity.ok().body(new PurchaseResponseDTO(purchaseService.returnGame(purchaseId, refundReason.getReason())));
+            SimplePurchaseResponseDTO simplePurchase = purchaseService.returnGame(trackingCode, refundReason.getReason());
+            return ResponseEntity.ok().body(simplePurchase);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -65,14 +66,17 @@ public class PurchaseRestController {
     }
 
     private List<SimplePurchaseResponseDTO> buildSimplePurchases(List<Purchase> purchases) {
-        HashMap<String, Float> map = new HashMap<>();
+        HashMap<String, Float> priceMap = new HashMap<>();
+        HashMap<String, String> refundMap = new HashMap<>();
         for (Purchase p: purchases) {
             String trackingCode = p.getTrackingCode();
-            Float purchaseTotal = map.getOrDefault(trackingCode, 0f);
-            map.put(trackingCode, Round.round(purchaseTotal + p.getTotalPrice()));
+            String refundReason = p.getRefundReason();
+            Float purchaseTotal = priceMap.getOrDefault(trackingCode, 0f);
+            priceMap.put(trackingCode, Round.round(purchaseTotal + p.getTotalPrice()));
+            refundMap.putIfAbsent(trackingCode, refundReason);
         }
-        return map.entrySet().stream()
-                .map(entry -> new SimplePurchaseResponseDTO(entry.getKey(), entry.getValue()))
+        return priceMap.entrySet().stream()
+                .map(entry -> new SimplePurchaseResponseDTO(entry.getKey(), entry.getValue(), refundMap.get(entry)))
                 .collect(Collectors.toList());
     }
 }

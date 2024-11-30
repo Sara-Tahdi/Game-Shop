@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.SimplePurchaseResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;
@@ -160,8 +161,9 @@ public class PurchaseServiceTests {
 
         Purchase p = new Purchase();
         p.setId(31);
+        p.setTrackingCode("3un141c");
         p.setPurchaseDate(Date.valueOf(LocalDate.now().minusDays(3)));
-        when(purchaseRepository.findPurchaseById(p.getId())).thenReturn(Optional.of(p));
+        when(purchaseRepository.findPurchasesByTrackingCode(p.getTrackingCode())).thenReturn(Optional.of(List.of(p)));
         Purchase refundedPurchase = new Purchase();
         refundedPurchase.setId(p.getId());
         refundedPurchase.setPurchaseDate(p.getPurchaseDate());
@@ -169,7 +171,7 @@ public class PurchaseServiceTests {
         refundedPurchase.setRefundReason(refundReason);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(refundedPurchase);
 
-        Purchase updated = purchaseService.returnGame(p.getId(), refundReason);
+        SimplePurchaseResponseDTO updated = purchaseService.returnGame(p.getTrackingCode(), refundReason);
 
         // check if properly returned
         assertEquals(refundReason, updated.getRefundReason());
@@ -180,21 +182,22 @@ public class PurchaseServiceTests {
         String refundReason = "I don't like this game anymore!";
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.returnGame(3, refundReason));
-        assertEquals("There is no Purchase with id: " + 3, e.getMessage());
+                purchaseService.returnGame("430qv31", refundReason));
+        assertEquals("There is no Purchase with trackingCode: 430qv31", e.getMessage());
     }
 
     @Test
     public void testRefundPurchaseInvalidTooLate() {
         Purchase p = new Purchase();
         p.setId(51);
+        p.setTrackingCode("r824fb41");
         p.setPurchaseDate(Date.valueOf(LocalDate.now().minusDays(8)));
-        when(purchaseRepository.findPurchaseById(p.getId())).thenReturn(Optional.of(p));
+        when(purchaseRepository.findPurchasesByTrackingCode((p.getTrackingCode()))).thenReturn(Optional.of(List.of(p)));
 
         String refundReason = "I don't like this game anymore!";
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.returnGame(p.getId(), refundReason));
+                purchaseService.returnGame(p.getTrackingCode(), refundReason));
         assertEquals("Refund request DENIED!! Refund period is over.", e.getMessage());
     }
 
