@@ -24,30 +24,38 @@
             <span class="price">${{ game.price.toFixed(2) }}</span>
             <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
           </div>
-          <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
-            {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
+          <div
+            class="stock-status"
+            :class="{ 'in-stock': game.remainingQuantity > 0 }"
+          >
+            {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
-          <button @click="removeFromCart(game.id)" class="remove-btn">Remove from Cart</button>
+          <button @click="removeFromCart(game.id)" class="remove-btn">
+            Remove from Cart
+          </button>
         </div>
       </section>
     </div>
 
     <!-- Empty Cart State -->
-    <div v-if="cart.length === 0" class="no-items">
-      Your cart is empty.
-    </div>
+    <div v-if="cart.length === 0" class="no-items">Your cart is empty.</div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { userState } from "@/state/userState";
+import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "http://localhost:8080",
+  },
 });
 
 export default {
-  name: 'Cart',
+  name: "Cart",
   data() {
     return {
       cart: [],
@@ -59,10 +67,19 @@ export default {
     async fetchCart() {
       this.loading = true;
       try {
-        const response = await axiosClient.get(`/carts/client/${this.clientId}`);
-        this.cart = response.data;
+        const response = await axiosClient.get(
+          `/carts/client/${userState.userInfo.id}`,
+        );
+        console.log(response.data);
+        response.data.forEach(async (item) => {
+          console.log(item);
+          const itemData = await axiosClient.get(`/games/id/${item.gameId}`);
+          this.cart.push(itemData.data);
+          console.log(this.cart);
+        });
+        this.loading = false;
       } catch (err) {
-        this.error = 'Failed to load cart. Please try again.';
+        this.error = "Failed to load cart. Please try again.";
         console.error(err);
       } finally {
         this.loading = false;
@@ -71,21 +88,22 @@ export default {
 
     async removeFromCart(gameId) {
       try {
-        await axiosClient.delete(`/carts/remove?clientId=${this.clientId}&gameId=${gameId}`);
-        this.cart = this.cart.filter(game => game.game.id !== gameId);
+        await axiosClient.delete(
+          `/carts/remove?clientId=${userState.userInfo.id}&gameId=${gameId}`,
+        );
+        this.cart = this.cart.filter((game) => game.game.id !== gameId);
       } catch (err) {
-        this.error = 'Failed to remove game from cart. Please try again.';
+        this.error = "Failed to remove game from cart. Please try again.";
         console.error(err);
       }
     },
   },
   created() {
-    this.clientId = this.$store.state.clientId;
-    console.log('Client ID:', this.clientId);
-    if (this.clientId) {
+    console.log("Client ID:", userState.userInfo.id);
+    if (userState.userInfo.id) {
       this.fetchCart();
     } else {
-      console.error('Client ID is missing!');
+      console.error("Client ID is missing!");
     }
   },
 };
@@ -124,7 +142,7 @@ export default {
   background: white;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .game-card h3 {
@@ -200,8 +218,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {

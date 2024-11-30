@@ -43,6 +43,7 @@ const purchaseService = {
     return await apiClient.get(`purchases/${userState.userInfo.id}`);
   },
   async refundPurchase(trackingCode, data) {
+    console.log(data);
     return await apiClient.put(`purchases/refund/${trackingCode}`, data);
   },
 };
