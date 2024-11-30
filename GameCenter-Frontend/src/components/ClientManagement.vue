@@ -102,8 +102,6 @@ export default {
     },
     handleFlagUser() {
       if (this.selectedItem) {
-        this.modalInitialData = this.selectedItem;
-        this.isModalVisible = true;
         this.modalInitialData = { ...this.selectedItem };
         this.isModalVisible = true;
       } else {

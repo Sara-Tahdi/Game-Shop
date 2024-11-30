@@ -20,6 +20,7 @@
                 v-model="formData[field.name]"
                 :disabled="!field.editable"
                 @change="clearError"
+                :required="true"
               >
                 <option
                   v-for="option in field.options"
