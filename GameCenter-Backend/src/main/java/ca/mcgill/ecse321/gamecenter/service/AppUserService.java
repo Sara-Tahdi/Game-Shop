@@ -72,13 +72,13 @@ public class AppUserService {
 
     @Transactional
     public Client createClientAccount(String aEmail, String aUsername, String aPassword, String aPhoneNumber, String aDeliveryAddress) {
-        Client ref = (Client) appUserRepository.findAppUserByUsername(aUsername).orElse(null);
-        if (ref != null) {
+        AppUser a = appUserRepository.findAppUserByUsername(aUsername).orElse(null);
+        if (a != null) {
             throw new IllegalArgumentException("User already exists with username: " + aUsername);
         }
 
-        ref = (Client) appUserRepository.findAppUserByEmail(aEmail).orElse(null);
-        if (ref != null) {
+        a = appUserRepository.findAppUserByEmail(aEmail).orElse(null);
+        if (a != null) {
             throw new IllegalArgumentException("User already exists with email: " + aEmail);
         }
 
@@ -261,10 +261,4 @@ public class AppUserService {
     
         return user;
     }
-    
-
-
-
-
-
 }

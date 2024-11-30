@@ -18,42 +18,66 @@ public class WishlistRestController {
     private WishlistService wishlistService;
 
     @PostMapping(value = "/wishlists/create")
-    public WishlistResponseDto createWishlist(@RequestBody WishlistRequestDto request) {
-        Wishlist createdWishlist = wishlistService.createWishlist(request.getClientId(), request.getGameId());
-        return new WishlistResponseDto(createdWishlist);
+    public ResponseEntity<?> createWishlist(@RequestBody WishlistRequestDto request) {
+        try {
+            Wishlist createdWishlist = wishlistService.createWishlist(request.getClientId(), request.getGameId());
+            return ResponseEntity.ok().body(new WishlistResponseDto(createdWishlist));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping(value = "/wishlists/remove")
-    public ResponseEntity<Object> removeGameFromWishlist(@RequestParam int clientId, @RequestParam int gameId) {
-        wishlistService.removeWishlist(clientId, gameId);
-        return ResponseEntity.noContent().build();  // HTTP 204 No Content
+    public ResponseEntity<?> removeGameFromWishlist(@RequestParam int clientId, @RequestParam int gameId) {
+        try {
+            wishlistService.removeWishlist(clientId, gameId);
+            return ResponseEntity.noContent().build();  // HTTP 204 No Content
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/wishlists/{wishlistId}")
-    public WishlistResponseDto findWishlistById(@PathVariable int wishlistId) {
-        Wishlist wishlist = wishlistService.findWishlistById(wishlistId);
-        return new WishlistResponseDto(wishlist);
+    public ResponseEntity<?> findWishlistById(@PathVariable int wishlistId) {
+        try {
+            Wishlist wishlist = wishlistService.findWishlistById(wishlistId);
+            return ResponseEntity.ok().body(new WishlistResponseDto(wishlist));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/wishlists/client/{clientId}")
-    public List<WishlistResponseDto> findWishlistsByClientId(@PathVariable int clientId) {
-        List<Wishlist> wishlists = wishlistService.findWishlistsByClientId(clientId);
-        return wishlists.stream()
-                        .map(WishlistResponseDto::new)
-                        .collect(Collectors.toList());
+    public ResponseEntity<?> findWishlistsByClientId(@PathVariable int clientId) {
+        try {
+            List<Wishlist> wishlists = wishlistService.findWishlistsByClientId(clientId);
+            return ResponseEntity.ok().body(wishlists.stream()
+                    .map(WishlistResponseDto::new)
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/wishlists/game/{gameId}")
-    public List<WishlistResponseDto> findWishlistsByGameId(@PathVariable int gameId) {
-        List<Wishlist> wishlists = wishlistService.findWishlistsByGameId(gameId);
-        return wishlists.stream()
-                        .map(WishlistResponseDto::new)
-                        .collect(Collectors.toList());
+    public ResponseEntity<?> findWishlistsByGameId(@PathVariable int gameId) {
+        try {
+            List<Wishlist> wishlists = wishlistService.findWishlistsByGameId(gameId);
+            return ResponseEntity.ok().body(wishlists.stream()
+                    .map(WishlistResponseDto::new)
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/wishlists/client/{clientId}/game/{gameId}")
-    public WishlistResponseDto findWishlistByClientAndGame(@PathVariable int clientId, @PathVariable int gameId) {
-        Wishlist wishlist = wishlistService.findWishlistByClientIdAndGameId(clientId, gameId);
-        return new WishlistResponseDto(wishlist);
+    public ResponseEntity<?> findWishlistByClientAndGame(@PathVariable int clientId, @PathVariable int gameId) {
+        try {
+            Wishlist wishlist = wishlistService.findWishlistByClientIdAndGameId(clientId, gameId);
+            return ResponseEntity.ok().body(new WishlistResponseDto(wishlist));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

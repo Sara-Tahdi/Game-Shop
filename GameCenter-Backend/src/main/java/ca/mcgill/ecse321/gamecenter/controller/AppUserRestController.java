@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamecenter.model.Employee;
 import ca.mcgill.ecse321.gamecenter.model.Owner;
 import ca.mcgill.ecse321.gamecenter.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,130 +20,208 @@ public class AppUserRestController {
     @Autowired
     private AppUserService appUserService;
 
+    @PostMapping(value = "/users/owner/create")
+    public ResponseEntity<?> createOwnerAccount(@Validated @RequestBody OwnerCreateRequestDTO ownerToCreate) {
+        try {
+            Owner o = appUserService.createOwnerAccount(
+                    ownerToCreate.getEmail(),
+                    ownerToCreate.getUsername(),
+                    ownerToCreate.getPassword()
+            );
+            return ResponseEntity.ok().body(new OwnerResponseDTO(o));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping(value = "/users/owner/update")
-    public OwnerResponseDTO updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate) {
-        Owner o = appUserService.updateOwnerAccount(
-                ownerToUpdate.getEmail(),
-                ownerToUpdate.getUsername(),
-                ownerToUpdate.getNewPassword(),
-                ownerToUpdate.getPassword()
-        );
-        return new OwnerResponseDTO(o);
+    public ResponseEntity<?> updateOwnerAccount(@Validated @RequestBody OwnerRequestDTO ownerToUpdate) {
+        try {
+            Owner o = appUserService.updateOwnerAccount(
+                    ownerToUpdate.getEmail(),
+                    ownerToUpdate.getUsername(),
+                    ownerToUpdate.getNewPassword(),
+                    ownerToUpdate.getPassword()
+            );
+            return ResponseEntity.ok().body(new OwnerResponseDTO(o));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping(value = "/users/employee/create")
-    public EmployeeResponseDTO createEmployeeAccount(@Validated @RequestBody EmployeeRequestDTO employeeToCreate) {
-        Employee e = appUserService.createEmployeeAccount(
-                employeeToCreate.getEmail(),
-                employeeToCreate.getUsername(),
-                employeeToCreate.getPassword()
-        );
-        return new EmployeeResponseDTO(e);
+    public ResponseEntity<?> createEmployeeAccount(@Validated @RequestBody EmployeeRequestDTO employeeToCreate) {
+        try {
+            Employee e = appUserService.createEmployeeAccount(
+                    employeeToCreate.getEmail(),
+                    employeeToCreate.getUsername(),
+                    employeeToCreate.getPassword()
+            );
+            return ResponseEntity.ok().body(new EmployeeResponseDTO(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping(value = "/users/employee/update")
-    public EmployeeResponseDTO updateEmployee(@Validated @RequestBody EmployeeRequestDTO employeeToUpdate) {
-        Employee e = appUserService.updateEmployeeAccount(
-                employeeToUpdate.getEmail(),
-                employeeToUpdate.getUsername(),
-                employeeToUpdate.getPassword(),
-                employeeToUpdate.getOldPassword()
-        );
-        return new EmployeeResponseDTO(e);
+    public ResponseEntity<?> updateEmployee(@Validated @RequestBody EmployeeRequestDTO employeeToUpdate) {
+        try {
+            Employee e = appUserService.updateEmployeeAccount(
+                    employeeToUpdate.getEmail(),
+                    employeeToUpdate.getUsername(),
+                    employeeToUpdate.getPassword(),
+                    employeeToUpdate.getOldPassword()
+            );
+            return ResponseEntity.ok().body(new EmployeeResponseDTO(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping(value = "/users/employee/fire/{employeeUsername}")
-    public EmployeeResponseDTO fireEmployee(@PathVariable String employeeUsername) {
-        Employee e = appUserService.deactivateEmployeeAccount(employeeUsername);
-        return new EmployeeResponseDTO(e);
+    public ResponseEntity<?> fireEmployee(@PathVariable String employeeUsername) {
+        try {
+            Employee e = appUserService.deactivateEmployeeAccount(employeeUsername);
+            return ResponseEntity.ok().body(new EmployeeResponseDTO(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/employee")
-    public List<EmployeeResponseDTO> getEmployees() {
-        List<AppUser> employees = appUserService.getAllEmployee();
-        return employees.stream()
-                .map(a -> new EmployeeResponseDTO((Employee) a))
-                .collect(Collectors.toList());
+    public ResponseEntity<?> getEmployees() {
+        try {
+            List<AppUser> employees = appUserService.getAllEmployee();
+            return ResponseEntity.ok().body(employees.stream()
+                    .map(a -> new EmployeeResponseDTO((Employee) a))
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/employee/{id}")
-    public EmployeeResponseDTO getEmployeeById(@PathVariable int id) {
-        Employee e = appUserService.getEmployeeById(id);
-        return new EmployeeResponseDTO(e);
+    public ResponseEntity<?> getEmployeeById(@PathVariable int id) {
+        try {
+            Employee e = appUserService.getEmployeeById(id);
+            return ResponseEntity.ok().body(new EmployeeResponseDTO(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/employee/username/{username}")
-    public EmployeeResponseDTO getEmployeeByUsername(@PathVariable String username) {
-        Employee e = appUserService.getEmployeeByUsername(username);
-        return new EmployeeResponseDTO(e);
+    public ResponseEntity<?> getEmployeeByUsername(@PathVariable String username) {
+        try {
+            Employee e = appUserService.getEmployeeByUsername(username);
+            return ResponseEntity.ok().body(new EmployeeResponseDTO(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/employee/email/{email}")
-    public EmployeeResponseDTO getEmployeeByEmail(@PathVariable String email) {
-        Employee e = appUserService.getEmployeeByEmail(email);
-        return new EmployeeResponseDTO(e);
+    public ResponseEntity<?> getEmployeeByEmail(@PathVariable String email) {
+        try {
+            Employee e = appUserService.getEmployeeByEmail(email);
+            return ResponseEntity.ok().body(new EmployeeResponseDTO(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping(value = "/users/client/create")
-    public ClientResponseDTO createClientAccount(@Validated @RequestBody ClientRequestDTO clientToCreate) {
-        Client c = appUserService.createClientAccount(
-                clientToCreate.getEmail(),
-                clientToCreate.getUsername(),
-                clientToCreate.getPassword(),
-                clientToCreate.getPhoneNumber(),
-                clientToCreate.getDeliveryAddress()
-        );
-        return new ClientResponseDTO(c);
+    public ResponseEntity<?> createClientAccount(@Validated @RequestBody ClientRequestDTO clientToCreate) {
+        try {
+            Client c = appUserService.createClientAccount(
+                    clientToCreate.getEmail(),
+                    clientToCreate.getUsername(),
+                    clientToCreate.getPassword(),
+                    clientToCreate.getPhoneNumber(),
+                    clientToCreate.getDeliveryAddress()
+            );
+            return ResponseEntity.ok().body(new ClientResponseDTO(c));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping(value = "/users/client/update")
-    public ClientResponseDTO updateClientAccount(@Validated @RequestBody ClientRequestDTO clientToUpdate) {
-        Client c = appUserService.updateClientAccount(
-                clientToUpdate.getEmail(),
-                clientToUpdate.getUsername(),
-                clientToUpdate.getPassword(),
-                clientToUpdate.getPhoneNumber(),
-                clientToUpdate.getDeliveryAddress(),
-                clientToUpdate.getOldPassword()
-        );
-        return new ClientResponseDTO(c);
+    public ResponseEntity<?> updateClientAccount(@Validated @RequestBody ClientRequestDTO clientToUpdate) {
+        try {
+            Client c = appUserService.updateClientAccount(
+                    clientToUpdate.getEmail(),
+                    clientToUpdate.getUsername(),
+                    clientToUpdate.getPassword(),
+                    clientToUpdate.getPhoneNumber(),
+                    clientToUpdate.getDeliveryAddress(),
+                    clientToUpdate.getOldPassword()
+            );
+            return ResponseEntity.ok().body(new ClientResponseDTO(c));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping(value = "/users/client/ban/{username}")
-    public ClientResponseDTO banClient(@PathVariable String username) {
-        Client c = appUserService.deactivateClientAccountByUsername(username);
-        return new ClientResponseDTO(c);
+    public ResponseEntity<?> banClient(@PathVariable String username) {
+        try {
+            Client c = appUserService.deactivateClientAccountByUsername(username);
+            return ResponseEntity.ok().body(new ClientResponseDTO(c));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/client")
-    public List<ClientResponseDTO> getClients() {
-        List<AppUser> clients = appUserService.findAllClients();
-        return clients.stream()
-                .map(c -> new ClientResponseDTO((Client) c))
-                .collect(Collectors.toList());
+    public ResponseEntity<?> getClients() {
+        try {
+            List<AppUser> clients = appUserService.findAllClients();
+            return ResponseEntity.ok().body(clients.stream()
+                    .map(c -> new ClientResponseDTO((Client) c))
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/client/{id}")
-    public ClientResponseDTO getClientById(@PathVariable int id) {
-        Client c = appUserService.getClientById(id);
-        return new ClientResponseDTO(c);
+    public ResponseEntity<?> getClientById(@PathVariable int id) {
+        try {
+            Client c = appUserService.getClientById(id);
+            return ResponseEntity.ok().body(new ClientResponseDTO(c));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/client/username/{username}")
-    public ClientResponseDTO getClientByUsername(@PathVariable String username) {
-        Client c = appUserService.getClientByUsername(username);
-        return new ClientResponseDTO(c);
+    public ResponseEntity<?> getClientByUsername(@PathVariable String username) {
+        try {
+            Client c = appUserService.getClientByUsername(username);
+            return ResponseEntity.ok().body(new ClientResponseDTO(c));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/users/client/email/{email}")
-    public ClientResponseDTO getClientByEmail(@PathVariable String email) {
-        Client c = appUserService.getClientByEmail(email);
-        return new ClientResponseDTO(c);
+    public ResponseEntity<?> getClientByEmail(@PathVariable String email) {
+        try {
+            Client c = appUserService.getClientByEmail(email);
+            return ResponseEntity.ok().body(new ClientResponseDTO(c));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping(value = "/users/login")
-    public AppUserResponseDTO loginUser(@Validated @RequestBody LoginRequestDTO loginRequest) {
-        AppUser user = appUserService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
-        return new AppUserResponseDTO(user);
+    public ResponseEntity<?> loginUser(@Validated @RequestBody LoginRequestDTO loginRequest) {
+        try {
+            AppUser user = appUserService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+            return ResponseEntity.ok().body(new AppUserResponseDTO(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

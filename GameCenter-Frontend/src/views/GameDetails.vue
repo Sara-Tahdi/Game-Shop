@@ -1,0 +1,392 @@
+<template>
+  <div class="game-details-page">
+    <div class="back-link">
+      <router-link to="/" class="back-button">← Back to Catalog</router-link>
+    </div>
+
+    <div v-if="loading" class="loading">
+      Loading game details...
+      <div class="spinner"></div>
+    </div>
+
+    <div v-else-if="error" class="error">
+      <p>Error loading game details: {{ error }}</p>
+    </div>
+
+    <div v-else-if="game" class="game-details-container">
+      <div class="content-wrapper">
+        <!-- Future image placeholder -->
+        <div class="game-image-placeholder">
+          <div class="placeholder-text">Game Image Coming Soon</div>
+        </div>
+
+        <div class="game-info">
+          <h1 class="game-title">{{ game.title }}</h1>
+
+          <div class="game-details">
+            <div class="detail-row">
+              <span class="label">Price:</span>
+              <span class="value">${{ game.price.toFixed(2) }}</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label">Category:</span>
+              <span class="value">{{ game.category.category }}</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label">Rating:</span>
+              <span class="value">⭐ {{ game.rating.toFixed(1) }}/5</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label">Status:</span>
+              <span class="value stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
+                {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
+              </span>
+            </div>
+
+            <div class="description-section">
+              <h2>Description</h2>
+              <p>{{ game.description }}</p>
+            </div>
+
+            <div class="opinion-section">
+              <h2>General Feeling</h2>
+              <p>{{ game.publicOpinion }}</p>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button
+                @click="addToWishlist"
+                class="wishlist-button"
+                :disabled="game.remainingQuantity === 0"
+            >
+              Add to Wishlist
+            </button>
+            <button
+                @click="addToCart"
+                class="cart-button"
+                :disabled="game.remainingQuantity === 0"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="reviews-section">
+        <div v-if="reviews && reviews.length > 0">
+          <button class="accordion-toggle" @click="toggleReviewsVisibility">
+            {{ areReviewsVisible ? "Hide Reviews" : "Show Reviews" }}
+          </button>
+
+          <div v-if="areReviewsVisible" class="reviews-container">
+            <h2>Reviews</h2>
+            <div v-for="review in reviews" :key="review.id" class="review-item">
+              <GameReview :review="review" />
+            </div>
+          </div>
+        </div>
+        <div v-else class="no-reviews">
+          <p>No reviews available for this game.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import GameReview from '../components/GameReview.vue';
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8080',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export default {
+  name: 'GameDetails',
+  components: {
+    GameReview,
+  },
+  data() {
+    return {
+      game: null,
+      reviews: [],
+      loading: true,
+      error: null,
+      areReviewsVisible: false
+    };
+  },
+  methods: {
+    async fetchGameDetails() {
+      try {
+        this.loading = true;
+        const response = await apiClient.get(`/games/id/${this.$route.params.id}`);
+        this.game = response.data;
+        console.log('Game details:', this.game);
+      } catch (err) {
+        this.error = err.response?.data || 'Error loading game details';
+        console.error('Error fetching game details:', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchGameReviews() {
+      try {
+        const response = await apiClient.get(`/reviews/${this.$route.params.id}`);
+        this.reviews = response.data;
+        console.log('Reviews:', this.reviews);
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+      }
+    },
+    toggleReviewsVisibility() {
+      this.areReviewsVisible = !this.areReviewsVisible;
+    },
+    addToWishlist() {
+      console.log('Adding to wishlist:', this.game.title);
+    },
+    addToCart() {
+      console.log('Adding to cart:', this.game.title);
+    }
+  },
+  created() {
+    this.fetchGameDetails();
+    this.fetchGameReviews();
+  }
+};
+</script>
+
+<style scoped>
+.game-details-page {
+  min-height: 100vh;
+  background-color: white;
+  color: black;
+  padding: 20px;
+}
+
+.back-link {
+  margin-bottom: 20px;
+}
+
+.back-button {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-image-placeholder {
+  flex: 0 0 400px;
+  height: 400px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ddd;
+}
+
+.placeholder-text {
+  color: #666;
+  font-style: italic;
+}
+
+.game-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-title {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.game-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.label {
+  font-weight: bold;
+  min-width: 100px;
+}
+
+.description-section,
+.opinion-section {
+  margin-top: 20px;
+}
+
+.description-section h2,
+.opinion-section h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.stock-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #dc3545;
+  color: white;
+}
+
+.stock-status.in-stock {
+  background-color: #28a745;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.wishlist-button,
+.cart-button {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.wishlist-button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.wishlist-button:hover:not(:disabled) {
+  background-color: #d0d0d0;
+}
+
+.cart-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cart-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.wishlist-button:disabled,
+.cart-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reviews-section {
+  margin-top: 40px;
+}
+
+.accordion-toggle {
+  width: 100%;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.reviews-container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-item {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  color: #dc3545;
+  text-align: center;
+  padding: 20px;
+  background-color: #f8d7da;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .game-image-placeholder {
+    width: 100%;
+    height: 300px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+</style>

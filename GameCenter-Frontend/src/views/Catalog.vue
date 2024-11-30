@@ -2,7 +2,6 @@
   <div class="catalog">
     <h1 class="catalog-title">Game Catalog</h1>
 
-    <!-- Horizontal Search Bar -->
     <div class="search-bar-container">
       <div class="search-bar-wrapper">
         <div class="search-input">
@@ -10,11 +9,23 @@
               type="text"
               v-model="searchQuery"
               placeholder="Search games by title or description..."
-              @input="filterGames"
+              @keyup.enter="applyFilters"
           >
+          <button @click="applyFilters" class="search-button">
+            Search
+          </button>
         </div>
 
         <div class="filter-group">
+          <div class="category-filter">
+            <select v-model="selectedCategory" @change="applyFilters">
+              <option value="">All Categories</option>
+              <option v-for="category in categories" :key="category.id" :value="category.id">
+                {{ category.category }}
+              </option>
+            </select>
+          </div>
+
           <div class="price-filter">
             <input
                 type="number"
@@ -22,7 +33,7 @@
                 placeholder="Min $"
                 min="0"
                 step="0.01"
-                @input="validatePriceRange"
+                @keyup.enter="applyFilters"
             >
             <span class="separator">-</span>
             <input
@@ -31,7 +42,7 @@
                 placeholder="Max $"
                 min="0"
                 step="0.01"
-                @input="validatePriceRange"
+                @keyup.enter="applyFilters"
             >
           </div>
 
@@ -43,7 +54,7 @@
                 min="0"
                 max="5"
                 step="0.5"
-                @input="validateRatingRange"
+                @keyup.enter="applyFilters"
             >
             <span class="separator">-</span>
             <input
@@ -53,10 +64,13 @@
                 min="0"
                 max="5"
                 step="0.5"
-                @input="validateRatingRange"
+                @keyup.enter="applyFilters"
             >
           </div>
         </div>
+        <button @click="applyFilters" class="apply-filters-button">
+          Apply Filters
+        </button>
       </div>
       <div class="error-messages">
         <span v-if="priceError" class="error-message">{{ priceError }}</span>
@@ -75,24 +89,23 @@
     </div>
 
     <div v-if="!loading && !error" class="catalog-container">
-      <!-- Games Grid -->
       <section class="games-grid">
         <div v-if="filteredGames.length === 0" class="no-results">
           No games found matching your criteria.
         </div>
-        <div v-else class="game-cards">
-          <div v-for="game in filteredGames" :key="game.id" class="game-card">
-            <h3>{{ game.title }}</h3>
-            <p class="description">{{ game.description }}</p>
-            <div class="game-details">
-              <span class="price">${{ game.price.toFixed(2) }}</span>
-              <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
-            </div>
-            <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
-              {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
-            </div>
-          </div>
-        </div>
+        <router-link
+            v-else
+            v-for="game in filteredGames"
+            :key="game.id"
+            :to="`/game/${game.id}`"
+            class="game-card-link"
+        >
+          <GameCard
+              :game="game"
+              @add-to-wishlist="addToWishlist"
+              @add-to-cart="addToCart"
+          />
+        </router-link>
       </section>
     </div>
   </div>
@@ -100,6 +113,7 @@
 
 <script>
 import axios from 'axios';
+import GameCard from '@/components/GameCard.vue';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080',
@@ -110,13 +124,18 @@ const apiClient = axios.create({
 
 export default {
   name: 'Catalog',
+  components: {
+    GameCard
+  },
   data() {
     return {
       games: [],
       filteredGames: [],
+      categories: [],
       loading: true,
       error: null,
       searchQuery: '',
+      selectedCategory: '',
       minPrice: null,
       maxPrice: null,
       minRating: null,
@@ -142,43 +161,49 @@ export default {
         this.loading = false;
       }
     },
+    async fetchCategories() {
+      try {
+        const response = await apiClient.get('/gameCategory');
+        console.log('Fetched categories:', response.data);
+        this.categories = response.data;
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    },
     validatePriceRange() {
       this.priceError = '';
 
       if (this.minPrice !== null && this.minPrice < 0) {
         this.minPrice = 0;
       }
+      if (this.maxPrice !== null && this.maxPrice < 0) {
+        this.maxPrice = 0;
+      }
 
       if (this.minPrice !== null && this.maxPrice !== null && this.minPrice > this.maxPrice) {
         this.priceError = 'Minimum price cannot be greater than maximum price';
         return false;
       }
-
-      this.filterGames();
       return true;
     },
     validateRatingRange() {
       this.ratingError = '';
 
-      if (this.minRating !== null) {
-        if (this.minRating < 0) this.minRating = 0;
-        if (this.minRating > 5) this.minRating = 5;
+      if (this.minRating !== null && (this.minRating < 0 || this.minRating > 5)) {
+        this.ratingError = 'Rating must be between 0 and 5';
+        return false;
       }
-
-      if (this.maxRating !== null) {
-        if (this.maxRating < 0) this.maxRating = 0;
-        if (this.maxRating > 5) this.maxRating = 5;
+      if (this.maxRating !== null && (this.maxRating < 0 || this.maxRating > 5)) {
+        this.ratingError = 'Rating must be between 0 and 5';
+        return false;
       }
-
       if (this.minRating !== null && this.maxRating !== null && this.minRating > this.maxRating) {
         this.ratingError = 'Minimum rating cannot be greater than maximum rating';
         return false;
       }
-
-      this.filterGames();
       return true;
     },
-    filterGames() {
+    applyFilters() {
       if (!this.validatePriceRange() || !this.validateRatingRange()) {
         return;
       }
@@ -196,48 +221,44 @@ export default {
             (!this.minRating || game.rating >= this.minRating) &&
             (!this.maxRating || game.rating <= this.maxRating);
 
-        return matchesSearch && matchesPrice && matchesRating;
+        const matchesCategory = !this.selectedCategory ||
+            (game.category && game.category.id === parseInt(this.selectedCategory));
+
+        return matchesSearch && matchesPrice && matchesRating && matchesCategory;
       });
+    },
+    addToWishlist(game) {
+      console.log('Adding to wishlist:', game.title);
+    },
+    addToCart(game) {
+      console.log('Adding to cart:', game.title);
     }
   },
   created() {
     this.fetchGames();
+    this.fetchCategories();
   }
 };
 </script>
 
 <style scoped>
-.catalog-title {
-  color: #000000;
-  font-size: 2.5em;
-  text-align: center;
-  margin: 20px 0;
-  font-weight: bold;
-}
-
 .catalog {
   padding: 20px;
-  width: 100%;
-  margin: 0 auto;
+  background-color: white;
   min-height: 100vh;
-  background-color: #f5f5f5;
+}
+
+.catalog-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
 }
 
 .search-bar-container {
-  position: sticky;
-  top: 0;
-  background: white;
-  padding: 15px 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 100;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  width: 100%;
+  margin-bottom: 30px;
 }
 
 .search-bar-wrapper {
-  width: 100%;
-  margin: 0 auto;
   display: flex;
   gap: 20px;
   align-items: center;
@@ -247,20 +268,51 @@ export default {
 .search-input {
   flex: 1;
   min-width: 200px;
+  display: flex;
+  gap: 10px;
 }
 
 .search-input input {
-  width: 100%;
+  flex: 1;
   padding: 10px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1em;
 }
 
+.search-button,
+.apply-filters-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover,
+.apply-filters-button:hover {
+  background-color: #45a049;
+}
+
 .filter-group {
   display: flex;
   gap: 15px;
   align-items: center;
+}
+
+.category-filter {
+  min-width: 150px;
+}
+
+.category-filter select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+  background-color: white;
 }
 
 .price-filter, .rating-filter {
@@ -350,49 +402,10 @@ export default {
   width: 100%;
 }
 
-.game-card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.game-card h3 {
-  margin: 0 0 10px 0;
-  color: #333;
-}
-
-.description {
-  color: #666;
-  margin-bottom: 10px;
-  font-size: 0.9em;
-}
-
-.game-details {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.price {
-  color: #2c3e50;
-  font-weight: bold;
-}
-
-.rating {
-  color: #f1c40f;
-}
-
-.stock-status {
-  padding: 5px 10px;
-  border-radius: 4px;
-  text-align: center;
-  background-color: #e74c3c;
-  color: white;
-}
-
-.stock-status.in-stock {
-  background-color: #2ecc71;
+.game-card-link {
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
 }
 
 .no-results {
