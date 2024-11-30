@@ -2,19 +2,16 @@
   <div class="cart">
     <h1 class="cart-title">Your Cart</h1>
 
-    <!-- Loading State -->
     <div v-if="loading" class="loading">
       Loading your cart...
       <div class="spinner"></div>
     </div>
 
-    <!-- Error State -->
     <div v-if="error" class="error">
       {{ error }}
       <button @click="fetchCart" class="retry-button">Retry</button>
     </div>
 
-    <!-- Cart Content -->
     <div v-if="!loading && !error && cart.length > 0" class="cart-container">
       <section class="games-list">
         <div v-for="game in cart" :key="game.id" class="game-card">
@@ -27,23 +24,25 @@
           <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
             {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
           </div>
-          <button @click="removeFromCart(game.id)" class="remove-btn">Remove from Cart</button>
+          <!-- Remove from Cart Button -->
+          <button @click="removeFromCart(game)" class="remove-btn">Remove from Cart</button>
+          <!-- Add to Wishlist Button -->
+          <button @click="addToWishlist(game)" class="add-to-wishlist-btn" :disabled="game.remainingQuantity === 0">Add to Wishlist</button>
         </div>
       </section>
     </div>
 
-    <!-- Empty Cart State -->
-    <div v-if="cart.length === 0" class="no-items">
+    <div v-if="clientId && cart.length === 0" class="no-items">
       Your cart is empty.
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
 const axiosClient = axios.create({
   baseURL: 'http://localhost:3000',
+  timeout: 5000
 });
 
 export default {
@@ -53,41 +52,100 @@ export default {
       cart: [],
       loading: false,
       error: null,
+      clientId: null
     };
   },
   methods: {
     async fetchCart() {
+      console.log('Attempting to fetch cart for client:', this.clientId);
+      
+      if (!this.clientId) {
+        this.error = 'No client ID available. Please log in.';
+        this.loading = false;
+        return;
+      }
+      
       this.loading = true;
+      this.error = null;
+      
       try {
         const response = await axiosClient.get(`/carts/client/${this.clientId}`);
-        this.cart = response.data;
+        
+        console.log('Cart fetch response:', response.data);
+        
+        if (!response.data || response.data.length === 0) {
+          this.error = 'No cart items found.';
+        } else {
+          this.cart = response.data;
+        }
       } catch (err) {
-        this.error = 'Failed to load cart. Please try again.';
-        console.error(err);
+        console.error('Detailed Cart fetch error:', err);
+        
+        if (err.response) {
+          this.error = err.response.data.message || 'Server error while fetching cart';
+        } else if (err.request) {
+          this.error = 'No response received from server. Check your network connection.';
+        } else {
+          this.error = 'Error setting up the request. Please try again.';
+        }
       } finally {
         this.loading = false;
       }
     },
 
-    async removeFromCart(gameId) {
+    async removeFromCart(game) {
+      console.log('Removing game from cart:', game);
+
+      if (!this.clientId) {
+        this.error = 'Please log in to remove games from your cart.';
+        return;
+      }
+
       try {
-        await axiosClient.delete(`/carts/remove?clientId=${this.clientId}&gameId=${gameId}`);
-        this.cart = this.cart.filter(game => game.game.id !== gameId);
+        const response = await axios.delete('http://localhost:8080/carts/remove', {
+          params: {
+            clientId: this.clientId,
+            gameId: game.id
+          }
+        });
+
+        if (response.status === 204) {
+          console.log('Game successfully removed from cart:', game);
+          this.cart = this.cart.filter(item => item.id !== game.id); // Remove the game from local cart
+        }
       } catch (err) {
+        console.error('Error removing game from cart:', err);
         this.error = 'Failed to remove game from cart. Please try again.';
-        console.error(err);
       }
     },
-  },
-  created() {
-    this.clientId = this.$store.state.clientId;
-    console.log('Client ID:', this.clientId);
-    if (this.clientId) {
-      this.fetchCart();
-    } else {
-      console.error('Client ID is missing!');
+
+    async addToWishlist(game) {
+      console.log('Adding game to wishlist:', game);
+
+      if (!this.clientId) {
+        this.error = 'Please log in to add games to your wishlist.';
+        return;
+      }
+
+      try {
+        const response = await axios.post('http://localhost:8080/wishlists/create', {
+          clientId: this.clientId,
+          gameId: game.id
+        });
+
+        if (response.status === 200) {
+          console.log('Game successfully added to wishlist:', game);
+          // this.wishlist.push(game); ??
+        }
+      } catch (err) {
+        console.error('Error adding game to wishlist:', err);
+        this.error = 'Failed to add game to wishlist. Please try again.';
+      }
     }
   },
+  created() {
+    this.fetchCart();
+  }
 };
 </script>
 
@@ -165,18 +223,36 @@ export default {
   background-color: #2ecc71;
 }
 
-.remove-btn {
+.remove-btn,
+.add-to-wishlist-btn {
   padding: 8px 16px;
-  background-color: #e74c3c;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
 }
 
+.remove-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
 .remove-btn:hover {
   background-color: #c0392b;
+}
+
+.add-to-wishlist-btn {
+  background-color: #f39c12;
+  color: white;
+}
+
+.add-to-wishlist-btn:hover {
+  background-color: #e67e22;
+}
+
+.add-to-wishlist-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .loading {
