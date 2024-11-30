@@ -2,6 +2,7 @@
   <div>
     <h2>Client Flags Management</h2>
     <ResourceTable
+      ref="resourceTable"
       :data="resourceData"
       :columns="tableColumns"
       :buttons="tableButtons"
@@ -116,10 +117,11 @@ export default {
       modalInitialData: {},
       modalSubmitButtonText: "Confirm Decision",
       error: null,
+      selectedItem: null,
+      autoSelectFirstRow: false, // Flag to control auto-selection
     };
   },
   methods: {
-    // Fetch all flagging requests and sort them by status (PENDING first)
     async fetchFlaggingRequests() {
       try {
         const response = await flaggingRequestService.getAllFlaggingRequests();
@@ -133,6 +135,20 @@ export default {
           }
           return 0; // maintain original order for same statuses
         });
+
+        // Automatically select the first row if available
+        if (this.autoSelectFirstRow && this.resourceData.length > 0) {
+          this.selectedItem = this.resourceData[0]; // Set the first row as selected
+          if (this.$refs.resourceTable) {
+            this.$refs.resourceTable.selectRow(this.selectedItem); // Notify the table
+          }
+          this.autoSelectFirstRow = false; // Reset the flag
+        } else {
+          this.selectedItem = null;
+          if (this.$refs.resourceTable) {
+            this.$refs.resourceTable.clearSelection();
+          }
+        }
       } catch (error) {
         console.error("Error fetching flagging requests:", error);
       }
@@ -141,18 +157,20 @@ export default {
       this.selectedItem = selectedItem;
     },
     handleManageRequest() {
-      if (this.selectedItem.status === "PENDING") {
-        this.modalInitialData = { ...this.selectedItem };
-        this.isModalVisible = true;
-        this.modalInitialData.createdRequestUsername =
-          this.modalInitialData.createdRequest.username;
-        this.modalInitialData.userFacingJudgementUsername =
-          this.modalInitialData.userFacingJudgement.username;
-      } else if (
-        this.selectedItem.status === "APPROVED" ||
-        this.selectedItem.status === "DENIED"
-      ) {
-        alert("This flagging request has already been handled.");
+      if (this.selectedItem) {
+        if (this.selectedItem.status === "PENDING") {
+          this.modalInitialData = { ...this.selectedItem };
+          this.isModalVisible = true;
+          this.modalInitialData.createdRequestUsername =
+            this.modalInitialData.createdRequest.username;
+          this.modalInitialData.userFacingJudgementUsername =
+            this.modalInitialData.userFacingJudgement.username;
+        } else if (
+          this.selectedItem.status === "APPROVED" ||
+          this.selectedItem.status === "DENIED"
+        ) {
+          alert("This flagging request has already been handled.");
+        }
       } else {
         alert("Please select a flagging request to manage.");
       }
@@ -170,7 +188,8 @@ export default {
           await flaggingRequestService.denyFlaggingRequest(formData.id);
         }
         this.closeModal();
-        this.fetchFlaggingRequests();
+        this.autoSelectFirstRow = true; // Enable auto-selection
+        await this.fetchFlaggingRequests();
       } catch (error) {
         this.error = error;
       }
