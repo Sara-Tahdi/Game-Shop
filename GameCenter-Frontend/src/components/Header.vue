@@ -25,6 +25,23 @@
 
           <!-- User Icon and Dropdown -->
           <div v-else class="user-menu" @mouseleave="showDropdown = false">
+            <!-- Cart and Wishlist Button -->
+            <div
+              v-if="userState.userInfo.userType === 'Client'"
+              class="user-icon wishlist"
+            >
+              <button class="button">
+                <RouterLink to="/wishlist">✨</RouterLink>
+              </button>
+            </div>
+            <div
+              v-if="userState.userInfo.userType === 'Client'"
+              class="user-icon cart"
+            >
+              <button class="button">
+                <RouterLink to="/cart">🛒</RouterLink>
+              </button>
+            </div>
             <div
               class="user-icon"
               @mouseover="showDropdown = true"
@@ -169,7 +186,9 @@ export default {
 /* User Menu */
 .user-menu {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .user-icon {
@@ -189,6 +208,19 @@ export default {
 
 .user-icon:hover {
   background-color: #0056b3;
+}
+
+.wishlist {
+  background-color: gray;
+}
+
+.cart {
+  background-color: yellow;
+}
+
+.button {
+  background-color: transparent;
+  border-color: transparent;
 }
 
 /* Dropdown Menu */
