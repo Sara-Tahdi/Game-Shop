@@ -84,17 +84,42 @@ export default {
     };
   },
   methods: {
-    selectRow(index) {
-      this.selectedItemIndex = index;
-      const selectedItem = this.data[index];
-      this.$emit("rowSelected", selectedItem);
+    selectRow(itemOrIndex) {
+      let index = null;
+      if (typeof itemOrIndex === "number") {
+        index = itemOrIndex;
+      } else if (itemOrIndex && this.itemKey) {
+        index = this.data.findIndex(
+          (dataItem) => dataItem[this.itemKey] === itemOrIndex[this.itemKey]
+        );
+      }
+      if (index !== null && index !== -1) {
+        this.selectedItemIndex = index;
+        const selectedItem = this.data[index];
+        this.$emit("rowSelected", selectedItem);
+      } else {
+        this.selectedItemIndex = null;
+        this.$emit("rowSelected", null);
+      }
     },
+    clearSelection() {
+      this.selectedItemIndex = null;
+      this.$emit("rowSelected", null);
+    },
+
     buttonClicked(action) {
       const selectedItem =
         this.selectedItemIndex !== null
           ? this.data[this.selectedItemIndex]
           : null;
       this.$emit(action, selectedItem);
+    },
+    getValue(row, field) {
+      const parts = field.split("."); // Handle nested fields using dot-notation
+      return parts.reduce(
+        (value, key) => (value && value[key] !== undefined ? value[key] : ""),
+        row
+      );
     },
   },
 };

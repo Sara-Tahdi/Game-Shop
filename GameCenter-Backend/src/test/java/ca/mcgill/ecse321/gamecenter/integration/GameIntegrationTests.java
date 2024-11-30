@@ -71,9 +71,6 @@ public class GameIntegrationTests {
                 VALID_TITLE,
                 VALID_PRICE,
                 VALID_DESCRIPTION,
-                VALID_RATING,
-                VALID_QUANTITY,
-                VALID_IS_OFFERED,
                 VALID_OPINION,
                 savedCategory.getId()
         );
@@ -92,9 +89,9 @@ public class GameIntegrationTests {
         assertEquals(VALID_TITLE, body.getTitle());
         assertEquals(VALID_PRICE, body.getPrice());
         assertEquals(VALID_DESCRIPTION, body.getDescription());
-        assertEquals(VALID_RATING, body.getRating());
-        assertEquals(VALID_QUANTITY, body.getRemainingQuantity());
-        assertEquals(VALID_IS_OFFERED, body.getIsOffered());
+        assertEquals(0, body.getRating());
+        assertEquals(0, body.getRemainingQuantity());
+        assertEquals(false, body.getIsOffered());
         assertEquals(VALID_OPINION, body.getPublicOpinion());
         assertEquals(savedCategory.getId(), body.getCategory().getId());
     }

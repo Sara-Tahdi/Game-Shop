@@ -1,46 +1,68 @@
 <template>
-  <div class="modal-overlay" @click="closeModal">
-    <div class="modal-box" @click.stop>
-      <div class="modal-header">
-        <h3>{{ title }}</h3>
-        <button class="close-button" @click="closeModal">×</button>
-      </div>
-      <div class="modal-body">
-        <!-- Error Message -->
-        <div v-if="error" class="error-message">{{ error }}</div>
-
-        <!-- Dynamic Form -->
-        <form @submit.prevent="handleSubmit">
-          <div class="form-group" v-for="(field, index) in fields" :key="index">
-            <label :for="field.name">{{ field.label }}</label>
-            <input
-              v-if="field.type !== 'textarea'"
-              :type="field.type || 'text'"
-              :id="field.name"
-              v-model="formData[field.name]"
-              :readonly="!field.editable"
-              :placeholder="field.placeholder"
-              @input="clearError"
-              required
-            />
-            <textarea
-              v-else
-              :id="field.name"
-              v-model="formData[field.name]"
-              :readonly="!field.editable"
-              :placeholder="field.placeholder"
-              @input="clearError"
-              required
-            ></textarea>
-          </div>
-          <button type="submit" class="submit-button">
-            {{ submitButtonText }}
-          </button>
-        </form>
+    <div class="modal-overlay" @click="closeModal">
+      <div class="modal-box" @click.stop>
+        <div class="modal-header">
+          <h3>{{ title }}</h3>
+          <button class="close-button" @click="closeModal">×</button>
+        </div>
+        <div class="modal-body">
+          <!-- Error Message -->
+          <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+  
+          <!-- Dynamic Form -->
+          <form @submit.prevent="handleFormSubmit">
+            <div class="form-group" v-for="(field, index) in fields" :key="index">
+              <label :for="field.name">{{ field.label }}</label>
+              <!-- Handle Select Fields -->
+              <select
+                v-if="field.type === 'select'"
+                :id="field.name"
+                v-model="formData[field.name]"
+                :disabled="!field.editable"
+                @change="clearError"
+                :required="true"
+              >
+                <option
+                  v-for="option in field.options"
+                  :value="option.value"
+                  :key="option.value"
+                >
+                  {{ option.label }}
+                </option>
+              </select>
+  
+              <!-- Handle Textarea Fields -->
+              <textarea
+                v-else-if="field.type === 'textarea'"
+                :id="field.name"
+                v-model="formData[field.name]"
+                :readonly="!field.editable"
+                :placeholder="field.placeholder"
+                @input="clearError"
+                required
+              ></textarea>
+  
+              <!-- Handle Other Input Fields -->
+              <input
+                v-else
+                :type="field.type || 'text'"
+                :id="field.name"
+                v-model="formData[field.name]"
+                :readonly="!field.editable"
+                :placeholder="field.placeholder"
+                @input="clearError"
+                :step="field.step || null"
+                required
+              />
+            </div>
+            <button type="submit" class="submit-button">
+              {{ submitButtonText }}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-</template>
+  </template>  
 
 <script>
 export default {
@@ -67,21 +89,28 @@ export default {
       type: String,
       default: "Submit",
     },
+    error: {
+      type: String,
+      default: null, // Accept error from parent
+    },
   },
   data() {
     return {
       formData: { ...this.initialData },
-      error: null,
+      errorMessage: this.error, // Local copy of the error prop
     };
   },
   watch: {
+    error(newError) {
+      this.errorMessage = newError; // Sync with the parent prop
+    },
     initialData(newData) {
       this.formData = { ...newData };
     },
     isVisible(newVal) {
       if (newVal) {
         this.formData = { ...this.initialData };
-        this.error = null;
+        this.errorMessage = this.error; // Reset error when modal opens
       }
     },
   },
@@ -89,12 +118,11 @@ export default {
     closeModal() {
       this.$emit("close");
     },
-    handleSubmit() {
-      // Validate data if needed
-      this.$emit("submit", { ...this.formData });
+    handleFormSubmit() {
+      this.$emit("formSubmit", { ...this.formData });
     },
     clearError() {
-      this.error = null;
+      this.errorMessage = null; // Reset local error message
     },
   },
 };

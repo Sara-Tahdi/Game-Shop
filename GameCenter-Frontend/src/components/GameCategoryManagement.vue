@@ -19,8 +19,9 @@
       :fields="modalFields"
       :initialData="modalInitialData"
       :submitButtonText="modalSubmitButtonText"
+      :error="error"
       @close="closeModal"
-      @submit="handleModalSubmit"
+      @formSubmit="handleModalSubmit"
     />
   </div>
 </template>
@@ -41,9 +42,11 @@ const categoryService = {
     return apiClient.get("/gameCategory");
   },
   createCategory(data) {
+    console.log("So far so good");
     return apiClient.post("/gameCategory/create", data);
   },
   updateCategory(id, data) {
+    console.log("So far so good 2");
     return apiClient.put(`/gameCategory/${id}`, data);
   },
 };
@@ -73,6 +76,7 @@ export default {
       modalInitialData: {},
       modalSubmitButtonText: "",
       currentAction: "", // "add" or "update"
+      error: null,
     };
   },
   methods: {
@@ -139,6 +143,7 @@ export default {
       this.isModalVisible = false;
       this.modalInitialData = {};
       this.currentAction = "";
+      this.error = null;
     },
 
     // Handle form submission from the modal
@@ -150,8 +155,9 @@ export default {
           this.resourceData.push(response.data); // Add the new category to the table
           this.closeModal();
         } catch (error) {
-          console.error("Error adding category:", error);
+          console.error("Error adding category:", error.response.data);
           // Handle error (e.g., display error message)
+          this.error = error.response?.data || "Failed to add category.";
         }
       } else if (this.currentAction === "update") {
         // Handle Update
@@ -165,11 +171,12 @@ export default {
           if (index !== -1) {
             this.resourceData.splice(index, 1, response.data); // Reactive update
           }
-          this.selectedItem = null;
+          this.selectedItem = response.data; // Reassign selectedItem to the updated row
           this.closeModal();
         } catch (error) {
-          console.error("Error updating category:", error);
+          console.error("Error updating category:", error.response.data);
           // Handle error (e.g., display error message)
+          this.error = error.response?.data || "Failed to update category.";
         }
       }
     },

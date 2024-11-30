@@ -31,9 +31,6 @@ public class GameRestController {
                     gameToCreate.getTitle(),
                     gameToCreate.getPrice(),
                     gameToCreate.getDescription(),
-                    gameToCreate.getRating(),
-                    gameToCreate.getRemainingQuantity(),
-                    gameToCreate.getIsOffered(),
                     gameToCreate.getPublicOpinion(),
                     c
             );
