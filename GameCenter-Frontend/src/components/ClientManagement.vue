@@ -86,6 +86,7 @@ export default {
       modalInitialData: {},
       modalSubmitButtonText: "Confirm Flag",
       error: null,
+      selectedItem: null,
     };
   },
   methods: {

@@ -93,6 +93,7 @@ export default {
       modalSubmitButtonText: "",
       currentAction: "", // add, update
       error: null,
+      selectedItem: null,
     };
   },
   methods: {

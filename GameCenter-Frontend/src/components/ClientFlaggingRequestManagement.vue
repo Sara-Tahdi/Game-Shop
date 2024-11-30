@@ -116,23 +116,14 @@ export default {
       modalInitialData: {},
       modalSubmitButtonText: "Confirm Decision",
       error: null,
+      selectedItem: null,
     };
   },
   methods: {
-    // Fetch all flagging requests and sort them by status (PENDING first)
     async fetchFlaggingRequests() {
       try {
         const response = await flaggingRequestService.getAllFlaggingRequests();
-
-        // Sort requests: PENDING first, then others
-        this.resourceData = response.data.sort((a, b) => {
-          if (a.status === "PENDING" && b.status !== "PENDING") {
-            return -1; // a comes before b
-          } else if (a.status !== "PENDING" && b.status === "PENDING") {
-            return 1; // b comes before a
-          }
-          return 0; // maintain original order for same statuses
-        });
+        this.resourceData = response.data;
       } catch (error) {
         console.error("Error fetching flagging requests:", error);
       }
@@ -141,6 +132,11 @@ export default {
       this.selectedItem = selectedItem;
     },
     handleManageRequest() {
+      if (!this.selectedItem) {
+        // Handle case where no row is selected
+        alert("Please select a flagging request to manage.");
+        return;
+      }
       if (this.selectedItem.status === "PENDING") {
         this.modalInitialData = { ...this.selectedItem };
         this.isModalVisible = true;
@@ -165,9 +161,15 @@ export default {
     async handleModalSubmit(formData) {
       try {
         if (formData.decision === "APPROVED") {
-          await flaggingRequestService.approveFlaggingRequest(formData.id);
+          const response = await flaggingRequestService.approveFlaggingRequest(
+            formData.id
+          );
+          this.selectedItem = response.data;
         } else if (formData.decision === "DENIED") {
-          await flaggingRequestService.denyFlaggingRequest(formData.id);
+          const response = await flaggingRequestService.denyFlaggingRequest(
+            formData.id
+          );
+          this.selectedItem = response.data;
         }
         this.closeModal();
         this.fetchFlaggingRequests();
