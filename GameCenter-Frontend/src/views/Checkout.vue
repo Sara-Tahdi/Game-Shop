@@ -66,10 +66,13 @@ export default {
       }
     },
     updateSelectedPayment(payment) {
+      console.log(payment);
       this.selectedPayment = payment;
     },
     async handlePurchase() {
       const paymentSelection = this.$refs.paymentSelection;
+
+      console.log(this.selectedPayment);
 
       if (paymentSelection.newPaymentInfo.cardNumber) {
         if (paymentSelection.savePaymentInfo) {
@@ -102,7 +105,10 @@ export default {
       console.log(purchaseData);
 
       try {
-        await apiClient.post(`purchases/place/${userState.userInfo.id}`);
+        await apiClient.post(
+          `purchases/place/${userState.userInfo.id}`,
+          purchaseData,
+        );
       } catch (err) {
         console.log(err);
       }

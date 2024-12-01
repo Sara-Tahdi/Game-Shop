@@ -154,13 +154,30 @@ export default {
         }
       }
       this.selectedPaymentInfo = paymentInfo;
-      this.$emit("payment-selected", this.selectedPaymentInfo);
+      this.$emit("payment-select", this.selectedPaymentInfo);
       console.log(paymentInfo);
     },
     handleRadioClick(info) {
       if (this.selectedPaymentInfo === info) {
         this.selectedPaymentInfo = null;
+        this.$emit("payment-select", null);
+      } else {
+        this.selectedPaymentInfo = info;
+        this.$emit("payment-select", info);
+        this.newPaymentInfo = {
+          cardNumber: "",
+          cardHolderName: "",
+          expiryMonth: "",
+          expiryYear: "",
+          cvv: "",
+        };
+        this.savePaymentInfo = false;
       }
+      console.log(this.selectedPaymentInfo);
+    },
+    clearRadioSelection() {
+      this.selectedPaymentInfo = null;
+      this.$emit("payment-select", null);
     },
   },
   created() {
@@ -168,7 +185,23 @@ export default {
   },
   watch: {
     selectedPaymentInfo(newValue) {
-      this.$emit("payment-selected", newValue);
+      this.$emit("payment-select", newValue);
+    },
+
+    newPaymentInfo: {
+      handler(newVal) {
+        const hasValue = Object.values(newVal).some((val) => val !== "");
+        if (hasValue) {
+          this.clearRadioSelection();
+        }
+      },
+      deep: true,
+    },
+
+    savePaymentInfo(newVal) {
+      if (newVal) {
+        this.clearRadioSelection();
+      }
     },
   },
 };
