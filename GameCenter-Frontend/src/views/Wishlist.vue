@@ -12,7 +12,10 @@
       <button @click="fetchWishlist" class="retry-button">Retry</button>
     </div>
 
-    <div v-if="!loading && !error && wishlist.length > 0" class="wishlist-container">
+    <div
+      v-if="!loading && !error && wishlist.length > 0"
+      class="wishlist-container"
+    >
       <section class="games-list">
         <div v-for="game in wishlist" :key="game.id" class="game-card">
           <h3>{{ game.title }}</h3>
@@ -21,13 +24,24 @@
             <span class="price">${{ game.price.toFixed(2) }}</span>
             <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
           </div>
-          <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
-            {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
+          <div
+            class="stock-status"
+            :class="{ 'in-stock': game.remainingQuantity > 0 }"
+          >
+            {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
           <!-- Remove from Wishlist Button -->
-          <button @click="removeFromWishlist(game.id)" class="remove-btn">Remove from Wishlist</button>
+          <button @click="removeFromWishlist(game.id)" class="remove-btn">
+            Remove from Wishlist
+          </button>
           <!-- Add to Cart Button -->
-          <button @click="addToCart(game)" class="add-to-cart-btn" :disabled="game.remainingQuantity === 0">Add to Cart</button>
+          <button
+            @click="addToCart(game)"
+            class="add-to-cart-btn"
+            :disabled="game.remainingQuantity === 0"
+          >
+            Add to Cart
+          </button>
         </div>
       </section>
     </div>
@@ -39,56 +53,63 @@
 </template>
 
 <script>
-
-import axios from 'axios';
+import { userState } from "@/state/userState";
+import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:3000',
-  timeout: 5000
+  baseURL: "http://localhost:3000",
+  timeout: 5000,
 });
 
 export default {
-  name: 'Wishlist',
+  name: "Wishlist",
   data() {
     return {
       wishlist: [],
       loading: false,
       error: null,
-      clientId: null
+      clientId: null,
     };
   },
   methods: {
     async fetchWishlist() {
-      console.log('Attempting to fetch wishlist for client:', this.clientId);
-      
-      if (!this.clientId) {
-        this.error = 'No client ID available. Please log in.';
+      console.log(
+        "Attempting to fetch wishlist for client:",
+        userState.userInfo.id,
+      );
+
+      if (!userState.userInfo.id) {
+        this.error = "No client ID available. Please log in.";
         this.loading = false;
         return;
       }
-      
+
       this.loading = true;
       this.error = null;
-      
+
       try {
-        const response = await axiosClient.get(`/wishlists/client/${this.clientId}`);
-        
-        console.log('Wishlist fetch response:', response.data);
-        
+        const response = await axiosClient.get(
+          `/wishlists/client/${userState.userInfo.id}`,
+        );
+
+        console.log("Wishlist fetch response:", response.data);
+
         if (!response.data || response.data.length === 0) {
-          this.error = 'No wishlist items found.';
+          this.error = "No wishlist items found.";
         } else {
           this.wishlist = response.data;
         }
       } catch (err) {
-        console.error('Detailed Wishlist fetch error:', err);
-        
+        console.error("Detailed Wishlist fetch error:", err);
+
         if (err.response) {
-          this.error = err.response.data.message || 'Server error while fetching wishlist';
+          this.error =
+            err.response.data.message || "Server error while fetching wishlist";
         } else if (err.request) {
-          this.error = 'No response received from server. Check your network connection.';
+          this.error =
+            "No response received from server. Check your network connection.";
         } else {
-          this.error = 'Error setting up the request. Please try again.';
+          this.error = "Error setting up the request. Please try again.";
         }
       } finally {
         this.loading = false;
@@ -96,59 +117,64 @@ export default {
     },
 
     async removeFromWishlist(game) {
-      console.log('Removing game from wishlist:', game);
+      console.log("Removing game from wishlist:", game);
 
-      if (!this.clientId) {
-        this.error = 'Please log in to remove games from your wishlist.';
+      if (!userState.userInfo.id) {
+        this.error = "Please log in to remove games from your wishlist.";
         return;
       }
 
       try {
-        const response = await axios.delete('http://localhost:8080/wishlists/remove', {
-          params: {
-            clientId: this.clientId,
-            gameId: game.id
-          }
-        });
+        const response = await axios.delete(
+          "http://localhost:8080/wishlists/remove",
+          {
+            params: {
+              clientId: userState.userInfo.id,
+              gameId: game.id,
+            },
+          },
+        );
 
         if (response.status === 204) {
-          console.log('Game successfully removed from wishlist:', game);
-          this.wishlist = this.wishlist.filter(item => item.id !== game.id);
+          console.log("Game successfully removed from wishlist:", game);
+          this.wishlist = this.wishlist.filter((item) => item.id !== game.id);
         }
       } catch (err) {
-        console.error('Error removing game from wishlist:', err);
-        this.error = 'Failed to remove game from wishlist. Please try again.';
+        console.error("Error removing game from wishlist:", err);
+        this.error = "Failed to remove game from wishlist. Please try again.";
       }
     },
 
     async addToCart(game) {
-      console.log('Adding game to cart:', game);
+      console.log("Adding game to cart:", game);
 
-      if (!this.clientId) {
-        this.error = 'Please log in to add games to your cart.';
+      if (!userState.userInfo.id) {
+        this.error = "Please log in to add games to your cart.";
         return;
       }
 
       try {
-        const response = await axios.post('http://localhost:8080/carts/create', {
-          clientId: this.clientId,
-          gameId: game.id
-        });
+        const response = await axios.post(
+          "http://localhost:8080/carts/create",
+          {
+            clientId: userState.userInfo.id,
+            gameId: game.id,
+          },
+        );
 
         if (response.status === 200) {
-          console.log('Game successfully added to cart:', game);
+          console.log("Game successfully added to cart:", game);
           this.cart.push(game);
         }
       } catch (err) {
-        console.error('Error adding game to cart:', err);
-        this.error = 'Failed to add game to cart. Please try again.';
+        console.error("Error adding game to cart:", err);
+        this.error = "Failed to add game to cart. Please try again.";
       }
-    }
-
+    },
   },
   created() {
     this.fetchWishlist();
-  }
+  },
 };
 </script>
 
@@ -185,7 +211,7 @@ export default {
   background: white;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .game-card h3 {
@@ -245,7 +271,7 @@ export default {
 }
 
 .add-to-cart-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -279,8 +305,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
