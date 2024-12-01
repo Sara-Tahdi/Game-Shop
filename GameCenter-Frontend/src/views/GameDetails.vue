@@ -56,27 +56,28 @@
               <p>{{ game.description }}</p>
             </div>
 
-            <div class="opinion-section">
-              <h2>General Feeling</h2>
-              <p>{{ game.publicOpinion }}</p>
+            <div class="opinion-section" :class="feelingClass">
+              <p>{{ formattedFeeling }}</p>
             </div>
           </div>
 
-          <div class="action-buttons">
-            <button
-              @click="addToWishlist"
-              class="wishlist-button"
-              :disabled="game.remainingQuantity === 0"
-            >
-              Add to Wishlist
-            </button>
-            <button
-              @click="addToCart"
-              class="cart-button"
-              :disabled="game.remainingQuantity === 0"
-            >
-              Add to Cart
-            </button>
+          <div v-if="isGuest || isClient" class="action-buttons">
+            <div class="action-buttons">
+              <button
+                @click="addToWishlist"
+                class="wishlist-button"
+                :disabled="isGuest || game.remainingQuantity === 0"
+              >
+                Add to Wishlist
+              </button>
+              <button
+                @click="addToCart"
+                class="cart-button"
+                :disabled="isGuest || game.remainingQuantity === 0"
+              >
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -106,6 +107,7 @@
 <script>
 import axios from "axios";
 import GameReview from "../components/GameReview.vue";
+import { userState } from "@/state/userState";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
@@ -126,14 +128,46 @@ export default {
       loading: true,
       error: null,
       areReviewsVisible: false,
+      isGuest: null,
+      isClient: null,
     };
+  },
+  computed: {
+    feelingClass() {
+      if (!this.game.publicOpinion) return "";
+      const feeling = this.game.publicOpinion;
+      return {
+        "very-positive": feeling === "VERYPOSITIVE",
+        positive: feeling === "POSITIVE",
+        neutral: feeling === "NEUTRAL",
+        negative: feeling === "NEGATIVE",
+        "very-negative": feeling === "VERYNEGATIVE",
+      };
+    },
+    formattedFeeling() {
+      const feelings = {
+        VERYPOSITIVE: "Very Positive",
+        POSITIVE: "Positive",
+        NEGATIVE: "Negative",
+        VERYNEGATIVE: "Very Negative",
+        NEUTRAL: "Neutral",
+      };
+      return feelings[this.game.publicOpinion];
+    },
+
+    isGuest() {
+      return userState.userInfo === null;
+    },
+    isClient() {
+      return userState.userInfo?.userType === "Client";
+    },
   },
   methods: {
     async fetchGameDetails() {
       try {
         this.loading = true;
         const response = await apiClient.get(
-          `/games/id/${this.$route.params.id}`,
+          `/games/id/${this.$route.params.id}`
         );
         this.game = response.data;
         console.log("Game details:", this.game);
@@ -147,7 +181,7 @@ export default {
     async fetchGameReviews() {
       try {
         const response = await apiClient.get(
-          `/reviews/${this.$route.params.id}`,
+          `/reviews/${this.$route.params.id}`
         );
         this.reviews = response.data;
         console.log("Reviews:", this.reviews);
@@ -164,8 +198,12 @@ export default {
     addToCart() {
       console.log("Adding to cart:", this.game.title);
     },
+    setUserType() {
+      console.log("USERSTATE:", userState.userInfo);
+    },
   },
   created() {
+    this.setUserType();
     this.fetchGameDetails();
     this.fetchGameReviews();
   },
@@ -248,16 +286,24 @@ export default {
   min-width: 100px;
 }
 
-.description-section,
-.opinion-section {
+.description-section {
   margin-top: 20px;
 }
 
-.description-section h2,
-.opinion-section h2 {
+.description-section h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
   color: #333;
+}
+
+.opinion-section {
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  max-width: 20%;
 }
 
 .stock-status {
@@ -269,6 +315,31 @@ export default {
 
 .stock-status.in-stock {
   background-color: #28a745;
+}
+
+.very-positive {
+  background-color: #a5d6a7; /* Pastel Green */
+  color: #2e7d32; /* Darker Green for contrast */
+}
+
+.positive {
+  background-color: #c5e1a5; /* Lighter Pastel Green */
+  color: #558b2f; /* Medium Green for contrast */
+}
+
+.negative {
+  background-color: #ef9a9a; /* Pastel Red */
+  color: #c62828; /* Darker Red for contrast */
+}
+
+.very-negative {
+  background-color: #e57373; /* Darker Pastel Red */
+  color: #b71c1c; /* Deep Red for contrast */
+}
+
+.neutral {
+  background-color: #b0bec5; /* Pastel Gray */
+  color: #37474f; /* Darker Gray for contrast */
 }
 
 .action-buttons {
