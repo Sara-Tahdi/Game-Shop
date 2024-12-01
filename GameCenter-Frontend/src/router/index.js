@@ -27,11 +27,6 @@ const router = createRouter({
       meta: { requiresAuth: true, userType: "client" },
     },
     {
-      path: "/purchase-history",
-      component: () => import("@/views/PurchaseHistory.vue"),
-      meta: { requiresAuth: true, userType: "client" },
-    },
-    {
       path: "/employee-dashboard",
       component: () => import("@/views/EmployeeDashboard.vue"),
       meta: { requiresAuth: true, userType: "employee" },
