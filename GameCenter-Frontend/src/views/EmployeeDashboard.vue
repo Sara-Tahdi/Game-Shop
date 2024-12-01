@@ -19,6 +19,9 @@
       <section class="management-section">
         <GameRequestManagement />
       </section>
+      <section class="management-section">
+        <PromotionManagement />
+      </section>
     </div>
   </div>
 </template>
@@ -30,6 +33,7 @@ import ClientManagement from "../components/ClientManagement.vue";
 import ClientFlaggingRequestManagement from "../components/ClientFlaggingRequestManagement.vue";
 import GameRequestManagement from "../components/GameRequestManagement.vue";
 import EmployeeManagement from "../components/EmployeeManagement.vue";
+import PromotionManagement from "../components/PromotionManagement.vue";
 
 export default {
   name: "EmployeeDashboard",
@@ -40,6 +44,7 @@ export default {
     ClientFlaggingRequestManagement,
     EmployeeManagement,
     GameRequestManagement,
+    PromotionManagement,
   },
 };
 </script>
