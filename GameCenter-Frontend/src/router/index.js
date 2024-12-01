@@ -42,16 +42,24 @@ const router = createRouter({
     },
 
     {
-      path: '/wishlist',
-      name: 'wishlist',
-      component: () => import("../views/Wishlist.vue"), 
+      path: "/wishlist",
+      name: "wishlist",
+      component: () => import("../views/Wishlist.vue"),
     },
 
     {
       path: "/cart",
       name: "Cart",
       component: () => import("../views/Cart.vue"),
-    }
+    },
+    {
+      path: "/checkout",
+      name: "Checkout",
+      component: () => import("@/views/Checkout.vue"),
+      props: (route) => ({
+        cartData: route.params.cartData,
+      }),
+    },
   ],
 });
 
