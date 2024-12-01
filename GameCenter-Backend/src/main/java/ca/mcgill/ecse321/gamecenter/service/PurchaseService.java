@@ -63,25 +63,19 @@ public class PurchaseService {
         return purchaseRepository.save(p);
     }
 
-    public SimplePurchaseResponseDTO returnGame(String trackingCode, String refundReason) {
-        List<Purchase> purchases = purchaseRepository.findPurchasesByTrackingCode(trackingCode).orElse(null);
-        if (purchases == null) {
-            throw new IllegalArgumentException("There is no Purchase with trackingCode: " + trackingCode);
+    public Purchase returnGame(int purchaseId, String refundReason) {
+        Purchase purchase = purchaseRepository.findPurchaseById(purchaseId).orElse(null);
+        if (purchase == null) {
+            throw new IllegalArgumentException("There is no Purchase with id: " + purchaseId);
         }
 
         // check if refund request is within valid time
-        if (purchases.getFirst().getPurchaseDate().toLocalDate().isBefore(LocalDate.now().minusDays(7))) {
+        if (purchase.getPurchaseDate().toLocalDate().isBefore(LocalDate.now().minusDays(7))) {
             throw new IllegalArgumentException("Refund request DENIED!! Refund period is over.");
         }
 
-        Float total = 0f;
-        for (Purchase p: purchases) {
-            p.setRefundReason(refundReason);
-            purchaseRepository.save(p);
-            total += p.getTotalPrice();
-        }
-
-        return new SimplePurchaseResponseDTO(trackingCode, Round.round(total), refundReason);
+        purchase.setRefundReason(refundReason);
+        return purchaseRepository.save(purchase);
     }
 
     public List<Purchase> getClientPurchaseHistory(int clientId) {

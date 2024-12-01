@@ -71,7 +71,7 @@ public class RequestIntegrationTests {
     private static final String VALID_GAME_DESCRIPTION_1 = "Battle Royale";
     private static final float VALID_GAME_RATING_1 = 4.5f;
     private static final int VALID_GAME_REMAINING_QUANTITY_1 = 100;
-    private static final boolean VALID_GAME_IS_OFFERED_1 = true;
+    private static final boolean VALID_GAME_IS_OFFERED_1 = false;
     private static final GeneralFeeling VALID_GAME_PUBLIC_OPINION_1 = GeneralFeeling.POSITIVE;
 
     private static final String VALID_GAME_TITLE_2 = "Minecraft";
@@ -79,7 +79,7 @@ public class RequestIntegrationTests {
     private static final String VALID_GAME_DESCRIPTION_2 = "Sandbox";
     private static final float VALID_GAME_RATING_2 = 4.8f;
     private static final int VALID_GAME_REMAINING_QUANTITY_2 = 50;
-    private static final boolean VALID_GAME_IS_OFFERED_2 = false;
+    private static final boolean VALID_GAME_IS_OFFERED_2 = true;
     private static final GeneralFeeling VALID_GAME_PUBLIC_OPINION_2 = GeneralFeeling.VERYPOSITIVE;
 
     private static final String VALID_GAME_REQUEST_REASON_1 = "I want to play this game, so would our customers.";
@@ -390,12 +390,12 @@ public class RequestIntegrationTests {
     }
 
     @Test
-    @Order(17)
+    @Order(18)
     public void testApproveRequest() {
         // Arrange
-        ResponseEntity<RequestResponseDTO[]> response = client.getForEntity("/requests", RequestResponseDTO[].class);
+        ResponseEntity<GameRequestResponseDTO[]> response = client.getForEntity("/requests/game", GameRequestResponseDTO[].class);
 
-        String url = "/requests/approve/" + response.getBody()[0].getId();
+        String url = "/requests/approve/" + response.getBody()[1].getId();
 
         // Act
         HttpEntity<Void> requestEntity = new HttpEntity<>(null);
@@ -410,7 +410,7 @@ public class RequestIntegrationTests {
     }
 
     @Test
-    @Order(18)
+    @Order(19)
     public void testDenyRequest() {
         // Arrange
         ResponseEntity<RequestResponseDTO[]> response = client.getForEntity("/requests", RequestResponseDTO[].class);

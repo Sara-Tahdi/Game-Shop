@@ -8,11 +8,11 @@ public class RefundRequestDTO {
 
     public RefundRequestDTO() {}
 
-    public RefundRequestDTO(String reason) {
-        this.refundReason = reason;
+    public RefundRequestDTO(String refundReason) {
+        this.refundReason = refundReason;
     }
 
-    public String getReason() {
+    public String getRefundReason() {
         return this.refundReason;
     }
 }

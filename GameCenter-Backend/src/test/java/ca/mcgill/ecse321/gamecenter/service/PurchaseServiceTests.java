@@ -163,7 +163,7 @@ public class PurchaseServiceTests {
         p.setId(31);
         p.setTrackingCode("3un141c");
         p.setPurchaseDate(Date.valueOf(LocalDate.now().minusDays(3)));
-        when(purchaseRepository.findPurchasesByTrackingCode(p.getTrackingCode())).thenReturn(Optional.of(List.of(p)));
+        when(purchaseRepository.findPurchaseById(p.getId())).thenReturn(Optional.of(p));
         Purchase refundedPurchase = new Purchase();
         refundedPurchase.setId(p.getId());
         refundedPurchase.setPurchaseDate(p.getPurchaseDate());
@@ -171,7 +171,7 @@ public class PurchaseServiceTests {
         refundedPurchase.setRefundReason(refundReason);
         when(purchaseRepository.save(any(Purchase.class))).thenReturn(refundedPurchase);
 
-        SimplePurchaseResponseDTO updated = purchaseService.returnGame(p.getTrackingCode(), refundReason);
+        Purchase updated = purchaseService.returnGame(p.getId(), refundReason);
 
         // check if properly returned
         assertEquals(refundReason, updated.getRefundReason());
@@ -182,8 +182,8 @@ public class PurchaseServiceTests {
         String refundReason = "I don't like this game anymore!";
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.returnGame("430qv31", refundReason));
-        assertEquals("There is no Purchase with trackingCode: 430qv31", e.getMessage());
+                purchaseService.returnGame(2, refundReason));
+        assertEquals("There is no Purchase with id: 2", e.getMessage());
     }
 
     @Test
@@ -192,12 +192,12 @@ public class PurchaseServiceTests {
         p.setId(51);
         p.setTrackingCode("r824fb41");
         p.setPurchaseDate(Date.valueOf(LocalDate.now().minusDays(8)));
-        when(purchaseRepository.findPurchasesByTrackingCode((p.getTrackingCode()))).thenReturn(Optional.of(List.of(p)));
+        when(purchaseRepository.findPurchaseById((p.getId()))).thenReturn(Optional.of(p));
 
         String refundReason = "I don't like this game anymore!";
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                purchaseService.returnGame(p.getTrackingCode(), refundReason));
+                purchaseService.returnGame(p.getId(), refundReason));
         assertEquals("Refund request DENIED!! Refund period is over.", e.getMessage());
     }
 

@@ -33,11 +33,11 @@ public class PurchaseRestController {
         }
     }
 
-    @PutMapping("/purchases/refund/{trackingCode}")
-    public ResponseEntity<?> refundPurchase(@Validated @RequestBody RefundRequestDTO refundReason, @PathVariable String trackingCode) {
+    @PutMapping("/purchases/refund/{purchaseId}")
+    public ResponseEntity<?> refundPurchase(@Validated @RequestBody RefundRequestDTO refundReason, @PathVariable int purchaseId) {
         try {
-            SimplePurchaseResponseDTO simplePurchase = purchaseService.returnGame(trackingCode, refundReason.getReason());
-            return ResponseEntity.ok().body(simplePurchase);
+            Purchase purchase = purchaseService.returnGame(purchaseId, refundReason.getRefundReason());
+            return ResponseEntity.ok().body(new PurchaseResponseDTO(purchase));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
