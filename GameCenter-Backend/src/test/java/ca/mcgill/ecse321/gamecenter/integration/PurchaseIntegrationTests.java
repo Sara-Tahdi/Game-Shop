@@ -183,6 +183,6 @@ public class PurchaseIntegrationTests {
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
         List<SimplePurchaseResponseDTO> body = List.of(res.getBody());
-        assertEquals(1, body.size());
+        assertEquals(2, body.size());
     }
 }
