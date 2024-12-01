@@ -76,10 +76,11 @@ export default {
       resourceData: [],
       categories: [],
       tableColumns: [
-        { label: "ID", field: "id", width: "25%" },
-        { label: "Title", field: "title", width: "25%" },
-        { label: "Price", field: "price", width: "25%" },
-        { label: "Category", field: "category.category", width: "25%" },
+        { label: "ID", field: "id", width: "20%" },
+        { label: "Title", field: "title", width: "20%" },
+        { label: "Price", field: "price", width: "20%" },
+        { label: "Category", field: "category.category", width: "20%" },
+        { label: "Offered", field: "isOffered", width: "20%" },
       ],
       tableButtons: [
         { label: "Request Game Removal", action: "removeItem" },

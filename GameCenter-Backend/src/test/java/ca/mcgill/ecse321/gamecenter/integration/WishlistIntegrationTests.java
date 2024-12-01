@@ -86,6 +86,7 @@ public class WishlistIntegrationTests {
         wishlistRepository.deleteAll();
         appUserRepository.deleteAll();
         gameRepository.deleteAll();
+        gameCategoryRepository.deleteAll();
     }
 
     @Test

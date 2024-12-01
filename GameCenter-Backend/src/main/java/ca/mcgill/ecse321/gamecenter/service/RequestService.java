@@ -29,6 +29,8 @@ public class RequestService {
     private GameRepository gameRepository;
     @Autowired
     private AppUserService appUserService;
+    @Autowired
+    private GameService gameService;
     
     public List<Request> getAllRequests() {
         List<Request> requests = new ArrayList<>();
@@ -213,6 +215,16 @@ public class RequestService {
 
         if (approval && request instanceof UserRequest) {
             appUserService.deactivateClientAccountByUsername(((UserRequest) request).getUserFacingJudgement().getUsername());
+        }
+
+        if (approval && request instanceof GameRequest) {
+            GameRequest gameRequest = (GameRequest) request;
+            if (gameRequest.getType() == GameRequest.Type.ADD) {
+                gameService.makeGameOffered(gameRequest.getGame().getId());
+            } else {
+                gameService.makeGameNotOffered(gameRequest.getGame().getId());
+            }
+
         }
 
         return requestRepository.save(request);

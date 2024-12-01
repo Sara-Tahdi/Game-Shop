@@ -61,6 +61,7 @@ export default {
         { label: "Username", field: "username", width: "25%" },
         { label: "Email", field: "email", width: "25%" },
         { label: "Phone Number", field: "phoneNumber", width: "25%" },
+        { label: "Allowed on Platform", field: "isActive", width: "25%" },
       ],
       tableButtons: [{ label: "Flag User", action: "flagUser" }],
       isModalVisible: false,
@@ -102,10 +103,13 @@ export default {
       this.selectedItem = item;
     },
     handleFlagUser() {
-      if (this.selectedItem) {
+      if (this.selectedItem && this.selectedItem.isActive) {
         this.modalInitialData = { ...this.selectedItem };
         this.isModalVisible = true;
-      } else {
+      } else if (this.selectedItem && !this.selectedItem.isActive) {
+        alert("This user is already banned.");
+      }
+      else {
         alert("Please select a user to flag.");
       }
     },
