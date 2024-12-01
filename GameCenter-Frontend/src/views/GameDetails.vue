@@ -1,7 +1,9 @@
 <template>
   <div class="game-details-page">
     <div class="back-link">
-      <router-link to="/" class="back-button">← Back to Catalog</router-link>
+      <router-link to="/catalog" class="back-button"
+        >← Back to Catalog</router-link
+      >
     </div>
 
     <div v-if="loading" class="loading">
@@ -55,7 +57,10 @@
 
             <div class="detail-row">
               <span class="label">Status:</span>
-              <span class="value stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
+              <span
+                class="value stock-status"
+                :class="{ 'in-stock': game.remainingQuantity > 0 }"
+              >
                 {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
               </span>
             </div>
@@ -65,17 +70,17 @@
               <p>{{ game.description }}</p>
             </div>
 
-            <div class="opinion-section">
-              <h2>General Feeling</h2>
-              <p>{{ game.publicOpinion }}</p>
+            <div class="opinion-section" :class="feelingClass">
+              <p>{{ formattedFeeling }}</p>
             </div>
           </div>
 
-          <div class="action-buttons">
-            <button
+          <div v-if="isGuest || isClient" class="action-buttons">
+            <div class="action-buttons">
+              <button
                 @click="addToWishlist"
                 class="wishlist-button"
-                :disabled="game.remainingQuantity === 0"
+                :disabled="isGuest || game.remainingQuantity === 0"
                 :title="!userState.userInfo ? 'Please log in to add to wishlist' : ''"
             >
               Add to Wishlist
@@ -83,11 +88,12 @@
             <button
                 @click="addToCart"
                 class="cart-button"
-                :disabled="game.remainingQuantity === 0"
+                :disabled="isGuest || game.remainingQuantity === 0"
                 :title="!userState.userInfo ? 'Please log in to add to cart' : ''"
             >
               Add to Cart
             </button>
+
           </div>
         </div>
       </div>
@@ -115,19 +121,20 @@
 </template>
 
 <script>
+
 import axios from 'axios';
 import GameReview from '../components/GameReview.vue';
 import { userState } from '@/state/userState';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: "http://localhost:8080",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 export default {
-  name: 'GameDetails',
+  name: "GameDetails",
   components: {
     GameReview,
   },
@@ -139,7 +146,9 @@ export default {
       loading: true,
       error: null,
       areReviewsVisible: false,
-      userState: userState
+      userState: userState,
+      isGuest: null,
+      isClient: null,
     };
   },
   computed: {
@@ -152,7 +161,35 @@ export default {
     },
     hasActivePromotions() {
       return this.activePromotions.length > 0;
-    }
+    },
+    feelingClass() {
+      if (!this.game.publicOpinion) return "";
+      const feeling = this.game.publicOpinion;
+      return {
+        "very-positive": feeling === "VERYPOSITIVE",
+        positive: feeling === "POSITIVE",
+        neutral: feeling === "NEUTRAL",
+        negative: feeling === "NEGATIVE",
+        "very-negative": feeling === "VERYNEGATIVE",
+      };
+    },
+    formattedFeeling() {
+      const feelings = {
+        VERYPOSITIVE: "Very Positive",
+        POSITIVE: "Positive",
+        NEGATIVE: "Negative",
+        VERYNEGATIVE: "Very Negative",
+        NEUTRAL: "Neutral",
+      };
+      return feelings[this.game.publicOpinion];
+    },
+
+    isGuest() {
+      return userState.userInfo === null;
+    },
+    isClient() {
+      return userState.userInfo?.userType === "Client";
+    },
   },
   methods: {
     formatDate(dateString) {
@@ -165,13 +202,15 @@ export default {
     async fetchGameDetails() {
       try {
         this.loading = true;
-        const response = await apiClient.get(`/games/id/${this.$route.params.id}`);
+        const response = await apiClient.get(
+          `/games/id/${this.$route.params.id}`
+        );
         this.game = response.data;
         await this.fetchPromotions();
         console.log('Game details:', this.game);
       } catch (err) {
-        this.error = err.response?.data || 'Error loading game details';
-        console.error('Error fetching game details:', err);
+        this.error = err.response?.data || "Error loading game details";
+        console.error("Error fetching game details:", err);
       } finally {
         this.loading = false;
       }
@@ -187,11 +226,13 @@ export default {
     },
     async fetchGameReviews() {
       try {
-        const response = await apiClient.get(`/reviews/${this.$route.params.id}`);
+        const response = await apiClient.get(
+          `/reviews/${this.$route.params.id}`
+        );
         this.reviews = response.data;
-        console.log('Reviews:', this.reviews);
+        console.log("Reviews:", this.reviews);
       } catch (err) {
-        console.error('Error fetching reviews:', err);
+        console.error("Error fetching reviews:", err);
       }
     },
     toggleReviewsVisibility() {
@@ -203,19 +244,27 @@ export default {
         return;
       }
       console.log('Adding to wishlist:', this.game.title);
-    },
-    addToCart() {
+   },
+    async addToCart() {
       if (!userState.userInfo) {
         alert('Please log in to add items to your cart');
         return;
       }
-      console.log('Adding to cart:', this.game.title);
-    }
+      try {
+        const response = await apiClient.post(`/carts/create`, {
+          clientId: userState.userInfo.id,
+          gameId: this.game.id,
+        });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
   created() {
     this.fetchGameDetails();
     this.fetchGameReviews();
-  }
+  },
 };
 </script>
 
@@ -329,6 +378,13 @@ export default {
   font-size: 1.2em;
 }
 
+.description-section {
+  margin-top: 20px;
+}
+
+.description-section h2 {
+  font-size: 1.5em;
+  
 .promotion-item {
   margin: 10px 0;
   padding: 10px;
@@ -352,6 +408,16 @@ export default {
 .promotion-end-date {
   color: #666;
   font-size: 0.9em;
+}
+
+.opinion-section {
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  max-width: 20%;
 }
 
 .stock-status {
@@ -384,6 +450,31 @@ export default {
   line-height: 1.6;
 }
 
+.very-positive {
+  background-color: #a5d6a7; /* Pastel Green */
+  color: #2e7d32; /* Darker Green for contrast */
+}
+
+.positive {
+  background-color: #c5e1a5; /* Lighter Pastel Green */
+  color: #558b2f; /* Medium Green for contrast */
+}
+
+.negative {
+  background-color: #ef9a9a; /* Pastel Red */
+  color: #c62828; /* Darker Red for contrast */
+}
+
+.very-negative {
+  background-color: #e57373; /* Darker Pastel Red */
+  color: #b71c1c; /* Deep Red for contrast */
+}
+
+.neutral {
+  background-color: #b0bec5; /* Pastel Gray */
+  color: #37474f; /* Darker Gray for contrast */
+}
+
 .action-buttons {
   display: flex;
   gap: 15px;
@@ -412,7 +503,7 @@ export default {
 }
 
 .cart-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -500,8 +591,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {

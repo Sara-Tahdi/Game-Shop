@@ -25,6 +25,23 @@
 
           <!-- User Icon and Dropdown -->
           <div v-else class="user-menu" @mouseleave="showDropdown = false">
+            <!-- Cart and Wishlist Button -->
+            <div
+              v-if="userState.userInfo.userType === 'Client'"
+              class="user-icon wishlist"
+            >
+              <button class="button">
+                <RouterLink to="/wishlist">✨</RouterLink>
+              </button>
+            </div>
+            <div
+              v-if="userState.userInfo.userType === 'Client'"
+              class="user-icon cart"
+            >
+              <button class="button">
+                <RouterLink to="/cart">🛒</RouterLink>
+              </button>
+            </div>
             <div
               class="user-icon"
               @mouseover="showDropdown = true"
@@ -42,10 +59,19 @@
                   userState.userInfo.userType === 'Owner'
                 "
               >
-                <RouterLink to="/store">Manage Store</RouterLink>
+                <RouterLink
+                  v-if="userState.userInfo.userType === 'Employee'"
+                  to="/employee-dashboard"
+                  >Manage Store</RouterLink
+                >
+                <RouterLink
+                  v-else-if="userState.userInfo.userType === 'Owner'"
+                  to="/owner-dashboard"
+                  >Manage Store</RouterLink
+                >
               </li>
               <li v-if="userState.userInfo.userType === 'Client'">
-                <RouterLink to="/checkout">Check Out</RouterLink>
+                <RouterLink to="/client-profile">Account Info</RouterLink>
               </li>
               <li>
                 <RouterLink @click="logout" to="/" class="logout-link"
@@ -160,7 +186,9 @@ export default {
 /* User Menu */
 .user-menu {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .user-icon {
@@ -180,6 +208,19 @@ export default {
 
 .user-icon:hover {
   background-color: #0056b3;
+}
+
+.wishlist {
+  background-color: gray;
+}
+
+.cart {
+  background-color: yellow;
+}
+
+.button {
+  background-color: transparent;
+  border-color: transparent;
 }
 
 /* Dropdown Menu */
