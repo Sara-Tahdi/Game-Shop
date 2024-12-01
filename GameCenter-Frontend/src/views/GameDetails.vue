@@ -100,6 +100,34 @@
           <p>No reviews available for this game.</p>
         </div>
       </div>
+
+      <!-- Write a Review Section -->
+      <div class="write-review-section">
+        <h2>Write a Review</h2>
+        <form @submit.prevent="submitReview">
+          <label for="author">Your Name:</label>
+          <input type="text" id="author" v-model="newReview.author" required />
+
+          <label for="rating">Rating:</label>
+          <select id="rating" v-model="newReview.rating" required>
+            <option value="" disabled>Select Rating</option>
+            <option value="1">1 - Very Negative</option>
+            <option value="2">2 - Negative</option>
+            <option value="3">3 - Neutral</option>
+            <option value="4">4 - Positive</option>
+            <option value="5">5 - Very Positive</option>
+          </select>
+
+          <label for="reviewMessage">Review:</label>
+          <textarea
+            id="reviewMessage"
+            v-model="newReview.reviewMessage"
+            required
+          ></textarea>
+
+          <button type="submit">Submit Review</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -130,6 +158,11 @@ export default {
       areReviewsVisible: false,
       isGuest: null,
       isClient: null,
+      newReview: {
+        author: "",
+        reviewMessage: "",
+        rating: "",
+      },
     };
   },
   computed: {
@@ -205,6 +238,33 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    submitReview() {
+      if (
+        !this.newReview.author ||
+        !this.newReview.reviewMessage ||
+        !this.newReview.rating
+      ) {
+        alert("Please fill in all fields before submitting.");
+        return;
+      }
+
+      const review = {
+        ...this.newReview,
+        game: this.game,
+        id: Date.now(), // Simulate unique ID
+        managerReply: null, // No manager reply for new reviews
+      };
+
+      // Simulate sending the review to the server
+      this.$emit("add-review", review);
+
+      // Clear the form
+      this.newReview = {
+        author: "",
+        reviewMessage: "",
+        rating: "",
+      };
     },
   },
   created() {
@@ -428,6 +488,18 @@ export default {
   color: #666;
   background-color: #f8f9fa;
   border-radius: 8px;
+}
+
+.write-review-section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.write-review-section h2 {
+  margin-bottom: 10px;
 }
 
 .loading {
