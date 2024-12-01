@@ -380,7 +380,7 @@ export default {
 
 .description-section p,
 .opinion-section p {
-  color: #666;
+  color: #2c3e50;
   line-height: 1.6;
 }
 
@@ -429,6 +429,7 @@ export default {
 .reviews-section {
   margin-top: 40px;
   padding: 0 20px 20px;
+  color: #2c3e50;
 }
 
 .accordion-toggle {
@@ -442,6 +443,7 @@ export default {
   font-size: 1em;
   margin-bottom: 20px;
   transition: background-color 0.2s ease;
+  color: #2c3e50;
 }
 
 .accordion-toggle:hover {
@@ -455,10 +457,16 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.reviews-container h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
 .review-item {
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
+  color: #2c3e50;
 }
 
 .review-item:last-child {
@@ -470,7 +478,7 @@ export default {
 .no-reviews {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: #2c3e50;
   background-color: #f8f9fa;
   border-radius: 8px;
 }
@@ -478,6 +486,7 @@ export default {
 .loading {
   text-align: center;
   padding: 40px;
+  color: #2c3e50;
 }
 
 .spinner {
