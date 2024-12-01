@@ -17,7 +17,6 @@
 
     <div v-else-if="game" class="game-details-container">
       <div class="content-wrapper">
-        <!-- Future image placeholder -->
         <div class="game-image-placeholder">
           <div class="placeholder-text">Game Image Coming Soon</div>
         </div>
@@ -27,8 +26,23 @@
 
           <div class="game-details">
             <div class="detail-row">
-              <span class="label">Price:</span>
-              <span class="value">${{ game.price.toFixed(2) }}</span>
+              <span class="label">Regular Price:</span>
+              <span class="value" :class="{ 'original-price': hasActivePromotions }">
+                ${{ game.price.toFixed(2) }}
+              </span>
+            </div>
+
+            <!-- Promotions Section -->
+            <div v-if="activePromotions.length > 0" class="promotions-section">
+              <h3>Active Promotions</h3>
+              <div v-for="promo in activePromotions" :key="promo.id" class="promotion-item">
+                <div class="promotion-price">
+                  <span class="promotional-price">${{ promo.newPrice.toFixed(2) }}</span>
+                  <span class="promotion-end-date">
+                    Ends on {{ formatDate(promo.endDate) }}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div class="detail-row">
@@ -67,17 +81,19 @@
                 @click="addToWishlist"
                 class="wishlist-button"
                 :disabled="isGuest || game.remainingQuantity === 0"
-              >
-                Add to Wishlist
-              </button>
-              <button
+                :title="!userState.userInfo ? 'Please log in to add to wishlist' : ''"
+            >
+              Add to Wishlist
+            </button>
+            <button
                 @click="addToCart"
                 class="cart-button"
                 :disabled="isGuest || game.remainingQuantity === 0"
-              >
-                Add to Cart
-              </button>
-            </div>
+                :title="!userState.userInfo ? 'Please log in to add to cart' : ''"
+            >
+              Add to Cart
+            </button>
+
           </div>
         </div>
       </div>
@@ -105,9 +121,10 @@
 </template>
 
 <script>
-import axios from "axios";
-import GameReview from "../components/GameReview.vue";
-import { userState } from "@/state/userState";
+
+import axios from 'axios';
+import GameReview from '../components/GameReview.vue';
+import { userState } from '@/state/userState';
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
@@ -125,14 +142,26 @@ export default {
     return {
       game: null,
       reviews: [],
+      promotions: [],
       loading: true,
       error: null,
       areReviewsVisible: false,
+      userState: userState,
       isGuest: null,
       isClient: null,
     };
   },
   computed: {
+    activePromotions() {
+      const currentDate = new Date();
+      return this.promotions.filter(promo => {
+        const endDate = new Date(promo.endDate);
+        return endDate >= currentDate;
+      }).sort((a, b) => a.newPrice - b.newPrice); // Sort by price, lowest first
+    },
+    hasActivePromotions() {
+      return this.activePromotions.length > 0;
+    },
     feelingClass() {
       if (!this.game.publicOpinion) return "";
       const feeling = this.game.publicOpinion;
@@ -163,6 +192,13 @@ export default {
     },
   },
   methods: {
+    formatDate(dateString) {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    },
     async fetchGameDetails() {
       try {
         this.loading = true;
@@ -170,12 +206,22 @@ export default {
           `/games/id/${this.$route.params.id}`
         );
         this.game = response.data;
-        console.log("Game details:", this.game);
+        await this.fetchPromotions();
+        console.log('Game details:', this.game);
       } catch (err) {
         this.error = err.response?.data || "Error loading game details";
         console.error("Error fetching game details:", err);
       } finally {
         this.loading = false;
+      }
+    },
+    async fetchPromotions() {
+      try {
+        const response = await apiClient.get(`/promotions/game/${this.$route.params.id}`);
+        this.promotions = response.data;
+        console.log('Promotions:', this.promotions);
+      } catch (err) {
+        console.error('Error fetching promotions:', err);
       }
     },
     async fetchGameReviews() {
@@ -193,9 +239,17 @@ export default {
       this.areReviewsVisible = !this.areReviewsVisible;
     },
     addToWishlist() {
-      console.log("Adding to wishlist:", this.game.title);
-    },
+      if (!userState.userInfo) {
+        alert('Please log in to add items to your wishlist');
+        return;
+      }
+      console.log('Adding to wishlist:', this.game.title);
+   },
     async addToCart() {
+      if (!userState.userInfo) {
+        alert('Please log in to add items to your cart');
+        return;
+      }
       try {
         const response = await apiClient.post(`/carts/create`, {
           clientId: userState.userInfo.id,
@@ -216,10 +270,11 @@ export default {
 
 <style scoped>
 .game-details-page {
-  min-height: 100vh;
-  background-color: white;
-  color: black;
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  min-height: 100vh;
 }
 
 .back-link {
@@ -227,34 +282,42 @@ export default {
 }
 
 .back-button {
-  color: #4caf50;
+  display: inline-block;
+  padding: 8px 16px;
+  color: #666;
   text-decoration: none;
-  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .back-button:hover {
-  text-decoration: underline;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.game-details-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 .content-wrapper {
   display: flex;
-  gap: 40px;
-  margin-bottom: 40px;
+  gap: 30px;
   padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .game-image-placeholder {
-  flex: 0 0 400px;
+  width: 400px;
   height: 400px;
   background-color: #f5f5f5;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
   border: 2px dashed #ddd;
+  flex-shrink: 0;
 }
 
 .placeholder-text {
@@ -268,9 +331,9 @@ export default {
 }
 
 .game-title {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  color: #333;
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 2em;
 }
 
 .game-details {
@@ -286,8 +349,33 @@ export default {
 }
 
 .label {
-  font-weight: bold;
+  color: #666;
   min-width: 100px;
+}
+
+.value {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.9em;
+}
+
+.promotions-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff8f8;
+  border-radius: 8px;
+  border: 1px solid #ffecec;
+}
+
+.promotions-section h3 {
+  color: #e74c3c;
+  margin-bottom: 10px;
+  font-size: 1.2em;
 }
 
 .description-section {
@@ -296,8 +384,30 @@ export default {
 
 .description-section h2 {
   font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #333;
+  
+.promotion-item {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.promotion-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.promotional-price {
+  color: #e74c3c;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.promotion-end-date {
+  color: #666;
+  font-size: 0.9em;
 }
 
 .opinion-section {
@@ -311,14 +421,33 @@ export default {
 }
 
 .stock-status {
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 4px;
-  background-color: #dc3545;
+  background-color: #e74c3c;
   color: white;
+  font-size: 0.9em;
 }
 
 .stock-status.in-stock {
-  background-color: #28a745;
+  background-color: #2ecc71;
+}
+
+.description-section,
+.opinion-section {
+  margin-top: 30px;
+}
+
+.description-section h2,
+.opinion-section h2 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.4em;
+}
+
+.description-section p,
+.opinion-section p {
+  color: #2c3e50;
+  line-height: 1.6;
 }
 
 .very-positive {
@@ -360,7 +489,8 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .wishlist-button {
@@ -389,6 +519,8 @@ export default {
 
 .reviews-section {
   margin-top: 40px;
+  padding: 0 20px 20px;
+  color: #2c3e50;
 }
 
 .accordion-toggle {
@@ -401,6 +533,12 @@ export default {
   text-align: left;
   font-size: 1em;
   margin-bottom: 20px;
+  transition: background-color 0.2s ease;
+  color: #2c3e50;
+}
+
+.accordion-toggle:hover {
+  background-color: #e9ecef;
 }
 
 .reviews-container {
@@ -410,10 +548,16 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.reviews-container h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
 .review-item {
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
+  color: #2c3e50;
 }
 
 .review-item:last-child {
@@ -425,7 +569,7 @@ export default {
 .no-reviews {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: #2c3e50;
   background-color: #f8f9fa;
   border-radius: 8px;
 }
@@ -433,6 +577,7 @@ export default {
 .loading {
   text-align: center;
   padding: 40px;
+  color: #2c3e50;
 }
 
 .spinner {
@@ -475,6 +620,36 @@ export default {
 
   .action-buttons {
     flex-direction: column;
+  }
+
+  .game-title {
+    font-size: 1.6em;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .label {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-details-page {
+    padding: 10px;
+  }
+
+  .game-image-placeholder {
+    height: 200px;
+  }
+
+  .promotion-price {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
   }
 }
 </style>
