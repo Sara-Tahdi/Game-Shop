@@ -212,8 +212,11 @@ export default {
           id: userData.id,
           username: userData.username,
           email: userData.email,
-          userType: userData.userType,
+          deliveryAddress: userData.deliveryAddress,
+          phoneNumber: userData.phoneNumber,
+          userType: "Client",
         });
+
         this.closeModal();
       } catch (err) {
         this.error = "Failed to create account. Please try again.";

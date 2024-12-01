@@ -25,7 +25,11 @@
               :key="colIndex"
               :style="{ width: column.width }"
             >
-              {{ getValue(item, column.field) }}
+              {{
+                column.formatter
+                  ? column.formatter(item[column.field])
+                  : item[column.field]
+              }}
             </td>
           </tr>
         </tbody>
@@ -80,11 +84,29 @@ export default {
     };
   },
   methods: {
-    selectRow(index) {
-      this.selectedItemIndex = index;
-      const selectedItem = this.data[index];
-      this.$emit("rowSelected", selectedItem);
+    selectRow(itemOrIndex) {
+      let index = null;
+      if (typeof itemOrIndex === "number") {
+        index = itemOrIndex;
+      } else if (itemOrIndex && this.itemKey) {
+        index = this.data.findIndex(
+          (dataItem) => dataItem[this.itemKey] === itemOrIndex[this.itemKey]
+        );
+      }
+      if (index !== null && index !== -1) {
+        this.selectedItemIndex = index;
+        const selectedItem = this.data[index];
+        this.$emit("rowSelected", selectedItem);
+      } else {
+        this.selectedItemIndex = null;
+        this.$emit("rowSelected", null);
+      }
     },
+    clearSelection() {
+      this.selectedItemIndex = null;
+      this.$emit("rowSelected", null);
+    },
+
     buttonClicked(action) {
       const selectedItem =
         this.selectedItemIndex !== null
@@ -170,7 +192,9 @@ tbody tr:hover {
   border-radius: 4px;
   background-color: #007bff; /* Blue background color */
   color: white; /* White text */
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .button-container button:hover {
