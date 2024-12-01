@@ -195,15 +195,19 @@ export default {
     addToWishlist() {
       console.log("Adding to wishlist:", this.game.title);
     },
-    addToCart() {
-      console.log("Adding to cart:", this.game.title);
-    },
-    setUserType() {
-      console.log("USERSTATE:", userState.userInfo);
+    async addToCart() {
+      try {
+        const response = await apiClient.post(`/carts/create`, {
+          clientId: userState.userInfo.id,
+          gameId: this.game.id,
+        });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
   created() {
-    this.setUserType();
     this.fetchGameDetails();
     this.fetchGameReviews();
   },
