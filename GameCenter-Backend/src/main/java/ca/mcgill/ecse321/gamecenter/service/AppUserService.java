@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Comparator;
+
 
 @Service
 public class AppUserService {
@@ -135,7 +138,17 @@ public class AppUserService {
     }
 
     public List<AppUser> findAllClients() {
-        return appUserRepository.findAppUserByUserType(Client.class).orElse(null);
+    List<AppUser> clients = appUserRepository.findAppUserByUserType(Client.class).orElse(null);
+
+    if (clients == null) {
+        throw new IllegalArgumentException("There are no clients.");
+    }
+
+    // Sort the list by ID
+    return clients.stream()
+                  .map(client -> (Client) client) // Cast to Client
+                  .sorted(Comparator.comparing(Client::getId)) // Sort by ID
+                  .collect(Collectors.toList());
     }
 
     @Transactional
@@ -245,7 +258,18 @@ public class AppUserService {
     }
 
     public List<AppUser> getAllEmployee() {
-        return appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
+        List<AppUser> employees = appUserRepository.findAppUserByUserType(Employee.class).orElse(null);
+
+        if (employees == null) {
+            throw new IllegalArgumentException("There are no employees.");
+        }
+
+        // Sort the list by ID
+        return employees.stream()
+                    .map(employee -> (Employee) employee) // Cast to Employee
+                    .sorted(Comparator.comparing(Employee::getId)) // Sort by ID
+                    .collect(Collectors.toList());
+        
     }
 
     @Transactional

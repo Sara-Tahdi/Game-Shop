@@ -2,7 +2,6 @@
   <div>
     <h2>Client Flags Management</h2>
     <ResourceTable
-      ref="resourceTable"
       :data="resourceData"
       :columns="tableColumns"
       :buttons="tableButtons"
@@ -118,37 +117,13 @@ export default {
       modalSubmitButtonText: "Confirm Decision",
       error: null,
       selectedItem: null,
-      autoSelectFirstRow: false, // Flag to control auto-selection
     };
   },
   methods: {
     async fetchFlaggingRequests() {
       try {
         const response = await flaggingRequestService.getAllFlaggingRequests();
-
-        // Sort requests: PENDING first, then others
-        this.resourceData = response.data.sort((a, b) => {
-          if (a.status === "PENDING" && b.status !== "PENDING") {
-            return -1; // a comes before b
-          } else if (a.status !== "PENDING" && b.status === "PENDING") {
-            return 1; // b comes before a
-          }
-          return 0; // maintain original order for same statuses
-        });
-
-        // Automatically select the first row if available
-        if (this.autoSelectFirstRow && this.resourceData.length > 0) {
-          this.selectedItem = this.resourceData[0]; // Set the first row as selected
-          if (this.$refs.resourceTable) {
-            this.$refs.resourceTable.selectRow(this.selectedItem); // Notify the table
-          }
-          this.autoSelectFirstRow = false; // Reset the flag
-        } else {
-          this.selectedItem = null;
-          if (this.$refs.resourceTable) {
-            this.$refs.resourceTable.clearSelection();
-          }
-        }
+        this.resourceData = response.data;
       } catch (error) {
         console.error("Error fetching flagging requests:", error);
       }
@@ -157,20 +132,23 @@ export default {
       this.selectedItem = selectedItem;
     },
     handleManageRequest() {
-      if (this.selectedItem) {
-        if (this.selectedItem.status === "PENDING") {
-          this.modalInitialData = { ...this.selectedItem };
-          this.isModalVisible = true;
-          this.modalInitialData.createdRequestUsername =
-            this.modalInitialData.createdRequest.username;
-          this.modalInitialData.userFacingJudgementUsername =
-            this.modalInitialData.userFacingJudgement.username;
-        } else if (
-          this.selectedItem.status === "APPROVED" ||
-          this.selectedItem.status === "DENIED"
-        ) {
-          alert("This flagging request has already been handled.");
-        }
+      if (!this.selectedItem) {
+        // Handle case where no row is selected
+        alert("Please select a flagging request to manage.");
+        return;
+      }
+      if (this.selectedItem.status === "PENDING") {
+        this.modalInitialData = { ...this.selectedItem };
+        this.isModalVisible = true;
+        this.modalInitialData.createdRequestUsername =
+          this.modalInitialData.createdRequest.username;
+        this.modalInitialData.userFacingJudgementUsername =
+          this.modalInitialData.userFacingJudgement.username;
+      } else if (
+        this.selectedItem.status === "APPROVED" ||
+        this.selectedItem.status === "DENIED"
+      ) {
+        alert("This flagging request has already been handled.");
       } else {
         alert("Please select a flagging request to manage.");
       }
@@ -183,13 +161,18 @@ export default {
     async handleModalSubmit(formData) {
       try {
         if (formData.decision === "APPROVED") {
-          await flaggingRequestService.approveFlaggingRequest(formData.id);
+          const response = await flaggingRequestService.approveFlaggingRequest(
+            formData.id
+          );
+          this.selectedItem = response.data;
         } else if (formData.decision === "DENIED") {
-          await flaggingRequestService.denyFlaggingRequest(formData.id);
+          const response = await flaggingRequestService.denyFlaggingRequest(
+            formData.id
+          );
+          this.selectedItem = response.data;
         }
         this.closeModal();
-        this.autoSelectFirstRow = true; // Enable auto-selection
-        await this.fetchFlaggingRequests();
+        this.fetchFlaggingRequests();
       } catch (error) {
         this.error = error;
       }

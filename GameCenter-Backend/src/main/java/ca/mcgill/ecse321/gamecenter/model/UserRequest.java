@@ -11,7 +11,7 @@ public class UserRequest extends Request {
     // ------------------------
 
     // UserRequest Associations
-    @OneToOne
+    @ManyToOne
     private Client userFacingJudgement;
 
     // ------------------------

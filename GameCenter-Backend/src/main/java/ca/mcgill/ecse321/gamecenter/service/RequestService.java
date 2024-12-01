@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 @Service
 public class RequestService {
@@ -27,6 +29,8 @@ public class RequestService {
     private GameRepository gameRepository;
     @Autowired
     private AppUserService appUserService;
+    @Autowired
+    private GameService gameService;
     
     public List<Request> getAllRequests() {
         List<Request> requests = new ArrayList<>();
@@ -110,19 +114,30 @@ public class RequestService {
     }
 
     public List<GameRequest> getAllGameRequests() {
-        List<Request> a = requestRepository.findRequestsByRequestType(GameRequest.class).orElse(null);
-        if (a == null) {
+        List<Request> requests = requestRepository.findRequestsByRequestType(GameRequest.class).orElse(null);
+        if (requests == null) {
             throw new IllegalArgumentException("There are no GameRequests");
         }
-        return Arrays.asList(a.toArray(new GameRequest[a.size()]));
+    
+        // Sort the list by ID
+        return requests.stream()
+                       .map(request -> (GameRequest) request)
+                       .sorted(Comparator.comparing(GameRequest::getId))
+                       .collect(Collectors.toList());
     }
 
     public List<UserRequest> getAllUserRequests() {
-        List<Request> a = requestRepository.findRequestsByRequestType(UserRequest.class).orElse(null);
-        if (a == null) {
-            throw new IllegalArgumentException("There are no UserRequests");
-        }
-        return Arrays.asList(a.toArray(new UserRequest[a.size()]));
+    List<Request> requests = requestRepository.findRequestsByRequestType(UserRequest.class).orElse(null);
+
+    if (requests == null) {
+        throw new IllegalArgumentException("There are no UserRequests");
+    }
+
+    // Sort the list by ID
+    return requests.stream()
+                   .map(request -> (UserRequest) request)
+                   .sorted(Comparator.comparing(UserRequest::getId)) // Assuming `getId` exists
+                   .collect(Collectors.toList());
     }
 
     public List<Request> getRequestsByStatus(Request.Status status) {
@@ -200,6 +215,16 @@ public class RequestService {
 
         if (approval && request instanceof UserRequest) {
             appUserService.deactivateClientAccountByUsername(((UserRequest) request).getUserFacingJudgement().getUsername());
+        }
+
+        if (approval && request instanceof GameRequest) {
+            GameRequest gameRequest = (GameRequest) request;
+            if (gameRequest.getType() == GameRequest.Type.ADD) {
+                gameService.makeGameOffered(gameRequest.getGame().getId());
+            } else {
+                gameService.makeGameNotOffered(gameRequest.getGame().getId());
+            }
+
         }
 
         return requestRepository.save(request);
