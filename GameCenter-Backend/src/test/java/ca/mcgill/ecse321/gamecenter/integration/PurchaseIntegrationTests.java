@@ -152,22 +152,23 @@ public class PurchaseIntegrationTests {
     @Test
     @Order(2)
     public void testRefundGame() {
-        String url = String.format("/purchases/refund/%s", this.trackingCode_1);
+        String url = String.format("/purchases/refund/%s", this.purchaseId_1);
 
         RefundRequestDTO refund = new RefundRequestDTO(VALID_REFUND_REASON);
 
         HttpEntity<RefundRequestDTO> refundRequest = new HttpEntity<>(refund);
 
-        ResponseEntity<SimplePurchaseResponseDTO> res = client.exchange(
+        ResponseEntity<PurchaseResponseDTO> res = client.exchange(
                 url,
                 HttpMethod.PUT,
                 refundRequest,
-                SimplePurchaseResponseDTO.class
+                PurchaseResponseDTO.class
         );
 
         assertNotNull(res);
+        System.out.println(res.getBody());
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        SimplePurchaseResponseDTO body = res.getBody();
+        PurchaseResponseDTO body = res.getBody();
         assertNotNull(body.getRefundReason());
         assertEquals(VALID_REFUND_REASON, body.getRefundReason());
     }
