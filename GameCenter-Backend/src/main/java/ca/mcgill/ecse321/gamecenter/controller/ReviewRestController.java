@@ -8,13 +8,14 @@ import ca.mcgill.ecse321.gamecenter.model.Review;
 import ca.mcgill.ecse321.gamecenter.service.GameService;
 import ca.mcgill.ecse321.gamecenter.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class ReviewRestController {
     @Autowired
     ReviewService reviewService;
@@ -22,22 +23,39 @@ public class ReviewRestController {
     private GameService gameService;
 
     @PostMapping("/reviews/{gameId}")
-    public ReviewResponseDTO createReview(@Validated @RequestBody ReviewRequestDTO req, @PathVariable int gameId) {
-        Game g = gameService.getGameById(gameId);
-        return new ReviewResponseDTO(reviewService.createReview(req.getAuthor(), req.getReviewMessage(), req.getRating(), g));
+    public ResponseEntity<?> createReview(@Validated @RequestBody ReviewRequestDTO req, @PathVariable int gameId) {
+        try {
+            Game g = gameService.getGameById(gameId);
+            return ResponseEntity.ok().body(new ReviewResponseDTO(
+                reviewService.createReview(
+                        req.getAuthor(),
+                        req.getReviewMessage(),
+                        req.getRating(),
+                        g)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/reviews/{gameId}")
-    public List<ReviewResponseDTO> getReviewsByGame(@PathVariable int gameId) {
-        return reviewService.findReviewsByGame(gameId)
-                .stream()
-                .map(ReviewResponseDTO::new)
-                .collect(Collectors.toList());
+    public ResponseEntity<?> getReviewsByGame(@PathVariable int gameId) {
+        try {
+            return ResponseEntity.ok().body(reviewService.findReviewsByGame(gameId)
+                    .stream()
+                    .map(ReviewResponseDTO::new)
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/reviews/{reviewId}/managerReply")
-    public ReviewResponseDTO managerReplyToReview(@Validated @RequestBody ManagerReplyRequestDTO req, @PathVariable int reviewId) {
-        Review r = reviewService.managerReplyToReview(reviewId, req.getReply());
-        return new ReviewResponseDTO(r);
+    public ResponseEntity<?> managerReplyToReview(@Validated @RequestBody ManagerReplyRequestDTO req, @PathVariable int reviewId) {
+        try {
+            Review r = reviewService.managerReplyToReview(reviewId, req.getReply());
+            return ResponseEntity.ok().body(new ReviewResponseDTO(r));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

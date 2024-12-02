@@ -14,14 +14,6 @@ public class GameService {
     @Autowired
     private GameRepository gameRepository;
 
-    public Game createGame(String title, float price, String description, Game.GeneralFeeling generalFeeling, GameCategory category) {
-        if (price <= 0.0) {
-            throw new IllegalArgumentException("Price is not valid");
-        }
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, category);
-        return gameRepository.save(g);
-    }
-
     public List<Game> getAllGame() {
         List<Game> g = gameRepository.findGameByGameType(Game.class).orElse(null);
         if (g == null) {
@@ -144,7 +136,7 @@ public class GameService {
 
 
     @Transactional
-    public Game createGame(String aTitle, Float aPrice, String aDescription, Float aRating, Integer aRemainingQuantity, boolean aIsOffered, Game.GeneralFeeling aPublicOpinion, GameCategory aCategory) {
+    public Game createGame(String aTitle, Float aPrice, String aDescription, Game.GeneralFeeling aPublicOpinion, GameCategory aCategory) {
         Game ref = gameRepository.findGameByTitle(aTitle).orElse(null);
         if (ref != null) {
             throw new IllegalArgumentException("Game already exists with title: " + aTitle);
@@ -165,17 +157,7 @@ public class GameService {
             throw new IllegalArgumentException("Price is not valid");
         }
 
-        if (aRating == null
-                || aRating < 0.0
-                || aRating > 5.0) {
-            throw new IllegalArgumentException("Rating is not valid");
-        }
-
-        if (aRemainingQuantity == null || aRemainingQuantity < 0) {
-            throw new IllegalArgumentException("Remaining Quantity is not valid");
-        }
-
-        Game g = new Game(aTitle, aPrice, aDescription, aRating, aRemainingQuantity, aIsOffered, aPublicOpinion, aCategory);
+        Game g = new Game(aTitle, aPrice, aDescription, 0, 0, false, aPublicOpinion, aCategory);
         return gameRepository.save(g);
     }
 

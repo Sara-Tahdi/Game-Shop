@@ -83,6 +83,7 @@ public class CartIntegrationTests {
         cartRepository.deleteAll();
         appUserRepository.deleteAll();
         gameRepository.deleteAll();
+        gameCategoryRepository.deleteAll();
     }
 
     @Test

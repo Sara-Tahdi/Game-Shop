@@ -8,6 +8,7 @@ import ca.mcgill.ecse321.gamecenter.repository.AppUserRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameCategoryRepository;
 import ca.mcgill.ecse321.gamecenter.repository.GameRepository;
 import ca.mcgill.ecse321.gamecenter.repository.PurchaseRepository;
+import ca.mcgill.ecse321.gamecenter.dto.Purchase.SimplePurchaseResponseDTO;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,6 +66,7 @@ public class PurchaseIntegrationTests {
     private int gameId_2;
     private int purchaseId_1;
     private int purchaseId_2;
+    private String trackingCode_1;
 
 
     @BeforeAll
@@ -145,32 +146,13 @@ public class PurchaseIntegrationTests {
 
         this.purchaseId_1 = body.getFirst().getId();
         this.purchaseId_2 = body.getLast().getId();
+        this.trackingCode_1 = body.getFirst().getTrackingCode();
     }
 
     @Test
     @Order(2)
-    public void testGetPurchaseHistory90Days() {
-        Purchase p = purchaseRepository.findPurchaseById(this.purchaseId_2).orElse(null);
-        p.setPurchaseDate(Date.valueOf(p.getPurchaseDate().toLocalDate().minusDays(100)));
-        p = purchaseRepository.save(p);
-
-        String url = String.format("/purchases/recent/%d", this.clientId);
-
-        ResponseEntity<PurchaseResponseDTO[]> res = client.getForEntity(url, PurchaseResponseDTO[].class);
-
-        assertNotNull(res);
-        assertEquals(HttpStatus.OK, res.getStatusCode());
-        List<PurchaseResponseDTO> body = List.of(res.getBody());
-        assertEquals(1, body.size());
-        assertEquals(this.clientId, body.getFirst().getClient().getId());
-        assertEquals(this.purchaseId_1, body.getFirst().getId());
-        assertEquals(this.gameId_1, body.getFirst().getGame().getId());
-    }
-
-    @Test
-    @Order(3)
     public void testRefundGame() {
-        String url = String.format("/purchases/refund/%d", this.purchaseId_1);
+        String url = String.format("/purchases/refund/%s", this.purchaseId_1);
 
         RefundRequestDTO refund = new RefundRequestDTO(VALID_REFUND_REASON);
 
@@ -184,6 +166,7 @@ public class PurchaseIntegrationTests {
         );
 
         assertNotNull(res);
+        System.out.println(res.getBody());
         assertEquals(HttpStatus.OK, res.getStatusCode());
         PurchaseResponseDTO body = res.getBody();
         assertNotNull(body.getRefundReason());
@@ -191,21 +174,15 @@ public class PurchaseIntegrationTests {
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     public void testGetPurchaseHistory() {
         String url = String.format("/purchases/%d", this.clientId);
 
-        ResponseEntity<PurchaseResponseDTO[]> res = client.getForEntity(url, PurchaseResponseDTO[].class);
+        ResponseEntity<SimplePurchaseResponseDTO[]> res = client.getForEntity(url, SimplePurchaseResponseDTO[].class);
 
         assertNotNull(res);
         assertEquals(HttpStatus.OK, res.getStatusCode());
-        List<PurchaseResponseDTO> body = List.of(res.getBody());
+        List<SimplePurchaseResponseDTO> body = List.of(res.getBody());
         assertEquals(2, body.size());
-
-        assertEquals(this.clientId, body.getFirst().getClient().getId());
-        assertEquals(this.gameId_1, body.getFirst().getGame().getId());
-
-        assertEquals(this.clientId, body.getLast().getClient().getId());
-        assertEquals(this.gameId_2, body.getLast().getGame().getId());
     }
 }

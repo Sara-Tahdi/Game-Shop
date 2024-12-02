@@ -13,7 +13,7 @@ public class GameCenterService {
     public GameCenter saveOrUpdateGameCenter(GameCenter gameCenter) {
         if (gameCenter == null||gameCenter.getName()==null||gameCenter.getName().isEmpty()||gameCenter.getOpen()==null|| gameCenter.getClose() == null) {
             throw new IllegalArgumentException("GameCenter name, opening time, and closing time are required.");
-            
+
         }
         // Validate that closing time is after opening time
     if (gameCenter.getClose().before(gameCenter.getOpen())) {
@@ -27,10 +27,14 @@ public class GameCenterService {
             existingGameCenter.setClose(gameCenter.getClose());
             existingGameCenter.setStorePolicy(gameCenter.getStorePolicy());
             return gameCenterRepository.save(existingGameCenter);
-        
+
         }
         else{
             return gameCenterRepository.save(gameCenter);
         }
+    }
+
+    public GameCenter getGameCenter() {
+        return gameCenterRepository.findGameCenter().orElse(null);
     }
 }

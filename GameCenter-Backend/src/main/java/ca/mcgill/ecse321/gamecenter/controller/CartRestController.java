@@ -15,48 +15,73 @@ import java.util.stream.Collectors;
  * Controller for managing cart
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class CartRestController {
 
     @Autowired
     private CartService cartService;
 
     @PostMapping(value = "/carts/create")
-    public CartResponseDto createCart(@RequestBody CartRequestDto request) {
-        Cart createdCart = cartService.createCart(request.getClientId(), request.getGameId());
-        return new CartResponseDto(createdCart);
+    public ResponseEntity<?> createCart(@RequestBody CartRequestDto request) {
+        try {
+            Cart createdCart = cartService.createCart(request.getClientId(), request.getGameId());
+            return ResponseEntity.ok().body(new CartResponseDto(createdCart));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping(value = "/carts/remove")
-    public ResponseEntity<Object> removeGameFromCart(@RequestParam int clientId, @RequestParam int gameId) {
-        cartService.removeCart(clientId, gameId);
-        return ResponseEntity.noContent().build();  // HTTP 204 No Content
+    public ResponseEntity<?> removeGameFromCart(@RequestParam int clientId, @RequestParam int gameId) {
+        try {
+            cartService.removeCart(clientId, gameId);
+            return ResponseEntity.noContent().build();  // HTTP 204 No Content
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/carts/{cartId}")
-    public CartResponseDto findCartById(@PathVariable int cartId) {
-        Cart cart = cartService.findCartById(cartId);
-        return new CartResponseDto(cart);
+    public ResponseEntity<?> findCartById(@PathVariable int cartId) {
+        try {
+            Cart cart = cartService.findCartById(cartId);
+            return ResponseEntity.ok().body(new CartResponseDto(cart));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/carts/client/{clientId}")
-    public List<CartResponseDto> findCartsByClientId(@PathVariable int clientId) {
-        List<Cart> carts = cartService.findCartsByClientId(clientId);
-        return carts.stream()
+    public ResponseEntity<?> findCartsByClientId(@PathVariable int clientId) {
+        try {
+            List<Cart> carts = cartService.findCartsByClientId(clientId);
+            return ResponseEntity.ok().body(carts.stream()
                     .map(CartResponseDto::new)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/carts/game/{gameId}")
-    public List<CartResponseDto> findCartsByGameId(@PathVariable int gameId) {
-        List<Cart> carts = cartService.findCartsByGameId(gameId);
-        return carts.stream()
+    public ResponseEntity<?> findCartsByGameId(@PathVariable int gameId) {
+        try {
+            List<Cart> carts = cartService.findCartsByGameId(gameId);
+            return ResponseEntity.ok().body(carts.stream()
                     .map(CartResponseDto::new)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value = "/carts/client/{clientId}/game/{gameId}")
-    public CartResponseDto findCartByClientAndGame(@PathVariable int clientId, @PathVariable int gameId) {
-        Cart cart = cartService.findCartByClientIdAndGameId(gameId, clientId);
-        return new CartResponseDto(cart);
+    public ResponseEntity<?> findCartByClientAndGame(@PathVariable int clientId, @PathVariable int gameId) {
+        try {
+            Cart cart = cartService.findCartByClientIdAndGameId(gameId, clientId);
+            return ResponseEntity.ok().body(new CartResponseDto(cart));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
