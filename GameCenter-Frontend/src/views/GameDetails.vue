@@ -225,8 +225,16 @@ export default {
     toggleReviewsVisibility() {
       this.areReviewsVisible = !this.areReviewsVisible;
     },
-    addToWishlist() {
-      console.log("Adding to wishlist:", this.game.title);
+    async addToWishlist() {
+      try {
+        const response = await apiClient.post(`/wishlists/create`, {
+          clientId: userState.userInfo.id,
+          gameId: this.game.id,
+        });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
     },
     async addToCart() {
       try {
@@ -500,6 +508,31 @@ export default {
 
 .write-review-section h2 {
   margin-bottom: 10px;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+input,
+textarea,
+select {
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .loading {
