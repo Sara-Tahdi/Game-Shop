@@ -1,15 +1,15 @@
 <template>
   <div>
-    <PurchaseHistory />
+    <PurchaseManagement />
   </div>
 </template>
 
 <script>
-import PurchaseHistory from "@/components/PurchaseHistory.vue";
+import PurchaseManagement from "@/components/PurchaseManagement.vue";
 
 export default {
   components: {
-    PurchaseHistory,
+    PurchaseManagement,
   },
 };
 </script>
