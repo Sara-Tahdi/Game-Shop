@@ -90,6 +90,7 @@ public class AppUserService {
         }
 
         Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress);
+        System.out.println(Encryption.encryptDecrypt(aPassword));
         return appUserRepository.save(c);
     }
 

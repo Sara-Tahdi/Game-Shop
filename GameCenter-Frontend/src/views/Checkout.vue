@@ -66,7 +66,6 @@ export default {
       }
     },
     updateSelectedPayment(payment) {
-      console.log(payment);
       this.selectedPayment = payment;
     },
     async handlePurchase() {
@@ -109,8 +108,10 @@ export default {
           `purchases/place/${userState.userInfo.id}`,
           purchaseData,
         );
+        alert("Purchase was succesful!");
+        this.$router.push("/");
       } catch (err) {
-        console.log(err);
+        alert("Purchase failed. Please try again");
       }
     },
   },
