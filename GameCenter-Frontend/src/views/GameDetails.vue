@@ -102,30 +102,33 @@
       </div>
 
       <!-- Write a Review Section -->
-      <div class="write-review-section">
+      <div class="write-review-section-container">
         <h2>Write a Review</h2>
         <form @submit.prevent="submitReview">
-          <label for="author">Your Name:</label>
-          <input type="text" id="author" v-model="newReview.author" required />
+          <div class="write-review-section">
+            <div class="write-review-section-top">
+              <div>
+                <label for="rating">Rating:</label>
+                <select id="rating" v-model.number="newReview.rating">
+                  <option v-for="num in 5" :key="num" :value="num">
+                    {{ num }}
+                  </option>
+                </select>
+              </div>
+            </div>
 
-          <label for="rating">Rating:</label>
-          <select id="rating" v-model="newReview.rating" required>
-            <option value="" disabled>Select Rating</option>
-            <option value="1">1 - Very Negative</option>
-            <option value="2">2 - Negative</option>
-            <option value="3">3 - Neutral</option>
-            <option value="4">4 - Positive</option>
-            <option value="5">5 - Very Positive</option>
-          </select>
+            <div class="write-review-section-bottom">
+              <label for="reviewMessage">Review:</label>
+              <textarea
+                class="write-review-text-area"
+                id="reviewMessage"
+                v-model="newReview.reviewMessage"
+                required
+              ></textarea>
+            </div>
 
-          <label for="reviewMessage">Review:</label>
-          <textarea
-            id="reviewMessage"
-            v-model="newReview.reviewMessage"
-            required
-          ></textarea>
-
-          <button type="submit">Submit Review</button>
+            <button type="submit">Submit Review</button>
+          </div>
         </form>
       </div>
     </div>
@@ -159,7 +162,6 @@ export default {
       isGuest: null,
       isClient: null,
       newReview: {
-        author: "",
         reviewMessage: "",
         rating: "",
       },
@@ -247,32 +249,30 @@ export default {
         console.log(e);
       }
     },
-    submitReview() {
-      if (
-        !this.newReview.author ||
-        !this.newReview.reviewMessage ||
-        !this.newReview.rating
-      ) {
+    async submitReview() {
+      if (!this.newReview.reviewMessage || !this.newReview.rating) {
         alert("Please fill in all fields before submitting.");
         return;
       }
 
-      const review = {
-        ...this.newReview,
-        game: this.game,
-        id: Date.now(), // Simulate unique ID
-        managerReply: null, // No manager reply for new reviews
+      const requestObj = {
+        author: userState.userInfo.username,
+        reviewMessage: this.newReview.reviewMessage,
+        rating: this.newReview.rating,
       };
 
-      // Simulate sending the review to the server
-      this.$emit("add-review", review);
+      try {
+        await apiClient.post(`/reviews/${this.$route.params.id}`, requestObj);
+      } catch (e) {
+        console.log(e);
+      }
 
-      // Clear the form
       this.newReview = {
-        author: "",
         reviewMessage: "",
         rating: "",
       };
+
+      this.fetchGameReviews();
     },
   },
   created() {
@@ -498,7 +498,9 @@ export default {
   border-radius: 8px;
 }
 
-.write-review-section {
+.write-review-section-container {
+  display: flex;
+  flex-direction: column;
   margin-top: 20px;
   padding: 20px;
   background-color: #f9f9f9;
@@ -506,16 +508,16 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.write-review-section h2 {
+.write-review-section-container h2 {
   margin-bottom: 10px;
 }
 
-label {
+.write-review-section-container label {
   font-weight: bold;
   margin-top: 10px;
 }
 
-input,
+.write-review-section-container input,
 textarea,
 select {
   margin-top: 5px;
@@ -525,7 +527,7 @@ select {
   font-size: 14px;
 }
 
-button {
+.write-review-section-container button {
   margin-top: 15px;
   padding: 10px 15px;
   background-color: #007bff;
@@ -533,6 +535,26 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.write-review-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.write-review-section-top {
+  display: flex;
+  flex-direction: row;
+  gap: 10em;
+}
+
+.write-review-section-bottom {
+  display: flex;
+}
+
+.write-review-text-area {
+  width: 100%;
+  resize: none;
 }
 
 .loading {
