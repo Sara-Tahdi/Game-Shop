@@ -27,18 +27,20 @@
           >
             {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
-          <!-- Remove from Cart Button -->
-          <button @click="removeFromCart(game)" class="remove-btn">
-            Remove from Cart
-          </button>
-          <!-- Add to Wishlist Button -->
-          <button
-            @click="addToWishlist(game)"
-            class="add-to-wishlist-btn"
-            :disabled="game.remainingQuantity === 0"
-          >
-            Add to Wishlist
-          </button>
+          <div class="button-container">
+            <!-- Remove from Cart Button -->
+            <button @click="removeFromCart(game)" class="remove-btn">
+              Remove from Cart
+            </button>
+            <!-- Add to Wishlist Button -->
+            <button
+              @click="addToWishlist(game)"
+              class="add-to-wishlist-btn"
+              :disabled="game.remainingQuantity === 0"
+            >
+              Add to Wishlist
+            </button>
+          </div>
         </div>
       </section>
     </div>
@@ -206,6 +208,9 @@ export default {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-card h3 {
@@ -217,6 +222,11 @@ export default {
   color: #666;
   margin-bottom: 10px;
   font-size: 0.9em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  flex: 1;
 }
 
 .game-details {
@@ -353,5 +363,12 @@ export default {
   transition: background-color 0.3s;
   text-decoration: none;
   text-align: center;
+}
+
+.button-container {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

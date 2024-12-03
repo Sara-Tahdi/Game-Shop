@@ -207,6 +207,9 @@ export default {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-card h3 {
@@ -218,6 +221,11 @@ export default {
   color: #666;
   margin-bottom: 10px;
   font-size: 0.9em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  flex: 1;
 }
 
 .game-details {
@@ -339,5 +347,12 @@ export default {
   text-align: center;
   padding: 40px;
   color: #666;
+}
+
+.button-container {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>
