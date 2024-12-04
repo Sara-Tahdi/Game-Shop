@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamecenter.service;
 
-import ca.mcgill.ecse321.gamecenter.dto.Purchase.SimplePurchaseResponseDTO;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.Game;
 import ca.mcgill.ecse321.gamecenter.model.GameCategory;

@@ -195,6 +195,12 @@ export default {
           editable: true,
           type: "textarea",
         },
+        {
+          name: "imageUrl",
+          label: "Image URL",
+          editable: true,
+          type: "text",
+        },
       ];
       this.modalInitialData = {};
       this.isModalVisible = true;
@@ -315,6 +321,7 @@ export default {
             description: formData.description,
             publicOpinion: formData.publicOpinion, // Enum value
             categoryId: parseInt(formData.category), // Category ID as integer
+            imageUrl: formData.imageUrl,
           };
           const response = await gameService.createGame(requestData);
           this.resourceData.push(response.data); // Add the new game to the table
@@ -354,10 +361,10 @@ export default {
 
           const response = await gameService.updateGame(
             formData.id,
-            requestData
+            requestData,
           );
           const index = this.resourceData.findIndex(
-            (item) => item.id === formData.id
+            (item) => item.id === formData.id,
           );
           if (index !== -1) {
             this.resourceData.splice(index, 1, response.data); // Reactive update
