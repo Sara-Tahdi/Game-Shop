@@ -96,7 +96,11 @@
           No games found matching your criteria.
         </div>
         <div v-else class="games-grid">
-          <div v-for="game in filteredGames" :key="game.id" class="game-card-wrapper">
+          <div
+            v-for="game in filteredGames"
+            :key="game.id"
+            class="game-card-wrapper"
+          >
             <div class="game-card-content" @click="navigateToGame(game.id)">
               <GameCard :game="game" />
             </div>
@@ -108,9 +112,9 @@
 </template>
 
 <script>
-import axios from 'axios';
-import GameCard from '@/components/GameCard.vue';
-import { userState } from '@/state/userState';
+import axios from "axios";
+import GameCard from "@/components/GameCard.vue";
+import { userState } from "@/state/userState";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
@@ -137,8 +141,8 @@ export default {
       maxPrice: null,
       minRating: null,
       maxRating: null,
-      priceError: '',
-      ratingError: '',
+      priceError: "",
+      ratingError: "",
       userState: userState,
     };
   },
@@ -209,8 +213,13 @@ export default {
         return false;
       }
 
-      if (this.minRating !== null && this.maxRating !== null && this.minRating > this.maxRating) {
-        this.ratingError = 'Minimum rating cannot be greater than maximum rating';
+      if (
+        this.minRating !== null &&
+        this.maxRating !== null &&
+        this.minRating > this.maxRating
+      ) {
+        this.ratingError =
+          "Minimum rating cannot be greater than maximum rating";
         return false;
       }
       return true;
@@ -227,19 +236,24 @@ export default {
           game.description
             .toLowerCase()
             .includes(this.searchQuery.toLowerCase());
-         
-        const matchesCategory = !this.selectedCategory ||
-            game.category.id === parseInt(this.selectedCategory);
 
-        const matchesPrice = (!this.minPrice || game.price >= this.minPrice) &&
-            (!this.maxPrice || game.price <= this.maxPrice);
+        const matchesCategory =
+          !this.selectedCategory ||
+          game.category.id === parseInt(this.selectedCategory);
 
-        const matchesRating = (!this.minRating || game.rating >= this.minRating) &&
-            (!this.maxRating || game.rating <= this.maxRating);
+        const matchesPrice =
+          (!this.minPrice || game.price >= this.minPrice) &&
+          (!this.maxPrice || game.price <= this.maxPrice);
 
-        return matchesSearch && matchesCategory && matchesPrice && matchesRating;
+        const matchesRating =
+          (!this.minRating || game.rating >= this.minRating) &&
+          (!this.maxRating || game.rating <= this.maxRating);
+
+        return (
+          matchesSearch && matchesCategory && matchesPrice && matchesRating
+        );
       });
-    }
+    },
   },
   created() {
     this.fetchGames();
@@ -411,17 +425,21 @@ export default {
 .games-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(5, minmax(200px, 1fr));
   width: 100%;
+  padding: 20px;
 }
 
 .game-card-wrapper {
   position: relative;
+  max-width: 200px;
+  margin: 0 auto;
 }
 
 .game-card-content {
   cursor: pointer;
   height: 100%;
+  transition: transform 0.2s ease;
 }
 
 .no-results {
