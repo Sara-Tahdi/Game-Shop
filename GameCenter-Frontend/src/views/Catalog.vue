@@ -96,11 +96,7 @@
         <div v-else class="games-grid">
           <div v-for="game in filteredGames" :key="game.id" class="game-card-wrapper">
             <div class="game-card-content" @click="navigateToGame(game.id)">
-              <GameCard
-                  :game="game"
-                  @add-to-wishlist="addToWishlist"
-                  @add-to-cart="addToCart"
-              />
+              <GameCard :game="game" />
             </div>
           </div>
         </div>
@@ -112,6 +108,7 @@
 <script>
 import axios from 'axios';
 import GameCard from '@/components/GameCard.vue';
+import { userState } from '@/state/userState';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080',
@@ -139,15 +136,13 @@ export default {
       minRating: null,
       maxRating: null,
       priceError: '',
-      ratingError: ''
+      ratingError: '',
+      userState: userState,
     };
   },
   methods: {
     navigateToGame(gameId) {
-      // Only navigate if the click wasn't on a button
-      if (!event.target.closest('button')) {
-        this.$router.push(`/game/${gameId}`);
-      }
+      this.$router.push(`/game/${gameId}`);
     },
     async fetchGames() {
       try {
@@ -229,14 +224,6 @@ export default {
 
         return matchesSearch && matchesCategory && matchesPrice && matchesRating;
       });
-    },
-    addToWishlist(game) {
-      event.stopPropagation();
-      console.log('Adding to wishlist:', game.title);
-    },
-    addToCart(game) {
-      event.stopPropagation();
-      console.log('Adding to cart:', game.title);
     }
   },
   created() {
