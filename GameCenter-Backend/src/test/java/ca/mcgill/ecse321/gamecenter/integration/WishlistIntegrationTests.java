@@ -76,7 +76,8 @@ public class WishlistIntegrationTests {
                 VALID_GAME_STOCK,
                 true,
                 VALID_GAME_GENERAL_FEELING,
-                gameCategory
+                gameCategory,
+                ""
         ));
         this.gameId_1 = g1.getId();
     }

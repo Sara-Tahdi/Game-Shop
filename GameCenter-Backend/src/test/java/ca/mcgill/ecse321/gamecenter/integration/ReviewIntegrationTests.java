@@ -92,7 +92,7 @@ public class ReviewIntegrationTests {
 
         GameCategory gc = gameCategoryRepository.save(new GameCategory(VALID_GAME_CATEGORY_1));
         // Create games and game categories
-        Game g = gameRepository.save(new Game(VALID_GAME_TITLE_1, VALID_GAME_PRICE_1, VALID_GAME_DESCRIPTION_1, VALID_GAME_RATING_1, VALID_GAME_REMAINING_QUANTITY_1, VALID_GAME_IS_OFFERED_1, VALID_GAME_PUBLIC_OPINION_1, gc));
+        Game g = gameRepository.save(new Game(VALID_GAME_TITLE_1, VALID_GAME_PRICE_1, VALID_GAME_DESCRIPTION_1, VALID_GAME_RATING_1, VALID_GAME_REMAINING_QUANTITY_1, VALID_GAME_IS_OFFERED_1, VALID_GAME_PUBLIC_OPINION_1, gc, ""));
         this.gameId = g.getId();
     }
 

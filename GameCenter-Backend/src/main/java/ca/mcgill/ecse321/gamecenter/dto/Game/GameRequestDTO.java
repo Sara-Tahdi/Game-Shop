@@ -15,13 +15,16 @@ public class GameRequestDTO {
     private Game.GeneralFeeling publicOpinion;
     @Min(value = 1, message = "Category ID is required")
     private int categoryId;
+    @NotNull(message = "Game needs an image")
+    private String imageUrl;
 
-    public GameRequestDTO(String title, float price, String description, Game.GeneralFeeling publicOpinion, int categoryId) {
+    public GameRequestDTO(String title, float price, String description, Game.GeneralFeeling publicOpinion, int categoryId, String imageUrl) {
         this.title = title;
         this.price = price;
         this.description = description;
         this.publicOpinion = publicOpinion;
         this.categoryId = categoryId;
+        this.imageUrl = imageUrl;
     }
 
     public String getTitle() {
@@ -44,4 +47,5 @@ public class GameRequestDTO {
         return this.categoryId;
     }
 
+    public String getImageUrl() { return imageUrl; }
 }
