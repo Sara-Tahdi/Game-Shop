@@ -61,7 +61,8 @@ public class GameRequestTests {
         100,                     
         false,                
         Game.GeneralFeeling.VERYPOSITIVE, 
-        gameCategory              
+        gameCategory,
+        ""
         );
         game = GameRepo.save(game);
 

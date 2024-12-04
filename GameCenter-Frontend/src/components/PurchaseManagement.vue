@@ -44,6 +44,7 @@ const purchaseService = {
     return apiClient.get(`/purchases/${clientId}`);
   },
   refundPurchase(purchaseId, data) {
+    console.log("Refunding purchase", purchaseId, data);
     return apiClient.put(`/purchases/refund/${purchaseId}`, data);
   },
 };
@@ -151,7 +152,7 @@ export default {
     async handleModalSubmit(formData) {
       try {
         await purchaseService.refundPurchase(this.selectedItem.id, {
-          reason: formData.refundReason,
+          refundReason: formData.refundReason,
         });
         this.selectedItem.refundReason = formData.refundReason;
         this.closeModal();

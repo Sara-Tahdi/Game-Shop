@@ -13,6 +13,7 @@ public class GameResponseDTO {
     private boolean isOffered;
     private Game.GeneralFeeling publicOpinion;
     private GameCategory category;
+    private String imageUrl;
 
     @SuppressWarnings("unused")
     private GameResponseDTO() {
@@ -28,6 +29,7 @@ public class GameResponseDTO {
         this.isOffered = g.getIsOffered();
         this.publicOpinion = g.getPublicOpinion();
         this.category = g.getCategory();
+        this.imageUrl = g.getImageUrl();
     }
 
     public int getId() {
@@ -65,4 +67,6 @@ public class GameResponseDTO {
     public GameCategory getCategory() {
         return this.category;
     }
+
+    public String getImageUrl() { return imageUrl; }
 }

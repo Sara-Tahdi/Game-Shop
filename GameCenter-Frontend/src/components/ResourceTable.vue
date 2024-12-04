@@ -27,8 +27,8 @@
             >
               {{
                 column.formatter
-                  ? column.formatter(item[column.field])
-                  : item[column.field]
+                  ? column.formatter(getValue(item, column.field))
+                  : getValue(item, column.field)
               }}
             </td>
           </tr>
@@ -106,7 +106,6 @@ export default {
       this.selectedItemIndex = null;
       this.$emit("rowSelected", null);
     },
-
     buttonClicked(action) {
       const selectedItem =
         this.selectedItemIndex !== null
@@ -192,9 +191,7 @@ tbody tr:hover {
   border-radius: 4px;
   background-color: #007bff; /* Blue background color */
   color: white; /* White text */
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .button-container button:hover {
