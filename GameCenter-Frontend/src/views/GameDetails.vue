@@ -1,9 +1,7 @@
 <template>
   <div class="game-details-page">
     <div class="back-link">
-      <router-link to="/catalog" class="back-button"
-        >← Back to Catalog</router-link
-      >
+      <router-link to="/catalog" class="back-button">← Back to Catalog</router-link>
     </div>
 
     <div v-if="loading" class="loading">
@@ -52,15 +50,12 @@
 
             <div class="detail-row">
               <span class="label">Rating:</span>
-              <span class="value">⭐ {{ game.rating.toFixed(1) }}/5</span>
+              <span class="value">⭐ {{ game.rating.toFixed(1) }}/5.0</span>
             </div>
 
             <div class="detail-row">
               <span class="label">Status:</span>
-              <span
-                class="value stock-status"
-                :class="{ 'in-stock': game.remainingQuantity > 0 }"
-              >
+              <span class="value stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
                 {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
               </span>
             </div>
@@ -75,13 +70,12 @@
             </div>
           </div>
 
-          <div v-if="isGuest || isClient" class="action-buttons">
-            <div class="action-buttons">
-              <button
+          <div class="action-buttons">
+            <button
                 @click="addToWishlist"
                 class="wishlist-button"
                 :disabled="isGuest || game.remainingQuantity === 0"
-                :title="!userState.userInfo ? 'Please log in to add to wishlist' : ''"
+                :title="!userState?.userInfo ? 'Please log in to add to wishlist' : ''"
             >
               Add to Wishlist
             </button>
@@ -89,11 +83,10 @@
                 @click="addToCart"
                 class="cart-button"
                 :disabled="isGuest || game.remainingQuantity === 0"
-                :title="!userState.userInfo ? 'Please log in to add to cart' : ''"
+                :title="!userState?.userInfo ? 'Please log in to add to cart' : ''"
             >
               Add to Cart
             </button>
-
           </div>
         </div>
       </div>
@@ -136,10 +129,10 @@
             <div class="write-review-section-bottom">
               <label for="reviewMessage">Review:</label>
               <textarea
-                class="write-review-text-area"
-                id="reviewMessage"
-                v-model="newReview.reviewMessage"
-                required
+                  class="write-review-text-area"
+                  id="reviewMessage"
+                  v-model="newReview.reviewMessage"
+                  required
               ></textarea>
             </div>
 
@@ -152,10 +145,8 @@
 </template>
 
 <script>
-
-import axios from 'axios';
-import GameReview from '../components/GameReview.vue';
-import { userState } from '@/state/userState';
+import { userState } from "@/state/userState";
+import axios from "axios";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
@@ -166,169 +157,162 @@ const apiClient = axios.create({
 
 export default {
   name: "GameDetails",
-  components: {
-    GameReview,
+  props: {
+    id: {
+      type: [String, Number],
+      required: true
+    }
   },
   data() {
     return {
       game: null,
-      reviews: [],
-      promotions: [],
       loading: true,
       error: null,
+      isInWishlist: false,
+      promotionalPrice: null,
+      activePromotions: [],
+      reviews: [],
       areReviewsVisible: false,
-      userState: userState,
-      isGuest: null,
-      isClient: null,
       newReview: {
-        reviewMessage: "",
-        rating: "",
-      },
+        rating: 5,
+        reviewMessage: ''
+      }
     };
   },
   computed: {
-    activePromotions() {
-      const currentDate = new Date();
-      return this.promotions.filter(promo => {
-        const endDate = new Date(promo.endDate);
-        return endDate >= currentDate;
-      }).sort((a, b) => a.newPrice - b.newPrice); // Sort by price, lowest first
+    isGuest() {
+      return !userState?.userInfo;
     },
     hasActivePromotions() {
       return this.activePromotions.length > 0;
     },
     feelingClass() {
-      if (!this.game.publicOpinion) return "";
-      const feeling = this.game.publicOpinion;
-      return {
-        "very-positive": feeling === "VERYPOSITIVE",
-        positive: feeling === "POSITIVE",
-        neutral: feeling === "NEUTRAL",
-        negative: feeling === "NEGATIVE",
-        "very-negative": feeling === "VERYNEGATIVE",
-      };
+      // Add your feeling class logic here if needed
+      return '';
     },
     formattedFeeling() {
-      const feelings = {
-        VERYPOSITIVE: "Very Positive",
-        POSITIVE: "Positive",
-        NEGATIVE: "Negative",
-        VERYNEGATIVE: "Very Negative",
-        NEUTRAL: "Neutral",
-      };
-      return feelings[this.game.publicOpinion];
-    },
-
-    isGuest() {
-      return userState.userInfo === null;
-    },
-    isClient() {
-      return userState.userInfo?.userType === "Client";
-    },
+      // Add your formatted feeling logic here if needed
+      return '';
+    }
   },
   methods: {
-    formatDate(dateString) {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    },
     async fetchGameDetails() {
+      this.loading = true;
+      this.error = null;
+
       try {
-        this.loading = true;
-        const response = await apiClient.get(
-          `/games/id/${this.$route.params.id}`
-        );
+        const gameId = this.id || this.$route.params.id;
+        console.log('Fetching game details for ID:', gameId);
+        const response = await apiClient.get(`/games/id/${gameId}`);
+        console.log('Game details response:', response.data);
+
         this.game = response.data;
-        await this.fetchPromotions();
-        console.log('Game details:', this.game);
-      } catch (err) {
-        this.error = err.response?.data || "Error loading game details";
-        console.error("Error fetching game details:", err);
+
+        if (this.game) {
+          await this.fetchPromotions();
+          if (userState?.userInfo) {
+            await this.checkWishlistStatus();
+          }
+        } else {
+          this.error = "Game not found";
+        }
+      } catch (error) {
+        console.error("Error fetching game details:", error);
+        this.error = "Failed to load game details: " + (error.response?.data || error.message);
       } finally {
         this.loading = false;
       }
     },
-    async fetchPromotions() {
-      try {
-        const response = await apiClient.get(`/promotions/game/${this.$route.params.id}`);
-        this.promotions = response.data;
-        console.log('Promotions:', this.promotions);
-      } catch (err) {
-        console.error('Error fetching promotions:', err);
-      }
-    },
-    async fetchGameReviews() {
+
+    async checkWishlistStatus() {
+      if (!userState?.userInfo) return;
+
       try {
         const response = await apiClient.get(
-          `/reviews/${this.$route.params.id}`
+            `/wishlists/${userState.userInfo.id}/game/${this.game.id}`
         );
-        this.reviews = response.data;
-        console.log("Reviews:", this.reviews);
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
+        this.isInWishlist = response.data;
+      } catch (error) {
+        console.error("Error checking wishlist status:", error);
       }
     },
+
+    async fetchPromotions() {
+      try {
+        const response = await apiClient.get(`/promotions/game/${this.game.id}`);
+        const promotions = response.data;
+        const currentDate = new Date();
+
+        this.activePromotions = promotions.filter(promo => {
+          const endDate = new Date(promo.endDate);
+          return endDate >= currentDate;
+        });
+      } catch (error) {
+        console.error("Error fetching promotions:", error);
+      }
+    },
+
+    formatDate(dateString) {
+      return new Date(dateString).toLocaleDateString();
+    },
+
+    async addToWishlist() {
+      if (!userState?.userInfo) {
+        this.$router.push('/');
+        return;
+      }
+
+      try {
+        await apiClient.post(
+            `/wishlists/${userState.userInfo.id}/game/${this.game.id}`
+        );
+        this.isInWishlist = true;
+        alert("Game added to wishlist successfully!");
+      } catch (err) {
+        console.error("Error adding to wishlist:", err);
+        alert("Failed to add game to wishlist. Please try again.");
+      }
+    },
+
+    async addToCart() {
+      if (!userState?.userInfo) {
+        this.$router.push('/');
+        return;
+      }
+
+      try {
+        await apiClient.post(
+            `/carts/${userState.userInfo.id}/game/${this.game.id}`
+        );
+        alert("Game added to cart successfully!");
+      } catch (err) {
+        console.error("Error adding to cart:", err);
+        alert("Failed to add game to cart. Please try again.");
+      }
+    },
+
     toggleReviewsVisibility() {
       this.areReviewsVisible = !this.areReviewsVisible;
     },
-    async addToWishlist() {
-      try {
-        const response = await apiClient.post(`/wishlists/create`, {
-          clientId: userState.userInfo.id,
-          gameId: this.game.id,
-        });
-        console.log(response);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async addToCart() {
-      if (!userState.userInfo) {
-        alert('Please log in to add items to your cart');
-        return;
-      }
-      try {
-        const response = await apiClient.post(`/carts/create`, {
-          clientId: userState.userInfo.id,
-          gameId: this.game.id,
-        });
-        console.log(response);
-      } catch (e) {
-        console.log(e);
-      }
-    },
+
     async submitReview() {
-      if (!this.newReview.reviewMessage || !this.newReview.rating) {
-        alert("Please fill in all fields before submitting.");
-        return;
-      }
-
-      const requestObj = {
-        author: userState.userInfo.username,
-        reviewMessage: this.newReview.reviewMessage,
-        rating: this.newReview.rating,
-      };
-
-      try {
-        await apiClient.post(`/reviews/${this.$route.params.id}`, requestObj);
-      } catch (e) {
-        console.log(e);
-      }
-
-      this.newReview = {
-        reviewMessage: "",
-        rating: "",
-      };
-
-      this.fetchGameReviews();
-    },
+      // Implement review submission logic here
+      console.log("Review submitted:", this.newReview);
+    }
   },
   created() {
     this.fetchGameDetails();
-    this.fetchGameReviews();
   },
+  watch: {
+    '$route.params.id': {
+      immediate: true,
+      handler(newId) {
+        if (newId) {
+          this.fetchGameDetails();
+        }
+      }
+    }
+  }
 };
 </script>
 
@@ -339,6 +323,7 @@ export default {
   margin: 0 auto;
   background-color: white;
   min-height: 100vh;
+  color: #2c3e50;
 }
 
 .back-link {
@@ -348,14 +333,13 @@ export default {
 .back-button {
   display: inline-block;
   padding: 8px 16px;
-  color: #666;
+  color: #2c3e50;
   text-decoration: none;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
 
 .back-button:hover {
-  color: #333;
   background-color: #f5f5f5;
 }
 
@@ -364,12 +348,15 @@ export default {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow: hidden;
+  padding-top: 180px;  /* Increased from 120px to 180px */
 }
 
 .content-wrapper {
   display: flex;
   gap: 30px;
   padding: 20px;
+  align-items: flex-start;
+  margin-top: 150px;  /* Increased from 100px to 150px */
 }
 
 .game-image-placeholder {
@@ -382,10 +369,13 @@ export default {
   border-radius: 8px;
   border: 2px dashed #ddd;
   flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+  margin-top: 120px;  /* Increased from 80px to 120px */
 }
 
 .placeholder-text {
-  color: #666;
+  color: #2c3e50;
   font-style: italic;
 }
 
@@ -413,8 +403,9 @@ export default {
 }
 
 .label {
-  color: #666;
+  color: #2c3e50;
   min-width: 100px;
+  font-weight: 500;
 }
 
 .value {
@@ -442,13 +433,6 @@ export default {
   font-size: 1.2em;
 }
 
-.description-section {
-  margin-top: 20px;
-}
-
-.description-section h2 {
-  font-size: 1.5em;
-  
 .promotion-item {
   margin: 10px 0;
   padding: 10px;
@@ -470,18 +454,8 @@ export default {
 }
 
 .promotion-end-date {
-  color: #666;
+  color: #2c3e50;
   font-size: 0.9em;
-}
-
-.opinion-section {
-  border-radius: 5px;
-  padding: 10px;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
-  max-width: 20%;
 }
 
 .stock-status {
@@ -514,31 +488,6 @@ export default {
   line-height: 1.6;
 }
 
-.very-positive {
-  background-color: #a5d6a7; /* Pastel Green */
-  color: #2e7d32; /* Darker Green for contrast */
-}
-
-.positive {
-  background-color: #c5e1a5; /* Lighter Pastel Green */
-  color: #558b2f; /* Medium Green for contrast */
-}
-
-.negative {
-  background-color: #ef9a9a; /* Pastel Red */
-  color: #c62828; /* Darker Red for contrast */
-}
-
-.very-negative {
-  background-color: #e57373; /* Darker Pastel Red */
-  color: #b71c1c; /* Deep Red for contrast */
-}
-
-.neutral {
-  background-color: #b0bec5; /* Pastel Gray */
-  color: #37474f; /* Darker Gray for contrast */
-}
-
 .action-buttons {
   display: flex;
   gap: 15px;
@@ -559,7 +508,7 @@ export default {
 
 .wishlist-button {
   background-color: #e0e0e0;
-  color: #333;
+  color: #2c3e50;
 }
 
 .wishlist-button:hover:not(:disabled) {
@@ -567,7 +516,7 @@ export default {
 }
 
 .cart-button {
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
 }
 
@@ -714,12 +663,8 @@ select {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .error {
