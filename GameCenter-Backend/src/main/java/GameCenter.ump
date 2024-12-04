@@ -55,6 +55,7 @@ class Game {
   Integer remainingQuantity;
   Boolean isOffered;
   GeneralFeeling publicOpinion;
+  imageUrl;
 
   * -> 1 GameCategory categories;
 }

@@ -157,7 +157,7 @@ public class GameService {
             throw new IllegalArgumentException("Price is not valid");
         }
 
-        Game g = new Game(aTitle, aPrice, aDescription, 0, 0, false, aPublicOpinion, aCategory);
+        Game g = new Game(aTitle, aPrice, aDescription, 0, 0, false, aPublicOpinion, aCategory, "");
         return gameRepository.save(g);
     }
 

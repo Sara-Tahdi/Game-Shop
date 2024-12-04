@@ -68,7 +68,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -181,7 +181,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -240,7 +240,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -299,7 +299,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -359,7 +359,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -402,7 +402,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -445,7 +445,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -508,7 +508,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -571,7 +571,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -713,7 +713,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -768,7 +768,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -804,7 +804,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";
@@ -859,7 +859,7 @@ public class RequestServiceTests {
         int remainingCopies = 10;
         boolean isOffered = false;
         GeneralFeeling generalFeeling = GeneralFeeling.POSITIVE;
-        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory);
+        Game game = new Game(gameTitle, gamePrice, gameDescription, rating, remainingCopies, isOffered, generalFeeling, gameCategory, "");
 
         String email = "John.Doe@gmail.com";
         String username = "JohnDoe";

@@ -58,7 +58,8 @@ public class PromotionIntegrationTests {
                 20,
                 true,
                 Game.GeneralFeeling.POSITIVE,
-                savedCategory
+                savedCategory,
+                ""
         );
         savedGame = gameRepository.save(game);
     }

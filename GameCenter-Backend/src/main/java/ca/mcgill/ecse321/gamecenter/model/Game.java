@@ -30,6 +30,7 @@ public class Game
   private int remainingQuantity;
   private boolean isOffered;
   private GeneralFeeling publicOpinion;
+  private String imageUrl;
 
   @ManyToOne
   private GameCategory category;
@@ -40,7 +41,7 @@ public class Game
 
   public Game() {}
 
-  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory aCategory)
+  public Game(String aTitle, float aPrice, String aDescription, float aRating, int aRemainingQuantity, boolean aIsOffered, GeneralFeeling aPublicOpinion, GameCategory aCategory, String aImageUrl)
   {
     title = aTitle;
     price = aPrice;
@@ -49,6 +50,7 @@ public class Game
     remainingQuantity = aRemainingQuantity;
     isOffered = aIsOffered;
     publicOpinion = aPublicOpinion;
+    imageUrl = aImageUrl;
     if (!setCategory(aCategory))
     {
       throw new RuntimeException("Unable to create Game due to aCategories. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -123,6 +125,14 @@ public class Game
     return wasSet;
   }
 
+  public boolean setImageUrl(String aImageUrl)
+  {
+    boolean wasSet = false;
+    imageUrl = aImageUrl;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getId()
   {
     return id;
@@ -162,6 +172,8 @@ public class Game
   {
     return publicOpinion;
   }
+
+  public String getImageUrl() { return imageUrl; }
   /* Code from template attribute_IsBoolean */
   public boolean isIsOffered()
   {
