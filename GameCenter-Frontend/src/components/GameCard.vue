@@ -1,11 +1,11 @@
 <template>
   <div class="game-card">
     <RouterLink
-        :to="{
+      :to="{
         name: 'GameDetails',
-        params: { id: game.id }
+        params: { id: game.id },
       }"
-        class="game-link"
+      class="game-link"
     >
       <div class="game-image-placeholder">
         <img
@@ -19,7 +19,10 @@
         <p class="description">{{ game.description }}</p>
         <div class="game-details">
           <div class="price-container">
-            <span class="original-price" :class="{ 'has-promotion': promotionalPrices[game.id] }">
+            <span
+              class="original-price"
+              :class="{ 'has-promotion': promotionalPrices[game.id] }"
+            >
               ${{ game.price.toFixed(2) }}
             </span>
             <span v-if="promotionalPrices[game.id]" class="promotional-price">
@@ -29,8 +32,8 @@
           <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5.0</span>
         </div>
         <div
-            class="stock-status"
-            :class="{ 'in-stock': game.remainingQuantity > 0 }"
+          class="stock-status"
+          :class="{ 'in-stock': game.remainingQuantity > 0 }"
         >
           {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
         </div>
@@ -60,7 +63,7 @@ export default {
     isInWishlist: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data() {
     return {
@@ -71,27 +74,34 @@ export default {
     async fetchPromotions() {
       try {
         console.log(`Fetching promotions for game ${this.game.id}`);
-        const response = await apiClient.get(`/promotions/game/${this.game.id}`);
+        const response = await apiClient.get(
+          `/promotions/game/${this.game.id}`,
+        );
         const promotions = response.data;
         const currentDate = new Date();
 
-        const activePromotions = promotions.filter(promo => {
+        const activePromotions = promotions.filter((promo) => {
           const endDate = new Date(promo.endDate);
           return endDate >= currentDate;
         });
 
         if (activePromotions.length > 0) {
-          const lowestPrice = Math.min(...activePromotions.map(p => p.newPrice));
+          const lowestPrice = Math.min(
+            ...activePromotions.map((p) => p.newPrice),
+          );
           this.promotionalPrices[this.game.id] = lowestPrice;
         }
       } catch (error) {
-        console.error(`Error fetching promotions for game ${this.game.id}:`, error);
+        console.error(
+          `Error fetching promotions for game ${this.game.id}:`,
+          error,
+        );
       }
-    }
+    },
   },
   created() {
     this.fetchPromotions();
-  }
+  },
 };
 </script>
 
@@ -163,7 +173,7 @@ h3 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 

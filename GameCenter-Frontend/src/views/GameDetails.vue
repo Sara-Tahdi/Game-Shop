@@ -1,7 +1,9 @@
 <template>
   <div class="game-details-page">
     <div class="back-link">
-      <router-link to="/catalog" class="back-button">← Back to Catalog</router-link>
+      <router-link to="/catalog" class="back-button"
+        >← Back to Catalog</router-link
+      >
     </div>
 
     <div v-if="loading" class="loading">
@@ -29,7 +31,10 @@
           <div class="game-details">
             <div class="detail-row">
               <span class="label">Regular Price:</span>
-              <span class="value" :class="{ 'original-price': hasActivePromotions }">
+              <span
+                class="value"
+                :class="{ 'original-price': hasActivePromotions }"
+              >
                 ${{ game.price.toFixed(2) }}
               </span>
             </div>
@@ -37,9 +42,15 @@
             <!-- Promotions Section -->
             <div v-if="activePromotions.length > 0" class="promotions-section">
               <h3>Active Promotions</h3>
-              <div v-for="promo in activePromotions" :key="promo.id" class="promotion-item">
+              <div
+                v-for="promo in activePromotions"
+                :key="promo.id"
+                class="promotion-item"
+              >
                 <div class="promotion-price">
-                  <span class="promotional-price">${{ promo.newPrice.toFixed(2) }}</span>
+                  <span class="promotional-price"
+                    >${{ promo.newPrice.toFixed(2) }}</span
+                  >
                   <span class="promotion-end-date">
                     Ends on {{ formatDate(promo.endDate) }}
                   </span>
@@ -59,7 +70,10 @@
 
             <div class="detail-row">
               <span class="label">Status:</span>
-              <span class="value stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
+              <span
+                class="value stock-status"
+                :class="{ 'in-stock': game.remainingQuantity > 0 }"
+              >
                 {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
               </span>
             </div>
@@ -68,26 +82,26 @@
               <h2>Description</h2>
               <p>{{ game.description }}</p>
             </div>
-
-            <div class="opinion-section" :class="feelingClass">
-              <p>{{ formattedFeeling }}</p>
-            </div>
           </div>
 
           <div class="action-buttons">
             <button
-                @click="addToWishlist"
-                class="wishlist-button"
-                :disabled="isGuest || game.remainingQuantity === 0"
-                :title="!userState?.userInfo ? 'Please log in to add to wishlist' : ''"
+              @click="addToWishlist"
+              class="wishlist-button"
+              :disabled="isGuest || game.remainingQuantity === 0"
+              :title="
+                !userState?.userInfo ? 'Please log in to add to wishlist' : ''
+              "
             >
               Add to Wishlist
             </button>
             <button
-                @click="addToCart"
-                class="cart-button"
-                :disabled="isGuest || game.remainingQuantity === 0"
-                :title="!userState?.userInfo ? 'Please log in to add to cart' : ''"
+              @click="addToCart"
+              class="cart-button"
+              :disabled="isGuest || game.remainingQuantity === 0"
+              :title="
+                !userState?.userInfo ? 'Please log in to add to cart' : ''
+              "
             >
               Add to Cart
             </button>
@@ -136,10 +150,10 @@
             <div class="write-review-section-bottom">
               <label for="reviewMessage">Review:</label>
               <textarea
-                  class="write-review-text-area"
-                  id="reviewMessage"
-                  v-model="newReview.reviewMessage"
-                  required
+                class="write-review-text-area"
+                id="reviewMessage"
+                v-model="newReview.reviewMessage"
+                required
               ></textarea>
             </div>
 
@@ -153,6 +167,7 @@
 
 <script>
 import { userState } from "@/state/userState";
+import GameReview from "@/components/GameReview.vue";
 import axios from "axios";
 
 const apiClient = axios.create({
@@ -164,11 +179,14 @@ const apiClient = axios.create({
 
 export default {
   name: "GameDetails",
+  components: {
+    GameReview,
+  },
   props: {
     id: {
       type: [String, Number],
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -182,8 +200,8 @@ export default {
       areReviewsVisible: false,
       newReview: {
         rating: 5,
-        reviewMessage: ''
-      }
+        reviewMessage: "",
+      },
     };
   },
   computed: {
@@ -193,14 +211,26 @@ export default {
     hasActivePromotions() {
       return this.activePromotions.length > 0;
     },
-    feelingClass() {
-      // Add your feeling class logic here if needed
-      return '';
-    },
     formattedFeeling() {
-      // Add your formatted feeling logic here if needed
-      return '';
-    }
+      const feelings = {
+        VERYPOSITIVE: "Very Positive",
+        POSITIVE: "Positive",
+        NEGATIVE: "Negative",
+        VERYNEGATIVE: "Very Negative",
+        NEUTRAL: "Neutral",
+      };
+      return feelings[this.game.publicOpinion];
+    },
+
+    isGuest() {
+      return userState.userInfo === null;
+    },
+    isClient() {
+      return userState.userInfo?.userType === "Client";
+    },
+    userState() {
+      return userState;
+    },
   },
   methods: {
     async fetchGameDetails() {
@@ -209,34 +239,46 @@ export default {
 
       try {
         const gameId = this.id || this.$route.params.id;
-        console.log('Fetching game details for ID:', gameId);
+        console.log("Fetching game details for ID:", gameId);
         const response = await apiClient.get(`/games/id/${gameId}`);
-        console.log('Game details response:', response.data);
+        console.log("Game details response:", response.data);
 
         this.game = response.data;
 
         if (this.game) {
           await this.fetchPromotions();
-          if (userState?.userInfo) {
-            await this.checkWishlistStatus();
-          }
         } else {
           this.error = "Game not found";
         }
       } catch (error) {
         console.error("Error fetching game details:", error);
-        this.error = "Failed to load game details: " + (error.response?.data || error.message);
+        this.error =
+          "Failed to load game details: " +
+          (error.response?.data || error.message);
       } finally {
         this.loading = false;
       }
     },
-
+    async fetchGameReviews() {
+      try {
+        const response = await apiClient.get(
+          `/reviews/${this.$route.params.id}`,
+        );
+        this.reviews = response.data;
+        console.log("Reviews:", this.reviews);
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+      }
+    },
+    toggleReviewsVisibility() {
+      this.areReviewsVisible = !this.areReviewsVisible;
+    },
     async checkWishlistStatus() {
       if (!userState?.userInfo) return;
 
       try {
         const response = await apiClient.get(
-            `/wishlists/client/${userState.userInfo.id}/game/${this.game.id}`
+          `/wishlists/client/${userState.userInfo.id}/game/${this.game.id}`,
         );
         this.isInWishlist = response.data;
       } catch (error) {
@@ -246,11 +288,13 @@ export default {
 
     async fetchPromotions() {
       try {
-        const response = await apiClient.get(`/promotions/game/${this.game.id}`);
+        const response = await apiClient.get(
+          `/promotions/game/${this.$route.params.id}`,
+        );
         const promotions = response.data;
         const currentDate = new Date();
 
-        this.activePromotions = promotions.filter(promo => {
+        this.activePromotions = promotions.filter((promo) => {
           const endDate = new Date(promo.endDate);
           return endDate >= currentDate;
         });
@@ -286,7 +330,7 @@ export default {
         alert("Please log in before adding to your wishlist");
         return;
       }
-      
+
       try {
         const response = await apiClient.post(`/carts/create`, {
           clientId: userState.userInfo.id,
@@ -304,23 +348,52 @@ export default {
     },
 
     async submitReview() {
-      // Implement review submission logic here
-      console.log("Review submitted:", this.newReview);
-    }
+      if (!this.newReview.reviewMessage || !this.newReview.rating) {
+        alert("Please fill in all fields before submitting.");
+        return;
+      }
+
+      const requestObj = {
+        author: userState.userInfo.username,
+        reviewMessage: this.newReview.reviewMessage,
+        rating: this.newReview.rating,
+      };
+
+      console.log(this.newReview.rating);
+
+      try {
+        const response = await apiClient.post(
+          `/reviews/${this.game.id}`,
+          requestObj,
+        );
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+
+      this.newReview = {
+        reviewMessage: "",
+        rating: "",
+      };
+
+      this.fetchGameReviews();
+    },
   },
   created() {
     this.fetchGameDetails();
+    this.fetchPromotions();
+    this.fetchGameReviews();
   },
   watch: {
-    '$route.params.id': {
+    "$route.params.id": {
       immediate: true,
       handler(newId) {
         if (newId) {
           this.fetchGameDetails();
         }
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 
@@ -354,9 +427,9 @@ export default {
 .game-details-container {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  padding-top: 180px;  /* Increased from 120px to 180px */
+  padding: 20px;
 }
 
 .content-wrapper {
@@ -364,7 +437,7 @@ export default {
   gap: 30px;
   padding: 20px;
   align-items: flex-start;
-  margin-top: 150px;  /* Increased from 100px to 150px */
+  margin-top: 15px;
 }
 
 .game-image-placeholder {
@@ -384,7 +457,7 @@ export default {
   height: 100%;
   object-fit: scale-down;
   object-position: center;
- }
+}
 
 .game-info {
   flex: 1;
@@ -445,7 +518,7 @@ export default {
   padding: 10px;
   background-color: white;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .promotion-price {
@@ -534,7 +607,7 @@ export default {
 }
 
 .cart-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -681,8 +754,12 @@ select {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
