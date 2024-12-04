@@ -37,7 +37,7 @@ public class PromotionServiceTests {
         Date startDate = Date.valueOf("2024-01-01");
         Date endDate = Date.valueOf("2024-12-31");
         Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         game.setId(23);
 
         when(gameRepository.findGameById(game.getId())).thenReturn(Optional.of(game));
@@ -103,7 +103,7 @@ public class PromotionServiceTests {
         Date startDate = Date.valueOf("2024-01-01");
         Date endDate = Date.valueOf("2024-12-31");
         Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         game.setId(23);
 
         Promotion promotion = new Promotion(price, startDate, endDate, game);
@@ -133,7 +133,7 @@ public class PromotionServiceTests {
     @Test
     void testGetPromotionByGameId() {
         Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         game.setId(23);
 
         List<Promotion> promotions = new ArrayList<>();
@@ -165,7 +165,7 @@ public class PromotionServiceTests {
         LocalDate oldStartDate = Date.valueOf("2024-01-01").toLocalDate();
         LocalDate oldEndDate = Date.valueOf("2024-12-31").toLocalDate();
         Game oldGame = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         oldGame.setId(23);
 
         Promotion originalPromotion = new Promotion(oldPrice, Date.valueOf(oldStartDate), Date.valueOf(oldEndDate), oldGame);
@@ -175,7 +175,7 @@ public class PromotionServiceTests {
         LocalDate newStartDate = Date.valueOf("2024-02-01").toLocalDate();
         LocalDate newEndDate = Date.valueOf("2024-11-30").toLocalDate();
         Game newGame = new Game("Mario Odyssey", 89.99F, "A 3D platformer!", 4.9F, 15, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("3D Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("3D Platformer"), "");
         newGame.setId(24);
 
         when(promotionRepository.findPromotionById(id)).thenReturn(Optional.of(originalPromotion));
@@ -199,7 +199,7 @@ public class PromotionServiceTests {
         Date oldStartDate = Date.valueOf("2024-01-01");
         Date oldEndDate = Date.valueOf("2024-12-31");
         Game oldGame = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         oldGame.setId(23);
 
         Promotion promotion = new Promotion(oldPrice, oldStartDate, oldEndDate, oldGame);

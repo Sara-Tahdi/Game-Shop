@@ -38,7 +38,7 @@ public class AppUserServiceTests {
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
-        assertEquals(password, a.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(a.getPassword()));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AppUserServiceTests {
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
-        assertEquals(password, a.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(a.getPassword()));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class AppUserServiceTests {
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
-        assertEquals(password, a.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(a.getPassword()));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class AppUserServiceTests {
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
-        assertEquals(password, a.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(a.getPassword()));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class AppUserServiceTests {
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
-        assertEquals(password, a.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(a.getPassword()));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class AppUserServiceTests {
         assertEquals(email, a.getEmail());
         assertEquals(23, a.getId());
         assertEquals(username, a.getUsername());
-        assertEquals(password, a.getPassword());
+        assertEquals(password, Encryption.encryptDecrypt(a.getPassword()));
     }
 
     @Test

@@ -93,7 +93,8 @@ public class PurchaseIntegrationTests {
                 VALID_GAME_STOCK,
                 true,
                 VALID_GAME_GENERAL_FEELING,
-                gameCategory
+                gameCategory,
+                ""
         ));
         this.gameId_1 = g1.getId();
         Game g2 = gameRepository.save(new Game(
@@ -104,7 +105,8 @@ public class PurchaseIntegrationTests {
                 VALID_GAME_STOCK_2,
                 true,
                 VALID_GAME_GENERAL_FEELING_2,
-                gameCategory
+                gameCategory,
+                ""
         ));
         this.gameId_2 = g2.getId();
     }

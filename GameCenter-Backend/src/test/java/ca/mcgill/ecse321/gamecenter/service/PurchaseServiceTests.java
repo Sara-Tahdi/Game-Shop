@@ -67,7 +67,7 @@ public class PurchaseServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         g.setId(513);
         g.setRemainingQuantity(10);
         when(gameRepository.save(any(Game.class))).thenReturn(g);
@@ -102,7 +102,7 @@ public class PurchaseServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         g.setId(513);
         g.setRemainingQuantity(10);
         when(gameRepository.save(any(Game.class))).thenReturn(g);

@@ -53,7 +53,7 @@ public class RequestTests {
         GameCategory category = new GameCategory();
         category.setCategory("Multiplayer online battle arena");
         category = gameCategoryRepository.save(category);
-        Game game = new Game("League", 3, "May cause brainrot", 3, 100, true, Game.GeneralFeeling.POSITIVE, category);
+        Game game = new Game("League", 3, "May cause brainrot", 3, 100, true, Game.GeneralFeeling.POSITIVE, category, "");
         game = gameRepository.save(game);
 
         // Create a new game request
@@ -131,7 +131,7 @@ public class RequestTests {
         GameCategory category = new GameCategory();
         category.setCategory("Strategy");
         category = gameCategoryRepository.save(category);
-        Game game = new Game("Strategic Game", 10, "A challenging strategy game.", 2, 15, true, Game.GeneralFeeling.NEUTRAL, category);
+        Game game = new Game("Strategic Game", 10, "A challenging strategy game.", 2, 15, true, Game.GeneralFeeling.NEUTRAL, category, "");
         game = gameRepository.save(game);
 
         // Create a game request
@@ -197,7 +197,7 @@ public class RequestTests {
         GameCategory category = new GameCategory();
         category.setCategory("Strategy");
         category = gameCategoryRepository.save(category);
-        Game game = new Game("Strategic Game", 10, "A challenging strategy game.", 2, 15, true, Game.GeneralFeeling.NEUTRAL, category);
+        Game game = new Game("Strategic Game", 10, "A challenging strategy game.", 2, 15, true, Game.GeneralFeeling.NEUTRAL, category, "");
         game = gameRepository.save(game);
 
         // Create a game request
@@ -239,7 +239,7 @@ public class RequestTests {
         GameCategory category = new GameCategory();
         category.setCategory("Strategy");
         category = gameCategoryRepository.save(category);
-        Game game = new Game("Strategic Game", 10, "A challenging strategy game.", 2, 15, true, Game.GeneralFeeling.NEUTRAL, category);
+        Game game = new Game("Strategic Game", 10, "A challenging strategy game.", 2, 15, true, Game.GeneralFeeling.NEUTRAL, category, "");
         game = gameRepository.save(game);
 
         // Create a game request
