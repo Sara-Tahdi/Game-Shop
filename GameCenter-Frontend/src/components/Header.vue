@@ -15,15 +15,15 @@
         <!-- Authentication -->
         <div class="auth">
           <!-- Debug Info -->
-          <div style="display: none;">
+          <div style="display: none">
             User Info: {{ JSON.stringify(userState.userInfo) }}
           </div>
 
           <!-- Sign In Button -->
           <button
-              v-if="!userState.userInfo"
-              @click="$emit('showLoginModal')"
-              class="auth-button"
+            v-if="!userState.userInfo"
+            @click="$emit('showLoginModal')"
+            class="auth-button"
           >
             Sign In
           </button>
@@ -36,10 +36,7 @@
             <div class="user-icon cart">
               <RouterLink to="/cart">🛒</RouterLink>
             </div>
-            <div
-                class="user-icon profile"
-                @click="toggleDropdown"
-            >
+            <div class="user-icon profile" @click="toggleDropdown">
               {{ userState.userInfo?.username?.charAt(0).toUpperCase() }}
             </div>
 
@@ -50,16 +47,14 @@
                   <RouterLink to="/account">Manage Account</RouterLink>
                 </li>
                 <li v-if="isEmployeeOrOwner">
-                  <RouterLink
-                      v-if="isEmployee"
-                      to="/employee-dashboard"
-                  >Manage Store</RouterLink>
-                  <RouterLink
-                      v-if="isOwner"
-                      to="/owner-dashboard"
-                  >Manage Store</RouterLink>
+                  <RouterLink v-if="isEmployee" to="/employee-dashboard"
+                    >Manage Store</RouterLink
+                  >
+                  <RouterLink v-if="isOwner" to="/owner-dashboard"
+                    >Manage Store</RouterLink
+                  >
                 </li>
-                <li>
+                <li v-if="isClient">
                   <RouterLink to="/client-profile">Account Info</RouterLink>
                 </li>
                 <li>
@@ -87,21 +82,33 @@ export default {
   },
   computed: {
     isEmployeeOrOwner() {
-      return this.userState.userInfo &&
-          (this.userState.userInfo.userType === 'Employee' ||
-              this.userState.userInfo.userType === 'Owner');
+      return (
+        this.userState.userInfo &&
+        (this.userState.userInfo.userType === "Employee" ||
+          this.userState.userInfo.userType === "Owner")
+      );
     },
     isEmployee() {
-      return this.userState.userInfo && this.userState.userInfo.userType === 'Employee';
+      return (
+        this.userState.userInfo &&
+        this.userState.userInfo.userType === "Employee"
+      );
     },
     isOwner() {
-      return this.userState.userInfo && this.userState.userInfo.userType === 'Owner';
-    }
+      return (
+        this.userState.userInfo && this.userState.userInfo.userType === "Owner"
+      );
+    },
+    isClient() {
+      return (
+        this.userState.userInfo && this.userState.userInfo.userType === "Client"
+      );
+    },
   },
   methods: {
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
-      console.log('Current user type:', this.userState.userInfo?.userType);
+      console.log("Current user type:", this.userState.userInfo?.userType);
     },
     closeDropdown() {
       this.showDropdown = false;
@@ -109,23 +116,26 @@ export default {
     handleLogout() {
       this.userState.clearUser();
       this.closeDropdown();
-      this.$router.push('/');
+      this.$router.push("/");
     },
     handleClickOutside(event) {
-      const userMenu = document.querySelector('.user-menu');
+      const userMenu = document.querySelector(".user-menu");
       if (userMenu && !userMenu.contains(event.target)) {
         this.closeDropdown();
       }
-    }
+    },
   },
   mounted() {
-    document.addEventListener('click', this.handleClickOutside);
-    console.log('Header mounted - User Info:', this.userState.userInfo);
-    console.log('Header mounted - User Type:', this.userState.userInfo?.userType);
+    document.addEventListener("click", this.handleClickOutside);
+    console.log("Header mounted - User Info:", this.userState.userInfo);
+    console.log(
+      "Header mounted - User Type:",
+      this.userState.userInfo?.userType,
+    );
   },
   unmounted() {
-    document.removeEventListener('click', this.handleClickOutside);
-  }
+    document.removeEventListener("click", this.handleClickOutside);
+  },
 };
 </script>
 

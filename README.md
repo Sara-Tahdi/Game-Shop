@@ -42,9 +42,9 @@ Here are all the tasks and logged for our team in Deliverable 2
 Here are all the tasks and logged for our team in Deliverable 3
 | Name | Tasks | Time Logged |
 | :--- |:---|:---:|
-|Naji El Khouri | <ul><li>Implemented the web frontend GUI with backend services for the browsing page</ul> | |
-|Laurier Gauvin | <ul><li>Implemented the web frontend GUI with backend services for the administration, the game addition/removal, and the login page</ul> | |
-|Manuel Hanna | <ul><li>Implemented the web frontend GUI with backend services for the individual game page</ul> | |
-|Arjun Sharma | <ul><li>Implemented the web frontend GUI with backend services for the administration page</ul> | |
+|Naji El Khouri | <ul><li>Implemented the web frontend GUI with backend services for the browsing page with promotions integrated</ul> | 25|
+|Laurier Gauvin | <ul><li>Implemented the web frontend GUI with backend services for the administration, the game addition/removal, and the login page<li>Created reusable component to ease the work for the rest of the team</ul> | 35|
+|Manuel Hanna | <ul><li>Implemented the web frontend GUI with backend services for the individual game page</ul> | 22|
+|Arjun Sharma | <ul><li>Implemented the web frontend GUI with backend services for the administration page, and payment info page</ul> | 23|
 |Sara Tahdi | <ul><li>Implemented the web frontend GUI with backend services for the wishlist and game cart page</ul> | 25|
-|Justin Tremellen | <ul><li>Implemented the web frontend GUI with backend services for the update user info, profile page, and welcome page</ul>  | |
+|Justin Tremellen | <ul><li>Implemented the web frontend GUI with backend services for the update user info, profile page, purchase history page, checkout page, and welcome page</ul>  | 27|
