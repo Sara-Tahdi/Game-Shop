@@ -80,7 +80,7 @@ public class PaymentInfoIntegrationTests {
         assertEquals(VALID_CLIENT_CARDNUMBER.substring(VALID_CLIENT_CARDNUMBER.length() - 4), createdPaymentInfoResponseDTO.getLastFourDigits());
         assertEquals(VALID_CLIENT_CARDEXPIRYMONTH, createdPaymentInfoResponseDTO.getExpiryMonth());
         assertEquals(VALID_CLIENT_CARDEXPIRYYEAR, createdPaymentInfoResponseDTO.getExpiryYear());
-        assertEquals(this.clientId, createdPaymentInfoResponseDTO.getClient().getId());
+        assertEquals(this.clientId, createdPaymentInfoResponseDTO.getClientId());
 
         this.paymentInfoId = createdPaymentInfoResponseDTO.getId();
     }
@@ -96,7 +96,7 @@ public class PaymentInfoIntegrationTests {
         List<PaymentInfoResponseDTO> body = List.of(res.getBody());
         assertNotNull(body);
         assertEquals(1, body.size());
-        assertEquals(this.clientId, body.getFirst().getClient().getId());
+        assertEquals(this.clientId, body.getFirst().getClientId());
         assertEquals(this.paymentInfoId, body.getFirst().getId());
     }
 
