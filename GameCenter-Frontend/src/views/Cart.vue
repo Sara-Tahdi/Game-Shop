@@ -27,18 +27,20 @@
           >
             {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
-          <!-- Remove from Cart Button -->
-          <button @click="removeFromCart(game)" class="remove-btn">
-            Remove from Cart
-          </button>
-          <!-- Add to Wishlist Button -->
-          <button
-            @click="addToWishlist(game)"
-            class="add-to-wishlist-btn"
-            :disabled="game.remainingQuantity === 0"
-          >
-            Add to Wishlist
-          </button>
+          <div class="button-container">
+            <!-- Remove from Cart Button -->
+            <button @click="removeFromCart(game)" class="remove-btn">
+              Remove from Cart
+            </button>
+            <!-- Add to Wishlist Button -->
+            <button
+              @click="addToWishlist(game)"
+              class="add-to-wishlist-btn"
+              :disabled="game.remainingQuantity === 0"
+            >
+              Add to Wishlist
+            </button>
+          </div>
         </div>
       </section>
     </div>
@@ -48,9 +50,7 @@
     </div>
 
     <!-- Empty Cart State -->
-    <div v-if="clientId && cart.length === 0" class="no-items">
-      Your cart is empty.
-    </div>
+    <div v-if="cart.length === 0" class="no-items">Your cart is empty.</div>
   </div>
 </template>
 <script>
@@ -96,11 +96,14 @@ export default {
           `/carts/client/${userState.userInfo.id}`,
         );
         console.log(response.data);
-        response.data.forEach(async (item) => {
-          console.log(item);
-          const itemData = await axiosClient.get(`/games/id/${item.gameId}`);
-          this.cart.push(itemData.data);
-        });
+        const cartPromises = response.data.map((item) =>
+          axiosClient.get(`/games/id/${item.gameId}`),
+        );
+        const cartResponses = await Promise.all(cartPromises);
+        this.cart = cartResponses.map((response) => response.data);
+        if (this.cart.length === 0) {
+          this.error = "No cart items found.";
+        }
         this.loading = false;
       } catch (err) {
         this.error = "Failed to load cart. Please try again.";
@@ -129,7 +132,7 @@ export default {
           },
         );
 
-        if (response.status === 204) {
+        if (response.status === 200) {
           console.log("Game successfully removed from cart:", game);
           this.cart = this.cart.filter((item) => item.id !== game.id); // Remove the game from local cart
         }
@@ -158,7 +161,6 @@ export default {
 
         if (response.status === 200) {
           console.log("Game successfully added to wishlist:", game);
-          // this.wishlist.push(game); ??
         }
       } catch (err) {
         console.error("Error adding game to wishlist:", err);
@@ -206,6 +208,9 @@ export default {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-card h3 {
@@ -217,6 +222,11 @@ export default {
   color: #666;
   margin-bottom: 10px;
   font-size: 0.9em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  flex: 1;
 }
 
 .game-details {
@@ -353,5 +363,12 @@ export default {
   transition: background-color 0.3s;
   text-decoration: none;
   text-align: center;
+}
+
+.button-container {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

@@ -31,7 +31,7 @@
             {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
           <!-- Remove from Wishlist Button -->
-          <button @click="removeFromWishlist(game.id)" class="remove-btn">
+          <button @click="removeFromWishlist(game)" class="remove-btn">
             Remove from Wishlist
           </button>
           <!-- Add to Cart Button -->
@@ -46,7 +46,7 @@
       </section>
     </div>
 
-    <div v-if="clientId && wishlist.length === 0" class="no-items">
+    <div v-if="wishlist.length === 0" class="no-items">
       Your wishlist is empty.
     </div>
   </div>
@@ -57,8 +57,11 @@ import { userState } from "@/state/userState";
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3000",
-  timeout: 5000,
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "http://localhost:8080",
+  },
 });
 
 export default {
@@ -91,26 +94,18 @@ export default {
         const response = await axiosClient.get(
           `/wishlists/client/${userState.userInfo.id}`,
         );
-
         console.log("Wishlist fetch response:", response.data);
-
-        if (!response.data || response.data.length === 0) {
+        const wishlistPromises = response.data.map((item) =>
+          axiosClient.get(`/games/id/${item.gameId}`),
+        );
+        const wishlistResponses = await Promise.all(wishlistPromises);
+        this.wishlist = wishlistResponses.map((response) => response.data);
+        if (this.wishlist.length === 0) {
           this.error = "No wishlist items found.";
-        } else {
-          this.wishlist = response.data;
         }
       } catch (err) {
-        console.error("Detailed Wishlist fetch error:", err);
-
-        if (err.response) {
-          this.error =
-            err.response.data.message || "Server error while fetching wishlist";
-        } else if (err.request) {
-          this.error =
-            "No response received from server. Check your network connection.";
-        } else {
-          this.error = "Error setting up the request. Please try again.";
-        }
+        this.error = "Failed to load wishlist. Please try again.";
+        console.error(err);
       } finally {
         this.loading = false;
       }
@@ -135,7 +130,7 @@ export default {
           },
         );
 
-        if (response.status === 204) {
+        if (response.status === 200) {
           console.log("Game successfully removed from wishlist:", game);
           this.wishlist = this.wishlist.filter((item) => item.id !== game.id);
         }
@@ -164,7 +159,7 @@ export default {
 
         if (response.status === 200) {
           console.log("Game successfully added to cart:", game);
-          this.cart.push(game);
+          this.wishlist.push(game);
         }
       } catch (err) {
         console.error("Error adding game to cart:", err);
@@ -212,6 +207,9 @@ export default {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-card h3 {
@@ -223,6 +221,11 @@ export default {
   color: #666;
   margin-bottom: 10px;
   font-size: 0.9em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  flex: 1;
 }
 
 .game-details {
@@ -255,6 +258,9 @@ export default {
 .remove-btn,
 .add-to-cart-btn {
   padding: 8px 16px;
+  width: 100%;
+  background-color: #e74c3c;
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -341,5 +347,12 @@ export default {
   text-align: center;
   padding: 40px;
   color: #666;
+}
+
+.button-container {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

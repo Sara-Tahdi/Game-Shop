@@ -72,7 +72,8 @@ public class GameIntegrationTests {
                 VALID_PRICE,
                 VALID_DESCRIPTION,
                 VALID_OPINION,
-                savedCategory.getId()
+                savedCategory.getId(),
+                ""
         );
 
         ResponseEntity<GameResponseDTO> response = client.postForEntity(

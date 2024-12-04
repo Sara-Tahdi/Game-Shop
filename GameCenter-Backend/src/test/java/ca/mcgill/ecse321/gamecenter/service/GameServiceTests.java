@@ -45,7 +45,7 @@ public class GameServiceTests {
         boolean isOffered1 = true;
         Game.GeneralFeeling publicOpinion1 = Game.GeneralFeeling.POSITIVE;
         GameCategory category1 = new GameCategory("Platformer");
-        Game g1 = new Game(title1, price1, description1, rating1, remainingQuantity1, isOffered1, publicOpinion1, category1);
+        Game g1 = new Game(title1, price1, description1, rating1, remainingQuantity1, isOffered1, publicOpinion1, category1, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g1);
         Game createdGame1 = gameService.createGame(title1, price1, description1, publicOpinion1, category1);
 
@@ -56,7 +56,7 @@ public class GameServiceTests {
         int remainingQuantity2 = 3;
         boolean isOffered2 = false;
         Game.GeneralFeeling publicOpinion2 = Game.GeneralFeeling.VERYNEGATIVE;
-        Game g2 = new Game(title2, price2, description2, rating2, remainingQuantity2, isOffered2, publicOpinion2, category1);
+        Game g2 = new Game(title2, price2, description2, rating2, remainingQuantity2, isOffered2, publicOpinion2, category1, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g2);
         Game createdGame2 = gameService.createGame(title2, price2, description2,  publicOpinion2, category1);
 
@@ -69,7 +69,7 @@ public class GameServiceTests {
         boolean isOffered3 = true;
         Game.GeneralFeeling publicOpinion3 = Game.GeneralFeeling.VERYPOSITIVE;
         GameCategory category3 = new GameCategory("Open World");
-        Game g3 = new Game(title3, price3, description3, rating3, remainingQuantity3, isOffered3, publicOpinion3, category3);
+        Game g3 = new Game(title3, price3, description3, rating3, remainingQuantity3, isOffered3, publicOpinion3, category3, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g3);
         Game createdGame3 = gameService.createGame(title3, price3, description3, publicOpinion3, category3);
 
@@ -110,7 +110,7 @@ public class GameServiceTests {
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
 
-        Game existingGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game existingGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         when(gameRepository.findGameByTitle(title)).thenReturn(Optional.of(existingGame));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -130,7 +130,7 @@ public class GameServiceTests {
         GameCategory category = new GameCategory("Platformer");
 
         when(gameRepository.findGameByTitle(title)).thenReturn(Optional.empty());
-        Game existingGame = new Game("Other Game", price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game existingGame = new Game("Other Game", price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         when(gameRepository.findGameByDescription(description)).thenReturn(Optional.of(existingGame));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -153,7 +153,7 @@ public class GameServiceTests {
         when(gameRepository.findGameByDescription(description)).thenReturn(Optional.empty());
 
         List<Game> categoryGames = new ArrayList<>();
-        categoryGames.add(new Game(title, price, "Different description", rating, remainingQuantity, isOffered, publicOpinion, category));
+        categoryGames.add(new Game(title, price, "Different description", rating, remainingQuantity, isOffered, publicOpinion, category, ""));
         when(gameRepository.findGamesByGameCategory(category.getCategory())).thenReturn(Optional.of(categoryGames));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
@@ -187,7 +187,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
         
         when(gameRepository.save(any(Game.class))).thenReturn(g);
@@ -226,7 +226,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
 
         when(gameRepository.save(any(Game.class))).thenReturn(g);
@@ -265,7 +265,7 @@ public class GameServiceTests {
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
         category.setId(23);
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
 
         when(gameCategoryRepository.findGameCategoryById(2)).thenReturn(Optional.empty());
@@ -312,7 +312,7 @@ public class GameServiceTests {
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
         category.setId(23);
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
 
         when(gameCategoryRepository.findGameCategoryByCategory("Platformer")).thenReturn(Optional.empty());
@@ -358,7 +358,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
 
         List<Game> gamesList = new ArrayList<>();
@@ -418,7 +418,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
 
         List<Game> gamesList = new ArrayList<>();
@@ -486,7 +486,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game g = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         g.setId(23);
 
         when(gameRepository.save(any(Game.class))).thenReturn(g);
@@ -524,7 +524,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         originalGame.setId(23);
 
         String newTitle = "Rayman Legends Definitive Edition";
@@ -573,11 +573,11 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         originalGame.setId(23);
 
         Game existingGame = new Game("Mario Odyssey", 89.99F, "A 3D platformer!",
-                4.9F, 15, true, Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                4.9F, 15, true, Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         existingGame.setId(24);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(originalGame));
@@ -599,7 +599,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         originalGame.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(originalGame));
@@ -620,7 +620,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         originalGame.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(originalGame));
@@ -641,7 +641,7 @@ public class GameServiceTests {
         boolean isOffered = true;
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
-        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game originalGame = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         originalGame.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(originalGame));
@@ -663,7 +663,7 @@ public class GameServiceTests {
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
 
-        Game game = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game game = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         game.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
@@ -678,7 +678,7 @@ public class GameServiceTests {
     @Test
     void testMakeGameOfferedAlreadyOffered() {
         Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         game.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
@@ -691,7 +691,7 @@ public class GameServiceTests {
     @Test
     void testMakeGameOfferedNoQuantity() {
         Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 0, false,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         game.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
@@ -721,7 +721,7 @@ public class GameServiceTests {
         Game.GeneralFeeling publicOpinion = Game.GeneralFeeling.POSITIVE;
         GameCategory category = new GameCategory("Platformer");
 
-        Game game = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category);
+        Game game = new Game(title, price, description, rating, remainingQuantity, isOffered, publicOpinion, category, "");
         game.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
@@ -736,7 +736,7 @@ public class GameServiceTests {
     @Test
     void testMakeGameNotOfferedAlreadyNotOffered() {
         Game game = new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, false,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), "");
         game.setId(23);
 
         when(gameRepository.findGameById(23)).thenReturn(Optional.of(game));
@@ -759,9 +759,9 @@ public class GameServiceTests {
     void testGetAllAvailableGamesSuccess() {
         List<Game> games = new ArrayList<>();
         games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer")));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), ""));
         games.add(new Game("Super Mario Odyssey", 89.99F, "A 3D platformer!", 4.9F, 15, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("3D Platformer")));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("3D Platformer"), ""));
 
         when(gameRepository.findAllAvailableGames()).thenReturn(Optional.of(games));
 
@@ -786,7 +786,7 @@ public class GameServiceTests {
         String category = "Platformer";
         List<Game> games = new ArrayList<>();
         games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory(category)));
+                Game.GeneralFeeling.POSITIVE, new GameCategory(category), ""));
 
         when(gameRepository.findAllAvailableGamesByGameCategory(category))
                 .thenReturn(Optional.of(games));
@@ -816,7 +816,7 @@ public class GameServiceTests {
         float maxPrice = 90.0F;
         List<Game> games = new ArrayList<>();
         games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer")));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), ""));
 
         when(gameRepository.findAllAvailableGamesByPriceRange(minPrice, maxPrice))
                 .thenReturn(Optional.of(games));
@@ -834,7 +834,7 @@ public class GameServiceTests {
         float maxRating = 5.0F;
         List<Game> games = new ArrayList<>();
         games.add(new Game("Rayman Legends", 79.99F, "A fun platformer!", 4.5F, 20, true,
-                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer")));
+                Game.GeneralFeeling.POSITIVE, new GameCategory("Platformer"), ""));
 
         when(gameRepository.findAllAvailableGamesByRatingRange(minRating, maxRating))
                 .thenReturn(Optional.of(games));

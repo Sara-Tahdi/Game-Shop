@@ -47,8 +47,7 @@ public class PurchaseRestController {
     public ResponseEntity<?> getPurchaseHistory(@PathVariable int clientId) {
         try {
             List<Purchase> purchases = purchaseService.getClientPurchaseHistory(clientId);
-            List<SimplePurchaseResponseDTO> simplePurchases = buildSimplePurchases(purchases);
-            return ResponseEntity.ok().body(simplePurchases);
+            return ResponseEntity.ok().body(purchases);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -63,20 +62,5 @@ public class PurchaseRestController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-    private List<SimplePurchaseResponseDTO> buildSimplePurchases(List<Purchase> purchases) {
-        HashMap<String, Float> priceMap = new HashMap<>();
-        HashMap<String, String> refundMap = new HashMap<>();
-        for (Purchase p: purchases) {
-            String trackingCode = p.getTrackingCode();
-            String refundReason = p.getRefundReason();
-            Float purchaseTotal = priceMap.getOrDefault(trackingCode, 0f);
-            priceMap.put(trackingCode, Round.round(purchaseTotal + p.getTotalPrice()));
-            refundMap.putIfAbsent(trackingCode, refundReason);
-        }
-        return priceMap.entrySet().stream()
-                .map(entry -> new SimplePurchaseResponseDTO(entry.getKey(), entry.getValue(), refundMap.get(entry)))
-                .collect(Collectors.toList());
     }
 }
