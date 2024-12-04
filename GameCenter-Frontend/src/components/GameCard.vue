@@ -1,7 +1,11 @@
 <template>
   <div class="game-card">
     <div class="game-image-placeholder">
-      <div class="placeholder-text">Game Image Coming Soon</div>
+      <img
+        :src="game.imageUrl"
+        alt="Problem fetching game image"
+        class="game-image"
+      />
     </div>
     <div class="game-content">
       <h3>{{ game.title }}</h3>
@@ -64,6 +68,13 @@ export default {
   align-items: center;
   justify-content: center;
   border-bottom: 2px dashed #ddd;
+}
+
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
+  object-position: center;
 }
 
 .placeholder-text {

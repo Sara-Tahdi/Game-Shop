@@ -47,7 +47,7 @@ public class GameServiceTests {
         GameCategory category1 = new GameCategory("Platformer");
         Game g1 = new Game(title1, price1, description1, rating1, remainingQuantity1, isOffered1, publicOpinion1, category1, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g1);
-        Game createdGame1 = gameService.createGame(title1, price1, description1, publicOpinion1, category1);
+        Game createdGame1 = gameService.createGame(title1, price1, description1, publicOpinion1, category1, "");
 
         String title2 = "Sonic '06";
         float price2 = 19.99F;
@@ -58,7 +58,7 @@ public class GameServiceTests {
         Game.GeneralFeeling publicOpinion2 = Game.GeneralFeeling.VERYNEGATIVE;
         Game g2 = new Game(title2, price2, description2, rating2, remainingQuantity2, isOffered2, publicOpinion2, category1, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g2);
-        Game createdGame2 = gameService.createGame(title2, price2, description2,  publicOpinion2, category1);
+        Game createdGame2 = gameService.createGame(title2, price2, description2,  publicOpinion2, category1, "");
 
 
         String title3 = "GTA 5";
@@ -71,7 +71,7 @@ public class GameServiceTests {
         GameCategory category3 = new GameCategory("Open World");
         Game g3 = new Game(title3, price3, description3, rating3, remainingQuantity3, isOffered3, publicOpinion3, category3, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g3);
-        Game createdGame3 = gameService.createGame(title3, price3, description3, publicOpinion3, category3);
+        Game createdGame3 = gameService.createGame(title3, price3, description3, publicOpinion3, category3, "");
 
         when(gameRepository.findGameByGameType(Game.class)).thenReturn(Optional.of(List.of(
                 createdGame1, createdGame2, createdGame3
@@ -91,11 +91,11 @@ public class GameServiceTests {
         GameCategory category = new GameCategory("Platformer");
 
         IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, invalidPrice, description, publicOpinion, category));
+                gameService.createGame(title, invalidPrice, description, publicOpinion, category, ""));
         assertEquals("Price is not valid", e1.getMessage());
 
         IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, 0F, description, publicOpinion, category));
+                gameService.createGame(title, 0F, description, publicOpinion, category, ""));
         assertEquals("Price is not valid", e2.getMessage());
     }
 
@@ -114,7 +114,7 @@ public class GameServiceTests {
         when(gameRepository.findGameByTitle(title)).thenReturn(Optional.of(existingGame));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, price, description, publicOpinion, category));
+                gameService.createGame(title, price, description, publicOpinion, category, ""));
         assertEquals("Game already exists with title: " + title, e.getMessage());
     }
 
@@ -134,7 +134,7 @@ public class GameServiceTests {
         when(gameRepository.findGameByDescription(description)).thenReturn(Optional.of(existingGame));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, price, description, publicOpinion, category));
+                gameService.createGame(title, price, description, publicOpinion, category, ""));
         assertEquals("Game already exists with description: " + title, e.getMessage());
     }
 
@@ -157,7 +157,7 @@ public class GameServiceTests {
         when(gameRepository.findGamesByGameCategory(category.getCategory())).thenReturn(Optional.of(categoryGames));
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, price, description, publicOpinion, category));
+                gameService.createGame(title, price, description, publicOpinion, category, ""));
         assertEquals("Game already exists with description: " + description + " and title: " + title, e.getMessage());
     }
 
@@ -169,11 +169,11 @@ public class GameServiceTests {
         GameCategory category = new GameCategory("Platformer");
 
         IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, null, description, publicOpinion, category));
+                gameService.createGame(title, null, description, publicOpinion, category, ""));
         assertEquals("Price is not valid", e1.getMessage());
 
         IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () ->
-                gameService.createGame(title, -79.99F, description, publicOpinion, category));
+                gameService.createGame(title, -79.99F, description, publicOpinion, category, ""));
         assertEquals("Price is not valid", e2.getMessage());
     }
     
@@ -191,7 +191,7 @@ public class GameServiceTests {
         g.setId(23);
         
         when(gameRepository.save(any(Game.class))).thenReturn(g);
-        gameService.createGame(title, price, description, publicOpinion, category);
+        gameService.createGame(title, price, description, publicOpinion, category, "");
 
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
         Game gg = gameService.getGameById(g.getId());
@@ -230,7 +230,7 @@ public class GameServiceTests {
         g.setId(23);
 
         when(gameRepository.save(any(Game.class))).thenReturn(g);
-        gameService.createGame(title, price, description, publicOpinion, category);
+        gameService.createGame(title, price, description, publicOpinion, category, "");
 
         when(gameRepository.findGameByTitle(g.getTitle())).thenReturn(Optional.of(g));
         Game gg = gameService.getGameByTitle(g.getTitle());
@@ -271,7 +271,7 @@ public class GameServiceTests {
         when(gameCategoryRepository.findGameCategoryById(2)).thenReturn(Optional.empty());
 
         when(gameRepository.save(any(Game.class))).thenReturn(g);
-        gameService.createGame(title, price, description, publicOpinion, category);
+        gameService.createGame(title, price, description, publicOpinion, category, "");
 
         List<Game> gameList = new ArrayList<>();
         gameList.add(g);
@@ -318,7 +318,7 @@ public class GameServiceTests {
         when(gameCategoryRepository.findGameCategoryByCategory("Platformer")).thenReturn(Optional.empty());
 
         when(gameRepository.save(any(Game.class))).thenReturn(g);
-        gameService.createGame(title, price, description, publicOpinion, category);
+        gameService.createGame(title, price, description, publicOpinion, category, "");
 
         List<Game> gameList = new ArrayList<>();
         gameList.add(g);
@@ -490,7 +490,7 @@ public class GameServiceTests {
         g.setId(23);
 
         when(gameRepository.save(any(Game.class))).thenReturn(g);
-        gameService.createGame(title, price, description, publicOpinion, category);
+        gameService.createGame(title, price, description, publicOpinion, category, "");
 
         when(gameRepository.findGameByDescription(g.getDescription())).thenReturn(Optional.of(g));
         Game gg = gameService.getGameByDescription(g.getDescription());

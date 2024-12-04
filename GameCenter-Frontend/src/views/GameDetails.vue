@@ -19,7 +19,11 @@
       <div class="content-wrapper">
         <!-- Future image placeholder -->
         <div class="game-image-placeholder">
-          <div class="placeholder-text">Game Image Coming Soon</div>
+          <img
+            :src="game.imageUrl"
+            alt="Problem fetching image"
+            class="game-image"
+          />
         </div>
 
         <div class="game-info">
@@ -110,9 +114,12 @@
               <div>
                 <label for="rating">Rating:</label>
                 <select id="rating" v-model.number="newReview.rating">
-                  <option v-for="num in 5" :key="num" :value="num">
-                    {{ num }}
-                  </option>
+                  <option value="" disabled selected>Select rating</option>
+                  <option value="ONE">1</option>
+                  <option value="TWO">2</option>
+                  <option value="THREE">3</option>
+                  <option value="FOUR">4</option>
+                  <option value="FIVE">5</option>
                 </select>
               </div>
             </div>
@@ -202,7 +209,7 @@ export default {
       try {
         this.loading = true;
         const response = await apiClient.get(
-          `/games/id/${this.$route.params.id}`
+          `/games/id/${this.$route.params.id}`,
         );
         this.game = response.data;
         console.log("Game details:", this.game);
@@ -216,7 +223,7 @@ export default {
     async fetchGameReviews() {
       try {
         const response = await apiClient.get(
-          `/reviews/${this.$route.params.id}`
+          `/reviews/${this.$route.params.id}`,
         );
         this.reviews = response.data;
         console.log("Reviews:", this.reviews);
@@ -261,8 +268,14 @@ export default {
         rating: this.newReview.rating,
       };
 
+      console.log(this.newReview.rating);
+
       try {
-        await apiClient.post(`/reviews/${this.$route.params.id}`, requestObj);
+        const response = await apiClient.post(
+          `/reviews/${this.game.id}`,
+          requestObj,
+        );
+        console.log(response.data);
       } catch (e) {
         console.log(e);
       }
@@ -323,11 +336,14 @@ export default {
   align-items: center;
   justify-content: center;
   border: 2px dashed #ddd;
+  overflow: hidden;
 }
 
-.placeholder-text {
-  color: #666;
-  font-style: italic;
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
+  object-position: center;
 }
 
 .game-info {
@@ -369,13 +385,14 @@ export default {
 }
 
 .opinion-section {
+  display: inline-block;
   border-radius: 5px;
   padding: 10px;
   color: white;
   font-weight: bold;
   text-align: center;
   margin-top: 10px;
-  max-width: 20%;
+  white-space: nowrap;
 }
 
 .stock-status {
