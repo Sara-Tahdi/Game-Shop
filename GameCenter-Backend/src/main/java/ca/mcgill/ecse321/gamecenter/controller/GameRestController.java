@@ -32,7 +32,8 @@ public class GameRestController {
                     gameToCreate.getPrice(),
                     gameToCreate.getDescription(),
                     gameToCreate.getPublicOpinion(),
-                    c
+                    c,
+                    gameToCreate.getImageUrl()
             );
             return ResponseEntity.ok().body(new GameResponseDTO(g));
         } catch (Exception e) {

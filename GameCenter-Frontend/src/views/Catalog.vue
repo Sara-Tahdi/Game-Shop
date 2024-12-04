@@ -6,21 +6,23 @@
       <div class="search-bar-wrapper">
         <div class="search-input">
           <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search games by title or description..."
-              @keyup.enter="applyFilters"
-          >
-          <button @click="applyFilters" class="search-button">
-            Search
-          </button>
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search games by title or description..."
+            @keyup.enter="applyFilters"
+          />
+          <button @click="applyFilters" class="search-button">Search</button>
         </div>
 
         <div class="filter-group">
           <div class="category-filter">
             <select v-model="selectedCategory" @change="applyFilters">
               <option value="">All Categories</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">
+              <option
+                v-for="category in categories"
+                :key="category.id"
+                :value="category.id"
+              >
                 {{ category.category }}
               </option>
             </select>
@@ -28,44 +30,44 @@
 
           <div class="price-filter">
             <input
-                type="number"
-                v-model.number="minPrice"
-                placeholder="Min $"
-                min="0"
-                step="0.01"
-                @keyup.enter="applyFilters"
-            >
+              type="number"
+              v-model.number="minPrice"
+              placeholder="Min $"
+              min="0"
+              step="0.01"
+              @keyup.enter="applyFilters"
+            />
             <span class="separator">-</span>
             <input
-                type="number"
-                v-model.number="maxPrice"
-                placeholder="Max $"
-                min="0"
-                step="0.01"
-                @keyup.enter="applyFilters"
-            >
+              type="number"
+              v-model.number="maxPrice"
+              placeholder="Max $"
+              min="0"
+              step="0.01"
+              @keyup.enter="applyFilters"
+            />
           </div>
 
           <div class="rating-filter">
             <input
-                type="number"
-                v-model.number="minRating"
-                placeholder="Min ⭐"
-                min="0"
-                max="5"
-                step="0.5"
-                @keyup.enter="applyFilters"
-            >
+              type="number"
+              v-model.number="minRating"
+              placeholder="Min ⭐"
+              min="0"
+              max="5"
+              step="0.5"
+              @keyup.enter="applyFilters"
+            />
             <span class="separator">-</span>
             <input
-                type="number"
-                v-model.number="maxRating"
-                placeholder="Max ⭐"
-                min="0"
-                max="5"
-                step="0.5"
-                @keyup.enter="applyFilters"
-            >
+              type="number"
+              v-model.number="maxRating"
+              placeholder="Max ⭐"
+              min="0"
+              max="5"
+              step="0.5"
+              @keyup.enter="applyFilters"
+            />
           </div>
         </div>
         <button @click="applyFilters" class="apply-filters-button">
@@ -111,16 +113,16 @@ import GameCard from '@/components/GameCard.vue';
 import { userState } from '@/state/userState';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: "http://localhost:8080",
   headers: {
-    'Content-Type': 'application/json'
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 export default {
-  name: 'Catalog',
+  name: "Catalog",
   components: {
-    GameCard
+    GameCard,
   },
   data() {
     return {
@@ -129,8 +131,8 @@ export default {
       categories: [],
       loading: true,
       error: null,
-      searchQuery: '',
-      selectedCategory: '',
+      searchQuery: "",
+      selectedCategory: "",
       minPrice: null,
       maxPrice: null,
       minRating: null,
@@ -148,29 +150,29 @@ export default {
       try {
         this.loading = true;
         this.error = null;
-        console.log('Fetching games...');
-        const response = await apiClient.get('/games/available');
-        console.log('Response:', response.data);
+        console.log("Fetching games...");
+        const response = await apiClient.get("/games/available");
+        console.log("Response:", response.data);
         this.games = response.data;
         this.filteredGames = this.games;
       } catch (err) {
-        console.error('Error details:', err);
-        this.error = 'Failed to load games catalog. Please try again.';
+        console.error("Error details:", err);
+        this.error = "Failed to load games catalog. Please try again.";
       } finally {
         this.loading = false;
       }
     },
     async fetchCategories() {
       try {
-        const response = await apiClient.get('/gameCategory');
-        console.log('Fetched categories:', response.data);
+        const response = await apiClient.get("/gameCategory");
+        console.log("Fetched categories:", response.data);
         this.categories = response.data;
       } catch (err) {
-        console.error('Error fetching categories:', err);
+        console.error("Error fetching categories:", err);
       }
     },
     validatePriceRange() {
-      this.priceError = '';
+      this.priceError = "";
 
       if (this.minPrice !== null && this.minPrice < 0) {
         this.minPrice = 0;
@@ -179,21 +181,31 @@ export default {
         this.maxPrice = 0;
       }
 
-      if (this.minPrice !== null && this.maxPrice !== null && this.minPrice > this.maxPrice) {
-        this.priceError = 'Minimum price cannot be greater than maximum price';
+      if (
+        this.minPrice !== null &&
+        this.maxPrice !== null &&
+        this.minPrice > this.maxPrice
+      ) {
+        this.priceError = "Minimum price cannot be greater than maximum price";
         return false;
       }
       return true;
     },
     validateRatingRange() {
-      this.ratingError = '';
+      this.ratingError = "";
 
-      if (this.minRating !== null && (this.minRating < 0 || this.minRating > 5)) {
-        this.ratingError = 'Rating must be between 0 and 5';
+      if (
+        this.minRating !== null &&
+        (this.minRating < 0 || this.minRating > 5)
+      ) {
+        this.ratingError = "Rating must be between 0 and 5";
         return false;
       }
-      if (this.maxRating !== null && (this.maxRating < 0 || this.maxRating > 5)) {
-        this.ratingError = 'Rating must be between 0 and 5';
+      if (
+        this.maxRating !== null &&
+        (this.maxRating < 0 || this.maxRating > 5)
+      ) {
+        this.ratingError = "Rating must be between 0 and 5";
         return false;
       }
 
@@ -208,11 +220,14 @@ export default {
         return;
       }
 
-      this.filteredGames = this.games.filter(game => {
-        const matchesSearch = !this.searchQuery ||
-            game.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            game.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-
+      this.filteredGames = this.games.filter((game) => {
+        const matchesSearch =
+          !this.searchQuery ||
+          game.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          game.description
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase());
+         
         const matchesCategory = !this.selectedCategory ||
             game.category.id === parseInt(this.selectedCategory);
 
@@ -229,15 +244,15 @@ export default {
   created() {
     this.fetchGames();
     this.fetchCategories();
-  }
+  },
 };
 </script>
 
 <style scoped>
 .catalog {
-  padding: 20px;
+  /* padding: 20px; */
   background-color: white;
-  min-height: 100vh;
+  min-height: 112vh;
 }
 
 .catalog-title {
@@ -275,7 +290,7 @@ export default {
 .search-button,
 .apply-filters-button {
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
@@ -307,13 +322,15 @@ export default {
   background-color: white;
 }
 
-.price-filter, .rating-filter {
+.price-filter,
+.rating-filter {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.price-filter input, .rating-filter input {
+.price-filter input,
+.rating-filter input {
   width: 80px;
   padding: 8px;
   border: 1px solid #ddd;
@@ -359,8 +376,12 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {

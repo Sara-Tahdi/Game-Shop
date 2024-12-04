@@ -59,7 +59,11 @@ export default {
       resourceData: [],
       tableColumns: [
         { label: "Purchase ID", field: "id" },
-        { label: "Purchase Price", field: "totalPrice" },
+        {
+          label: "Purchase Price",
+          field: "totalPrice",
+          formatter: (value) => `${value.toFixed(2)}$`,
+        },
         { label: "Game Title", field: "game.title" },
         { label: "Nb of Copies", field: "copies" },
       ],
@@ -115,7 +119,7 @@ export default {
     async fetchPurchases() {
       try {
         const response = await purchaseService.getClientPurchases(
-          userState.userInfo.id
+          userState.userInfo.id,
         );
         this.resourceData = response.data;
       } catch (error) {
@@ -135,12 +139,12 @@ export default {
       } else if (this.selectedItem && this.selectedItem.refundReason != null) {
         console.log(
           "This purchase has already been refunded.",
-          this.selectedItem
+          this.selectedItem,
         );
         alert("This purchase has already been refunded.");
       } else {
         alert(
-          "If you truly wish to refund a purchase, you must first click on one."
+          "If you truly wish to refund a purchase, you must first click on one.",
         );
       }
     },
@@ -158,7 +162,7 @@ export default {
         this.closeModal();
         setTimeout(() => {
           alert(
-            "Your refund has been confirmed. Please wait up to 10 business months for your refund to be processed."
+            "Your refund has been confirmed. Please wait up to 10 business months for your refund to be processed.",
           );
         }, 100); // Adjust the delay if needed
       } catch (error) {

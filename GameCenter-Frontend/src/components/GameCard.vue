@@ -7,11 +7,12 @@
       }"
         class="game-link"
     >
-      <div class="game-image">
-        <!-- Image placeholder -->
-        <div class="image-placeholder">
-          <span>Game Image</span>
-        </div>
+      <div class="game-image-placeholder">
+        <img
+          :src="game.imageUrl"
+          alt="Problem fetching game image"
+          class="game-image"
+        />
       </div>
       <div class="game-content">
         <h3>{{ game.title }}</h3>
@@ -128,6 +129,17 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 2px dashed #ddd;
+}
+
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
+  object-position: center;
+}
+
+.placeholder-text {
   color: #666;
   font-size: 1.1em;
 }

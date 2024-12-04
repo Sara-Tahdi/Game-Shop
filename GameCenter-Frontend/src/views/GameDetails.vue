@@ -16,7 +16,11 @@
     <div v-else-if="game" class="game-details-container">
       <div class="content-wrapper">
         <div class="game-image-placeholder">
-          <div class="placeholder-text">Game Image Coming Soon</div>
+          <img
+            :src="game.imageUrl"
+            alt="Problem fetching image"
+            class="game-image"
+          />
         </div>
 
         <div class="game-info">
@@ -119,9 +123,12 @@
               <div>
                 <label for="rating">Rating:</label>
                 <select id="rating" v-model.number="newReview.rating">
-                  <option v-for="num in 5" :key="num" :value="num">
-                    {{ num }}
-                  </option>
+                  <option value="" disabled selected>Select rating</option>
+                  <option value="ONE">1</option>
+                  <option value="TWO">2</option>
+                  <option value="THREE">3</option>
+                  <option value="FOUR">4</option>
+                  <option value="FIVE">5</option>
                 </select>
               </div>
             </div>
@@ -229,7 +236,7 @@ export default {
 
       try {
         const response = await apiClient.get(
-            `/wishlists/${userState.userInfo.id}/game/${this.game.id}`
+            `/wishlists/client/${userState.userInfo.id}/game/${this.game.id}`
         );
         this.isInWishlist = response.data;
       } catch (error) {
@@ -258,35 +265,36 @@ export default {
 
     async addToWishlist() {
       if (!userState?.userInfo) {
-        this.$router.push('/');
+        alert("Please log in before adding to your wishlist");
         return;
       }
 
       try {
-        await apiClient.post(
-            `/wishlists/${userState.userInfo.id}/game/${this.game.id}`
-        );
-        this.isInWishlist = true;
-        alert("Game added to wishlist successfully!");
-      } catch (err) {
-        console.error("Error adding to wishlist:", err);
+        const response = await apiClient.post(`/wishlists/create`, {
+          clientId: userState.userInfo.id,
+          gameId: this.game.id,
+        });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
         alert("Failed to add game to wishlist. Please try again.");
       }
     },
 
     async addToCart() {
       if (!userState?.userInfo) {
-        this.$router.push('/');
+        alert("Please log in before adding to your wishlist");
         return;
       }
-
+      
       try {
-        await apiClient.post(
-            `/carts/${userState.userInfo.id}/game/${this.game.id}`
-        );
-        alert("Game added to cart successfully!");
-      } catch (err) {
-        console.error("Error adding to cart:", err);
+        const response = await apiClient.post(`/carts/create`, {
+          clientId: userState.userInfo.id,
+          gameId: this.game.id,
+        });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
         alert("Failed to add game to cart. Please try again.");
       }
     },
@@ -368,16 +376,15 @@ export default {
   justify-content: center;
   border-radius: 8px;
   border: 2px dashed #ddd;
-  flex-shrink: 0;
-  position: sticky;
-  top: 20px;
-  margin-top: 120px;  /* Increased from 80px to 120px */
+  overflow: hidden;
 }
 
-.placeholder-text {
-  color: #2c3e50;
-  font-style: italic;
-}
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
+  object-position: center;
+ }
 
 .game-info {
   flex: 1;
@@ -456,6 +463,17 @@ export default {
 .promotion-end-date {
   color: #2c3e50;
   font-size: 0.9em;
+}
+
+.opinion-section {
+  display: inline-block;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  white-space: nowrap;
 }
 
 .stock-status {

@@ -136,7 +136,7 @@ public class GameService {
 
 
     @Transactional
-    public Game createGame(String aTitle, Float aPrice, String aDescription, Game.GeneralFeeling aPublicOpinion, GameCategory aCategory) {
+    public Game createGame(String aTitle, Float aPrice, String aDescription, Game.GeneralFeeling aPublicOpinion, GameCategory aCategory, String imageUrl) {
         Game ref = gameRepository.findGameByTitle(aTitle).orElse(null);
         if (ref != null) {
             throw new IllegalArgumentException("Game already exists with title: " + aTitle);
@@ -157,7 +157,7 @@ public class GameService {
             throw new IllegalArgumentException("Price is not valid");
         }
 
-        Game g = new Game(aTitle, aPrice, aDescription, 0, 0, false, aPublicOpinion, aCategory, "");
+        Game g = new Game(aTitle, aPrice, aDescription, 0, 0, false, aPublicOpinion, aCategory, imageUrl);
         return gameRepository.save(g);
     }
 
