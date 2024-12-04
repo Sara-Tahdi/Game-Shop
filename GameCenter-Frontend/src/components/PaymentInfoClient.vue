@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h2>Payment Info Client</h2>
+      <h2>Payment Info</h2>
       <ResourceTable
         :data="resourceData"
         :columns="tableColumns"
