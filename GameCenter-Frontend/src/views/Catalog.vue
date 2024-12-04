@@ -144,6 +144,7 @@ export default {
       priceError: "",
       ratingError: "",
       userState: userState,
+      promotionalPrices: {},
     };
   },
   methods: {
@@ -159,6 +160,8 @@ export default {
         console.log("Response:", response.data);
         this.games = response.data;
         this.filteredGames = this.games;
+
+        await this.fetchPromotionalPrices();
       } catch (err) {
         console.error("Error details:", err);
         this.error = "Failed to load games catalog. Please try again.";
@@ -173,6 +176,29 @@ export default {
         this.categories = response.data;
       } catch (err) {
         console.error("Error fetching categories:", err);
+      }
+    },
+    async fetchPromotionalPrices() {
+      try {
+        for (const game of this.games) {
+          const response = await apiClient.get(`/promotions/game/${game.id}`);
+          const promotions = response.data;
+          const currentDate = new Date();
+
+          const activePromotions = promotions.filter((promo) => {
+            const endDate = new Date(promo.endDate);
+            return endDate >= currentDate;
+          });
+
+          if (activePromotions.length > 0) {
+            const lowestPrice = Math.min(
+              ...activePromotions.map((p) => p.newPrice),
+            );
+            this.promotionalPrices[game.id] = lowestPrice;
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching promotional prices:", error);
       }
     },
     validatePriceRange() {
@@ -241,9 +267,11 @@ export default {
           !this.selectedCategory ||
           game.category.id === parseInt(this.selectedCategory);
 
+        const effectivePrice = this.promotionalPrices[game.id] || game.price;
+
         const matchesPrice =
-          (!this.minPrice || game.price >= this.minPrice) &&
-          (!this.maxPrice || game.price <= this.maxPrice);
+          (!this.minPrice || effectivePrice >= this.minPrice) &&
+          (!this.maxPrice || effectivePrice <= this.maxPrice);
 
         const matchesRating =
           (!this.minRating || game.rating >= this.minRating) &&
