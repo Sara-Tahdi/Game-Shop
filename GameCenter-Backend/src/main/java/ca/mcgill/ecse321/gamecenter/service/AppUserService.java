@@ -24,7 +24,6 @@ public class AppUserService {
         if (!(a instanceof Client)) {
             throw new IllegalArgumentException("There is no Client with id: " + id);
         }
-        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Client) a;
     }
 
@@ -33,7 +32,6 @@ public class AppUserService {
         if (!(a instanceof Employee)) {
             throw new IllegalArgumentException("There is no Employee with id: " + id);
         }
-        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Employee) a;
     }
 
@@ -42,7 +40,6 @@ public class AppUserService {
         if (!(a instanceof Client)) {
             throw new IllegalArgumentException("There is no Client with email: " + email);
         }
-        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Client) a;
     }
 
@@ -51,7 +48,6 @@ public class AppUserService {
         if (!(a instanceof Employee)) {
             throw new IllegalArgumentException("There is no Employee with email: " + email);
         }
-        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Employee) a;
     }
 
@@ -60,7 +56,6 @@ public class AppUserService {
         if (!(a instanceof Client)) {
             throw new IllegalArgumentException("There is no Client with username: " + username);
         }
-        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Client) a;
     }
 
@@ -69,7 +64,6 @@ public class AppUserService {
         if (!(a instanceof Employee)) {
             throw new IllegalArgumentException("There is no Employee with username: " + username);
         }
-        a.setPassword(Encryption.encryptDecrypt(a.getPassword()));
         return (Employee) a;
     }
 
@@ -90,6 +84,7 @@ public class AppUserService {
         }
 
         Client c = new Client(aEmail, aUsername, Encryption.encryptDecrypt(aPassword), aPhoneNumber, aDeliveryAddress);
+        System.out.println(Encryption.encryptDecrypt(aPassword));
         return appUserRepository.save(c);
     }
 

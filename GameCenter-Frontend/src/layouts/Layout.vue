@@ -33,6 +33,6 @@ export default {
 
 <style scoped>
 .main-content {
-  padding-top: 80px; /* We can adjust this to match the header's height */
+  padding-top: 85px; /* We can adjust this to match the header's height */
 }
 </style>

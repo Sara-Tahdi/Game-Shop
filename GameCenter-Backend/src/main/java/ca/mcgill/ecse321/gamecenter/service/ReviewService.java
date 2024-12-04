@@ -25,7 +25,9 @@ public class ReviewService {
             case THREE: {return 3;}
             case FOUR: {return 4;}
             case FIVE: {return 5;}
-            case null, default: {return 0;}
+            default: {
+                return 0;
+            }
         }
     }
 

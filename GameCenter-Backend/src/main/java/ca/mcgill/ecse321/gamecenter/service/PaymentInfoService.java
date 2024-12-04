@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.gamecenter.service;
 import ca.mcgill.ecse321.gamecenter.model.Client;
 import ca.mcgill.ecse321.gamecenter.model.PaymentInfo;
 import ca.mcgill.ecse321.gamecenter.repository.PaymentInfoRepository;
+import ca.mcgill.ecse321.gamecenter.utilities.Encryption;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

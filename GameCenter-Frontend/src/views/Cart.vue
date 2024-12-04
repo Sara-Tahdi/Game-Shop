@@ -18,51 +18,56 @@
           <h3>{{ game.title }}</h3>
           <p class="description">{{ game.description }}</p>
           <div class="game-details">
-            <span class="price">${{ game.price.toFixed(2) }}</span>
+            <div class="price-container">
+              <span class="original-price" :class="{ 'has-promotion': promotionalPrices[game.id] }">
+                ${{ game.price.toFixed(2) }}
+              </span>
+              <span v-if="promotionalPrices[game.id]" class="promotional-price">
+                ${{ promotionalPrices[game.id].toFixed(2) }}
+              </span>
+            </div>
             <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
           </div>
           <div
-            class="stock-status"
-            :class="{ 'in-stock': game.remainingQuantity > 0 }"
+              class="stock-status"
+              :class="{ 'in-stock': game.remainingQuantity > 0 }"
           >
             {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
-          <!-- Remove from Cart Button -->
-          <button @click="removeFromCart(game)" class="remove-btn">
+          <button @click="removeFromCart(game.id)" class="remove-btn">
             Remove from Cart
-          </button>
-          <!-- Add to Wishlist Button -->
-          <button
-            @click="addToWishlist(game)"
-            class="add-to-wishlist-btn"
-            :disabled="game.remainingQuantity === 0"
-          >
-            Add to Wishlist
           </button>
         </div>
       </section>
+
+      <div class="cart-summary">
+        <div class="total">
+          <span>Total:</span>
+          <span>${{ calculateTotal().toFixed(2) }}</span>
+        </div>
+        <button
+            @click="proceedToCheckout"
+            class="checkout-btn"
+            :disabled="cart.some(game => game.remainingQuantity === 0)"
+        >
+          Proceed to Checkout
+        </button>
+      </div>
     </div>
 
-    <div v-if="!loading && cart.length > 0" style="padding: 10px">
-      <RouterLink to="/checkout" class="submit-button">Checkout</RouterLink>
-    </div>
-
-    <!-- Empty Cart State -->
-    <div v-if="clientId && cart.length === 0" class="no-items">
+    <div v-if="!loading && !error && cart.length === 0" class="no-items">
       Your cart is empty.
     </div>
   </div>
 </template>
+
 <script>
 import { userState } from "@/state/userState";
 import axios from "axios";
 
-const axiosClient = axios.create({
+const apiClient = axios.create({
   baseURL: "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "http://localhost:8080",
-  },
+  timeout: 5000,
 });
 
 export default {
@@ -72,19 +77,41 @@ export default {
       cart: [],
       loading: false,
       error: null,
-      clientId: null,
+      promotionalPrices: {},
     };
   },
   methods: {
-    async fetchCart() {
-      console.log(
-        "Attempting to fetch cart for client:",
-        userState.userInfo.id,
-      );
+    calculateTotal() {
+      return this.cart.reduce((total, game) => {
+        const price = this.promotionalPrices[game.id] || game.price;
+        return total + price;
+      }, 0);
+    },
 
-      if (!userState.userInfo.id) {
-        this.error = "No client ID available. Please log in.";
-        this.loading = false;
+    async fetchPromotions(gameId) {
+      try {
+        console.log(`Fetching promotions for game ${gameId}`);
+        const response = await apiClient.get(`/promotions/game/${gameId}`);
+        const promotions = response.data;
+        const currentDate = new Date();
+
+        const activePromotions = promotions.filter(promo => {
+          const endDate = new Date(promo.endDate);
+          return endDate >= currentDate;
+        });
+
+        if (activePromotions.length > 0) {
+          const lowestPrice = Math.min(...activePromotions.map(p => p.newPrice));
+          this.promotionalPrices[gameId] = lowestPrice;
+        }
+      } catch (error) {
+        console.error(`Error fetching promotions for game ${gameId}:`, error);
+      }
+    },
+
+    async fetchCart() {
+      if (!userState.userInfo?.id) {
+        this.error = "Please log in to view your cart";
         return;
       }
 
@@ -92,78 +119,38 @@ export default {
       this.error = null;
 
       try {
-        const response = await axiosClient.get(
-          `/carts/client/${userState.userInfo.id}`,
-        );
-        console.log(response.data);
-        response.data.forEach(async (item) => {
-          console.log(item);
-          const itemData = await axiosClient.get(`/games/id/${item.gameId}`);
-          this.cart.push(itemData.data);
-        });
-        this.loading = false;
+        const response = await apiClient.get(`/carts/client/${userState.userInfo.id}`);
+        this.cart = [];
+
+        for (const item of response.data) {
+          try {
+            const gameResponse = await apiClient.get(`/games/id/${item.gameId}`);
+            this.cart.push(gameResponse.data);
+            await this.fetchPromotions(item.gameId);
+          } catch (err) {
+            console.error(`Error fetching game ${item.gameId}:`, err);
+          }
+        }
       } catch (err) {
+        console.error("Error fetching cart:", err);
         this.error = "Failed to load cart. Please try again.";
-        console.error(err);
       } finally {
         this.loading = false;
       }
     },
 
-    async removeFromCart(game) {
-      console.log("Removing game from cart:", game);
-
-      if (!userState.userInfo.id) {
-        this.error = "Please log in to remove games from your cart.";
-        return;
-      }
-
+    async removeFromCart(gameId) {
       try {
-        const response = await axios.delete(
-          "http://localhost:8080/carts/remove",
-          {
-            params: {
-              clientId: userState.userInfo.id,
-              gameId: game.id,
-            },
-          },
-        );
-
-        if (response.status === 204) {
-          console.log("Game successfully removed from cart:", game);
-          this.cart = this.cart.filter((item) => item.id !== game.id); // Remove the game from local cart
-        }
+        await apiClient.delete(`/carts/${userState.userInfo.id}/game/${gameId}`);
+        this.cart = this.cart.filter(game => game.id !== gameId);
       } catch (err) {
-        console.error("Error removing game from cart:", err);
-        this.error = "Failed to remove game from cart. Please try again.";
+        console.error("Error removing from cart:", err);
+        alert("Failed to remove game from cart. Please try again.");
       }
     },
 
-    async addToWishlist(game) {
-      console.log("Adding game to wishlist:", game);
-
-      if (!userState.userInfo.id) {
-        this.error = "Please log in to add games to your wishlist.";
-        return;
-      }
-
-      try {
-        const response = await axios.post(
-          "http://localhost:8080/wishlists/create",
-          {
-            clientId: userState.userInfo.id,
-            gameId: game.id,
-          },
-        );
-
-        if (response.status === 200) {
-          console.log("Game successfully added to wishlist:", game);
-          // this.wishlist.push(game); ??
-        }
-      } catch (err) {
-        console.error("Error adding game to wishlist:", err);
-        this.error = "Failed to add game to wishlist. Please try again.";
-      }
+    proceedToCheckout() {
+      this.$router.push("/checkout");
     },
   },
   created() {
@@ -197,8 +184,8 @@ export default {
 
 .games-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  gap: 20px; /* spacing between items */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .game-card {
@@ -206,27 +193,52 @@ export default {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-card h3 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: #2c3e50;
+  font-size: 1.2em;
 }
 
 .description {
-  color: #666;
+  color: #2c3e50;
   margin-bottom: 10px;
   font-size: 0.9em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  flex: 1;
 }
 
 .game-details {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
-.price {
+.price-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.original-price {
   color: #2c3e50;
+}
+
+.original-price.has-promotion {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.promotional-price {
+  color: #dc3545;
   font-weight: bold;
 }
 
@@ -240,44 +252,65 @@ export default {
   text-align: center;
   background-color: #e74c3c;
   color: white;
+  margin: 10px 0;
 }
 
 .stock-status.in-stock {
   background-color: #2ecc71;
 }
 
-.remove-btn,
-.add-to-wishlist-btn {
-  padding: 8px 16px;
+.remove-btn {
   width: 100%;
+  padding: 8px 16px;
   background-color: #e74c3c;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-}
-
-.remove-btn {
-  background-color: #e74c3c;
-  color: white;
+  transition: background-color 0.3s;
 }
 
 .remove-btn:hover {
   background-color: #c0392b;
 }
 
-.add-to-wishlist-btn {
-  background-color: #f39c12;
+.cart-summary {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 12px 24px;
+  background-color: #2ecc71;
   color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.3s;
 }
 
-.add-to-wishlist-btn:hover {
-  background-color: #e67e22;
+.checkout-btn:hover:not(:disabled) {
+  background-color: #27ae60;
 }
 
-.add-to-wishlist-btn:disabled {
-  opacity: 0.5;
+.checkout-btn:disabled {
+  background-color: #95a5a6;
   cursor: not-allowed;
 }
 
@@ -302,12 +335,8 @@ export default {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .error {
@@ -337,21 +366,26 @@ export default {
 .no-items {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: #2c3e50;
+  background-color: white;
+  border-radius: 8px;
+  margin: 20px;
+  font-size: 1.2em;
 }
 
-.submit-button {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
-  text-align: center;
+@media (max-width: 1024px) {
+  .games-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .games-list {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-title {
+    font-size: 2em;
+  }
 }
 </style>

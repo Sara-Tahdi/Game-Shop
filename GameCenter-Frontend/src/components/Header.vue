@@ -14,71 +14,59 @@
 
         <!-- Authentication -->
         <div class="auth">
+          <!-- Debug Info -->
+          <div style="display: none;">
+            User Info: {{ JSON.stringify(userState.userInfo) }}
+          </div>
+
           <!-- Sign In Button -->
           <button
-            v-if="!userState.userInfo"
-            @click="$emit('showLoginModal')"
-            class="auth-button"
+              v-if="!userState.userInfo"
+              @click="$emit('showLoginModal')"
+              class="auth-button"
           >
             Sign In
           </button>
 
-          <!-- User Icon and Dropdown -->
-          <div v-else class="user-menu" @mouseleave="showDropdown = false">
-            <!-- Cart and Wishlist Button -->
-            <div
-              v-if="userState.userInfo.userType === 'Client'"
-              class="user-icon wishlist"
-            >
-              <button class="button">
-                <RouterLink to="/wishlist">✨</RouterLink>
-              </button>
+          <!-- User Menu with Cart and Wishlist -->
+          <div v-else class="user-menu">
+            <div class="user-icon wishlist">
+              <RouterLink to="/wishlist">✨</RouterLink>
+            </div>
+            <div class="user-icon cart">
+              <RouterLink to="/cart">🛒</RouterLink>
             </div>
             <div
-              v-if="userState.userInfo.userType === 'Client'"
-              class="user-icon cart"
+                class="user-icon profile"
+                @click="toggleDropdown"
             >
-              <button class="button">
-                <RouterLink to="/cart">🛒</RouterLink>
-              </button>
+              {{ userState.userInfo?.username?.charAt(0).toUpperCase() }}
             </div>
-            <div
-              class="user-icon"
-              @mouseover="showDropdown = true"
-              @click="showDropdown = !showDropdown"
-            >
-              {{ userState.userInfo.username.charAt(0).toUpperCase() }}
+
+            <!-- Dropdown Menu -->
+            <div v-show="showDropdown" class="dropdown-container">
+              <ul class="dropdown">
+                <li>
+                  <RouterLink to="/account">Manage Account</RouterLink>
+                </li>
+                <li v-if="isEmployeeOrOwner">
+                  <RouterLink
+                      v-if="isEmployee"
+                      to="/employee-dashboard"
+                  >Manage Store</RouterLink>
+                  <RouterLink
+                      v-if="isOwner"
+                      to="/owner-dashboard"
+                  >Manage Store</RouterLink>
+                </li>
+                <li>
+                  <RouterLink to="/client-profile">Account Info</RouterLink>
+                </li>
+                <li>
+                  <a @click="handleLogout" class="logout-link">Sign Out</a>
+                </li>
+              </ul>
             </div>
-            <ul v-if="showDropdown" class="dropdown">
-              <li>
-                <RouterLink to="/account">Manage Account</RouterLink>
-              </li>
-              <li
-                v-if="
-                  userState.userInfo.userType === 'Employee' ||
-                  userState.userInfo.userType === 'Owner'
-                "
-              >
-                <RouterLink
-                  v-if="userState.userInfo.userType === 'Employee'"
-                  to="/employee-dashboard"
-                  >Manage Store</RouterLink
-                >
-                <RouterLink
-                  v-else-if="userState.userInfo.userType === 'Owner'"
-                  to="/owner-dashboard"
-                  >Manage Store</RouterLink
-                >
-              </li>
-              <li v-if="userState.userInfo.userType === 'Client'">
-                <RouterLink to="/client-profile">Account Info</RouterLink>
-              </li>
-              <li>
-                <RouterLink @click="logout" to="/" class="logout-link"
-                  >Sign Out</RouterLink
-                >
-              </li>
-            </ul>
           </div>
         </div>
       </div>
@@ -93,21 +81,55 @@ export default {
   name: "Header",
   data() {
     return {
-      showDropdown: false, // Controls dropdown visibility
+      showDropdown: false,
+      userState: userState,
     };
   },
-  setup() {
-    const logout = () => {
-      userState.clearUser();
-    };
-
-    return { userState, logout };
+  computed: {
+    isEmployeeOrOwner() {
+      return this.userState.userInfo &&
+          (this.userState.userInfo.userType === 'Employee' ||
+              this.userState.userInfo.userType === 'Owner');
+    },
+    isEmployee() {
+      return this.userState.userInfo && this.userState.userInfo.userType === 'Employee';
+    },
+    isOwner() {
+      return this.userState.userInfo && this.userState.userInfo.userType === 'Owner';
+    }
   },
+  methods: {
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+      console.log('Current user type:', this.userState.userInfo?.userType);
+    },
+    closeDropdown() {
+      this.showDropdown = false;
+    },
+    handleLogout() {
+      this.userState.clearUser();
+      this.closeDropdown();
+      this.$router.push('/');
+    },
+    handleClickOutside(event) {
+      const userMenu = document.querySelector('.user-menu');
+      if (userMenu && !userMenu.contains(event.target)) {
+        this.closeDropdown();
+      }
+    }
+  },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+    console.log('Header mounted - User Info:', this.userState.userInfo);
+    console.log('Header mounted - User Type:', this.userState.userInfo?.userType);
+  },
+  unmounted() {
+    document.removeEventListener('click', this.handleClickOutside);
+  }
 };
 </script>
 
 <style scoped>
-/* General Header Styles */
 .header {
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -160,11 +182,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-/* Sign In Button */
 .auth-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0.5rem 1.25rem;
   border: none;
   border-radius: 6px;
@@ -174,16 +192,13 @@ export default {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .auth-button:hover {
   background-color: #0056b3;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* User Menu */
 .user-menu {
   position: relative;
   display: flex;
@@ -192,8 +207,6 @@ export default {
 }
 
 .user-icon {
-  background-color: #007bff;
-  color: white;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -201,49 +214,70 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 }
 
-.user-icon:hover {
-  background-color: #0056b3;
+.user-icon.profile {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
 }
 
 .wishlist {
-  background-color: gray;
+  background-color: #f8d7da;
 }
 
 .cart {
-  background-color: yellow;
+  background-color: #d4edda;
 }
 
-.button {
-  background-color: transparent;
-  border-color: transparent;
+.user-icon a {
+  text-decoration: none;
+  color: #2c3e50;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Dropdown Menu */
-.dropdown {
+.user-icon:hover {
+  transform: translateY(-2px);
+}
+
+.wishlist:hover {
+  background-color: #f5c6cb;
+}
+
+.cart:hover {
+  background-color: #c3e6cb;
+}
+
+.profile:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-container {
   position: absolute;
   top: 100%;
   right: 0;
+  padding-top: 10px;
+  z-index: 1000;
+}
+
+.dropdown {
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
   list-style: none;
-  min-width: 150px;
-  z-index: 1000;
-  text-align: center; /* Ensures dropdown text is centered */
+  min-width: 200px;
 }
 
 .dropdown li {
   padding: 0.5rem 1rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .dropdown li:hover {
@@ -252,12 +286,28 @@ export default {
 
 .dropdown li a {
   text-decoration: none;
-  color: #333; /* Default link color */
+  color: #333;
+  display: block;
+  width: 100%;
+  cursor: pointer;
 }
 
 .logout-link {
-  color: red !important; /* Ensure the logout link is red */
-  font-weight: bold;
-  cursor: pointer;
+  color: #dc3545 !important;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    padding: 1rem;
+  }
+
+  .brand {
+    font-size: 1.2rem;
+  }
+
+  .browse {
+    font-size: 1rem;
+  }
 }
 </style>

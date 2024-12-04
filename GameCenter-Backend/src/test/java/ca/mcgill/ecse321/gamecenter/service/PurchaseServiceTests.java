@@ -67,12 +67,12 @@ public class PurchaseServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         g.setId(513);
         g.setRemainingQuantity(10);
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
-        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory);
+        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory, "");
 
         int copies = 2;
         float total = Round.round(copies * g.getPrice());
@@ -102,12 +102,12 @@ public class PurchaseServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         g.setId(513);
         g.setRemainingQuantity(10);
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
-        gameService.createGame(title, price, description, generalFeeling, gameCategory);
+        gameService.createGame(title, price, description, generalFeeling, gameCategory, "");
 
         int copies = 2;
 

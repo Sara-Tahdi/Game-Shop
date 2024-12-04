@@ -1,7 +1,11 @@
 <template>
   <div class="game-card">
     <div class="game-image-placeholder">
-      <div class="placeholder-text">Game Image Coming Soon</div>
+      <img
+        :src="game.imageUrl"
+        alt="Problem fetching game image"
+        class="game-image"
+      />
     </div>
     <div class="game-content">
       <h3>{{ game.title }}</h3>
@@ -10,22 +14,11 @@
         <span class="price">${{ game.price.toFixed(2) }}</span>
         <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
       </div>
-      <div class="stock-status" :class="{ 'in-stock': game.remainingQuantity > 0 }">
-        {{ game.remainingQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
-      </div>
-      <div class="action-buttons">
-        <button
-            @click.stop="addToWishlist"
-            class="wishlist-button"
-            :disabled="game.remainingQuantity === 0">
-          Add to Wishlist
-        </button>
-        <button
-            @click.stop="addToCart"
-            class="cart-button"
-            :disabled="game.remainingQuantity === 0">
-          Add to Cart
-        </button>
+      <div
+        class="stock-status"
+        :class="{ 'in-stock': game.remainingQuantity > 0 }"
+      >
+        {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
       </div>
     </div>
   </div>
@@ -33,21 +26,21 @@
 
 <script>
 export default {
-  name: 'GameCard',
+  name: "GameCard",
   props: {
     game: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     addToWishlist() {
-      this.$emit('add-to-wishlist', this.game);
+      this.$emit("add-to-wishlist", this.game);
     },
     addToCart() {
-      this.$emit('add-to-cart', this.game);
-    }
-  }
+      this.$emit("add-to-cart", this.game);
+    },
+  },
 };
 </script>
 
@@ -55,7 +48,7 @@ export default {
 .game-card {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -75,6 +68,13 @@ export default {
   align-items: center;
   justify-content: center;
   border-bottom: 2px dashed #ddd;
+}
+
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
+  object-position: center;
 }
 
 .placeholder-text {
@@ -127,46 +127,5 @@ export default {
 
 .stock-status.in-stock {
   background-color: #2ecc71;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: auto;
-}
-
-.wishlist-button,
-.cart-button {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.2s;
-}
-
-.wishlist-button {
-  background-color: #e0e0e0;
-  color: #333;
-}
-
-.wishlist-button:hover:not(:disabled) {
-  background-color: #d0d0d0;
-}
-
-.cart-button {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.cart-button:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-.wishlist-button:disabled,
-.cart-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 </style>

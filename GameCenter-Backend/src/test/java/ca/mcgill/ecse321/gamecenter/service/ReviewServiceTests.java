@@ -45,10 +45,10 @@ public class ReviewServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
-        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory);
+        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory, "");
 
         String author = "awesomesauce3247";
         String reviewContent = "yes yes this good game, i like";
@@ -77,7 +77,7 @@ public class ReviewServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
 
         String author = "awesomesauce3247";
         String reviewContent = "yes yes this good game, i like";
@@ -102,7 +102,7 @@ public class ReviewServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
 
@@ -130,10 +130,10 @@ public class ReviewServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
-        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory);
+        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory, "");
 
         String author = "awesomesauce3247";
         String reviewContent = "yes yes this good game, i like";
@@ -165,10 +165,10 @@ public class ReviewServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.of(g));
-        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory);
+        Game createdGame = gameService.createGame(title, price, description, generalFeeling, gameCategory, "");
 
         when(reviewRepository.findReviewsByGameId(createdGame.getId())).thenReturn(Optional.empty());
 
@@ -187,7 +187,7 @@ public class ReviewServiceTests {
         float price = 26.99f;
         String description = "block game";
         Game.GeneralFeeling generalFeeling = Game.GeneralFeeling.VERYPOSITIVE;
-        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory);
+        Game g = new Game(title, price, description, 0, 0, false, generalFeeling, savedCategory, "");
         when(gameRepository.save(any(Game.class))).thenReturn(g);
         when(gameRepository.findGameById(g.getId())).thenReturn(Optional.empty());
 
