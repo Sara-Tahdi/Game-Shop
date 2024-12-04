@@ -264,7 +264,7 @@ export default {
 
 <style scoped>
 .catalog {
-  /* padding: 20px; */
+  padding: 100px;
   background-color: white;
   min-height: 112vh;
 }
@@ -425,7 +425,7 @@ export default {
 .games-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(5, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, 300px);
   width: 100%;
   padding: 20px;
 }

@@ -2,9 +2,6 @@
   <div class="dashboard-container">
     <div class="employee-dashboard">
       <section class="management-section">
-        <GameCategoryManagement />
-      </section>
-      <section class="management-section">
         <GameManagement />
       </section>
       <section class="management-section">
@@ -15,9 +12,6 @@
       </section>
       <section class="management-section">
         <EmployeeManagement />
-      </section>
-      <section class="management-section">
-        <GameRequestManagement />
       </section>
       <section class="management-section">
         <PromotionManagement />

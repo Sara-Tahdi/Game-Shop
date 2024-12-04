@@ -53,16 +53,29 @@ export default {
     ResourceTable,
     ResourceModal,
   },
+  computed: {
+    specificColumns() {
+      if (userState.userInfo.userType === "Employee") {
+        return [
+          { label: "ID", field: "id", width: "33.33333%" },
+          { label: "Username", field: "username", width: "33.33333%" },
+          { label: "Email", field: "email", width: "33.33334%" },
+        ];
+      } else if (userState.userInfo.userType === "Owner") {
+        return [
+          { label: "ID", field: "id", width: "25%" },
+          { label: "Username", field: "username", width: "25%" },
+          { label: "Email", field: "email", width: "25%" },
+          { label: "Phone Number", field: "phoneNumber", width: "25%" },
+          { label: "Allowed on Platform", field: "isActive", width: "25%" },
+        ];
+      }
+    },
+  },
   data() {
     return {
       resourceData: [],
-      tableColumns: [
-        { label: "ID", field: "id", width: "25%" },
-        { label: "Username", field: "username", width: "25%" },
-        { label: "Email", field: "email", width: "25%" },
-        { label: "Phone Number", field: "phoneNumber", width: "25%" },
-        { label: "Allowed on Platform", field: "isActive", width: "25%" },
-      ],
+      tableColumns: [],
       tableButtons: [{ label: "Flag User", action: "flagUser" }],
       isModalVisible: false,
       modalTitle: "Flag Client",
@@ -108,8 +121,7 @@ export default {
         this.isModalVisible = true;
       } else if (this.selectedItem && !this.selectedItem.isActive) {
         alert("This user is already banned.");
-      }
-      else {
+      } else {
         alert("Please select a user to flag.");
       }
     },
@@ -137,6 +149,7 @@ export default {
   },
   created() {
     this.fetchClients();
+    this.tableColumns = this.specificColumns;
   },
 };
 </script>

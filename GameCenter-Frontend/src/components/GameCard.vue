@@ -1,30 +1,58 @@
 <template>
   <div class="game-card">
-    <div class="game-image-placeholder">
-      <img
-        :src="game.imageUrl"
-        alt="Problem fetching game image"
-        class="game-image"
-      />
-    </div>
-    <div class="game-content">
-      <h3>{{ game.title }}</h3>
-      <p class="description">{{ game.description }}</p>
-      <div class="game-details">
-        <span class="price">${{ game.price.toFixed(2) }}</span>
-        <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
+    <RouterLink
+      :to="{
+        name: 'GameDetails',
+        params: { id: game.id },
+      }"
+      class="game-link"
+    >
+      <div class="game-image-placeholder">
+        <img
+          :src="game.imageUrl"
+          alt="Problem fetching game image"
+          class="game-image"
+        />
       </div>
-      <div
-        class="stock-status"
-        :class="{ 'in-stock': game.remainingQuantity > 0 }"
-      >
-        {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
+      <div class="game-content">
+        <h3>{{ game.title }}</h3>
+        <p class="description">{{ game.description }}</p>
+        <div class="game-details">
+          <div class="price-container">
+            <span
+              class="original-price"
+              :class="{ 'has-promotion': promotionalPrices[game.id] }"
+            >
+              ${{ game.price.toFixed(2) }}
+            </span>
+            <span v-if="promotionalPrices[game.id]" class="promotional-price">
+              ${{ promotionalPrices[game.id].toFixed(2) }}
+            </span>
+          </div>
+          <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5.0</span>
+        </div>
+        <div
+          class="stock-status"
+          :class="{ 'in-stock': game.remainingQuantity > 0 }"
+        >
+          {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
+        </div>
       </div>
-    </div>
+    </RouterLink>
   </div>
 </template>
 
 <script>
+import { userState } from "@/state/userState";
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export default {
   name: "GameCard",
   props: {
@@ -32,14 +60,47 @@ export default {
       type: Object,
       required: true,
     },
+    isInWishlist: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      promotionalPrices: {},
+    };
   },
   methods: {
-    addToWishlist() {
-      this.$emit("add-to-wishlist", this.game);
+    async fetchPromotions() {
+      try {
+        console.log(`Fetching promotions for game ${this.game.id}`);
+        const response = await apiClient.get(
+          `/promotions/game/${this.game.id}`,
+        );
+        const promotions = response.data;
+        const currentDate = new Date();
+
+        const activePromotions = promotions.filter((promo) => {
+          const endDate = new Date(promo.endDate);
+          return endDate >= currentDate;
+        });
+
+        if (activePromotions.length > 0) {
+          const lowestPrice = Math.min(
+            ...activePromotions.map((p) => p.newPrice),
+          );
+          this.promotionalPrices[this.game.id] = lowestPrice;
+        }
+      } catch (error) {
+        console.error(
+          `Error fetching promotions for game ${this.game.id}:`,
+          error,
+        );
+      }
     },
-    addToCart() {
-      this.$emit("add-to-cart", this.game);
-    },
+  },
+  created() {
+    this.fetchPromotions();
   },
 };
 </script>
@@ -47,17 +108,27 @@ export default {
 <style scoped>
 .game-card {
   background: white;
+  width: 300px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 450px;
   transition: transform 0.2s ease-in-out;
+  margin: 10px;
 }
 
 .game-card:hover {
   transform: translateY(-5px);
+}
+
+.game-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-image-placeholder {
@@ -73,13 +144,8 @@ export default {
 .game-image {
   width: 100%;
   height: 100%;
-  object-fit: scale-down;
+  object-fit: fill;
   object-position: center;
-}
-
-.placeholder-text {
-  color: #666;
-  font-style: italic;
 }
 
 .game-content {
@@ -107,8 +173,24 @@ export default {
   margin-bottom: 10px;
 }
 
-.price {
+.price-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 1.5em; /* Fixed height for price container */
+}
+
+.original-price {
   color: #2c3e50;
+}
+
+.original-price.has-promotion {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.promotional-price {
+  color: #dc3545;
   font-weight: bold;
 }
 
@@ -122,7 +204,11 @@ export default {
   text-align: center;
   background-color: #e74c3c;
   color: white;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  height: 2em; /* Fixed height for status */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stock-status.in-stock {
