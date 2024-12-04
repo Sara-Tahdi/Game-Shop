@@ -95,27 +95,22 @@
         <div v-if="filteredGames.length === 0" class="no-results">
           No games found matching your criteria.
         </div>
-        <router-link
-          v-else
-          v-for="game in filteredGames"
-          :key="game.id"
-          :to="`/game/${game.id}`"
-          class="game-card-link"
-        >
-          <GameCard
-            :game="game"
-            @add-to-wishlist="addToWishlist"
-            @add-to-cart="addToCart"
-          />
-        </router-link>
+        <div v-else class="games-grid">
+          <div v-for="game in filteredGames" :key="game.id" class="game-card-wrapper">
+            <div class="game-card-content" @click="navigateToGame(game.id)">
+              <GameCard :game="game" />
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import GameCard from "@/components/GameCard.vue";
+import axios from 'axios';
+import GameCard from '@/components/GameCard.vue';
+import { userState } from '@/state/userState';
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
@@ -142,11 +137,15 @@ export default {
       maxPrice: null,
       minRating: null,
       maxRating: null,
-      priceError: "",
-      ratingError: "",
+      priceError: '',
+      ratingError: '',
+      userState: userState,
     };
   },
   methods: {
+    navigateToGame(gameId) {
+      this.$router.push(`/game/${gameId}`);
+    },
     async fetchGames() {
       try {
         this.loading = true;
@@ -209,13 +208,9 @@ export default {
         this.ratingError = "Rating must be between 0 and 5";
         return false;
       }
-      if (
-        this.minRating !== null &&
-        this.maxRating !== null &&
-        this.minRating > this.maxRating
-      ) {
-        this.ratingError =
-          "Minimum rating cannot be greater than maximum rating";
+
+      if (this.minRating !== null && this.maxRating !== null && this.minRating > this.maxRating) {
+        this.ratingError = 'Minimum rating cannot be greater than maximum rating';
         return false;
       }
       return true;
@@ -232,31 +227,19 @@ export default {
           game.description
             .toLowerCase()
             .includes(this.searchQuery.toLowerCase());
+         
+        const matchesCategory = !this.selectedCategory ||
+            game.category.id === parseInt(this.selectedCategory);
 
-        const matchesPrice =
-          (!this.minPrice || game.price >= this.minPrice) &&
-          (!this.maxPrice || game.price <= this.maxPrice);
+        const matchesPrice = (!this.minPrice || game.price >= this.minPrice) &&
+            (!this.maxPrice || game.price <= this.maxPrice);
 
-        const matchesRating =
-          (!this.minRating || game.rating >= this.minRating) &&
-          (!this.maxRating || game.rating <= this.maxRating);
+        const matchesRating = (!this.minRating || game.rating >= this.minRating) &&
+            (!this.maxRating || game.rating <= this.maxRating);
 
-        const matchesCategory =
-          !this.selectedCategory ||
-          (game.category &&
-            game.category.id === parseInt(this.selectedCategory));
-
-        return (
-          matchesSearch && matchesPrice && matchesRating && matchesCategory
-        );
+        return matchesSearch && matchesCategory && matchesPrice && matchesRating;
       });
-    },
-    addToWishlist(game) {
-      console.log("Adding to wishlist:", game.title);
-    },
-    addToCart(game) {
-      console.log("Adding to cart:", game.title);
-    },
+    }
   },
   created() {
     this.fetchGames();
@@ -432,9 +415,12 @@ export default {
   width: 100%;
 }
 
-.game-card-link {
-  text-decoration: none;
-  color: inherit;
+.game-card-wrapper {
+  position: relative;
+}
+
+.game-card-content {
+  cursor: pointer;
   height: 100%;
 }
 

@@ -13,8 +13,8 @@
     </div>
 
     <div
-      v-if="!loading && !error && wishlist.length > 0"
-      class="wishlist-container"
+        v-if="!loading && !error && wishlist.length > 0"
+        class="wishlist-container"
     >
       <section class="games-list">
         <div v-for="game in wishlist" :key="game.id" class="game-card">
@@ -25,8 +25,8 @@
             <span class="rating">⭐ {{ game.rating.toFixed(1) }}/5</span>
           </div>
           <div
-            class="stock-status"
-            :class="{ 'in-stock': game.remainingQuantity > 0 }"
+              class="stock-status"
+              :class="{ 'in-stock': game.remainingQuantity > 0 }"
           >
             {{ game.remainingQuantity > 0 ? "In Stock" : "Out of Stock" }}
           </div>
@@ -36,9 +36,9 @@
           </button>
           <!-- Add to Cart Button -->
           <button
-            @click="addToCart(game)"
-            class="add-to-cart-btn"
-            :disabled="game.remainingQuantity === 0"
+              @click="addToCart(game)"
+              class="add-to-cart-btn"
+              :disabled="game.remainingQuantity === 0"
           >
             Add to Cart
           </button>
@@ -76,12 +76,7 @@ export default {
   },
   methods: {
     async fetchWishlist() {
-      console.log(
-        "Attempting to fetch wishlist for client:",
-        userState.userInfo.id,
-      );
-
-      if (!userState.userInfo.id) {
+      if (!userState.userInfo?.id) {
         this.error = "No client ID available. Please log in.";
         this.loading = false;
         return;
@@ -92,7 +87,7 @@ export default {
 
       try {
         const response = await axiosClient.get(
-          `/wishlists/client/${userState.userInfo.id}`,
+            `/wishlists/client/${userState.userInfo.id}`
         );
         console.log("Wishlist fetch response:", response.data);
         const wishlistPromises = response.data.map((item) =>
@@ -111,24 +106,19 @@ export default {
       }
     },
 
-    async removeFromWishlist(game) {
-      console.log("Removing game from wishlist:", game);
-
-      if (!userState.userInfo.id) {
+    async removeFromWishlist(gameId) {
+      if (!userState.userInfo?.id) {
         this.error = "Please log in to remove games from your wishlist.";
         return;
       }
 
       try {
-        const response = await axios.delete(
-          "http://localhost:8080/wishlists/remove",
-          {
-            params: {
-              clientId: userState.userInfo.id,
-              gameId: game.id,
-            },
+        const response = await axiosClient.delete("/wishlists/remove", {
+          params: {
+            clientId: userState.userInfo.id,
+            gameId: gameId,
           },
-        );
+        });
 
         if (response.status === 200) {
           console.log("Game successfully removed from wishlist:", game);
@@ -141,21 +131,16 @@ export default {
     },
 
     async addToCart(game) {
-      console.log("Adding game to cart:", game);
-
-      if (!userState.userInfo.id) {
+      if (!userState.userInfo?.id) {
         this.error = "Please log in to add games to your cart.";
         return;
       }
 
       try {
-        const response = await axios.post(
-          "http://localhost:8080/carts/create",
-          {
-            clientId: userState.userInfo.id,
-            gameId: game.id,
-          },
-        );
+        const response = await axiosClient.post("/carts/create", {
+          clientId: userState.userInfo.id,
+          gameId: game.id,
+        });
 
         if (response.status === 200) {
           console.log("Game successfully added to cart:", game);
@@ -163,12 +148,15 @@ export default {
         }
       } catch (err) {
         console.error("Error adding game to cart:", err);
-        this.error = "Failed to add game to cart. Please try again.";
+        alert("Failed to add game to cart. Please try again.");
       }
     },
   },
   created() {
-    this.fetchWishlist();
+    if (userState.userInfo?.id) {
+      this.clientId = userState.userInfo.id;
+      this.fetchWishlist();
+    }
   },
 };
 </script>
@@ -249,6 +237,7 @@ export default {
   text-align: center;
   background-color: #e74c3c;
   color: white;
+  margin-bottom: 10px;
 }
 
 .stock-status.in-stock {
@@ -257,6 +246,7 @@ export default {
 
 .remove-btn,
 .add-to-cart-btn {
+  width: 100%;
   padding: 8px 16px;
   width: 100%;
   background-color: #e74c3c;
@@ -265,6 +255,8 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
 }
 
 .remove-btn {
@@ -281,7 +273,7 @@ export default {
   color: white;
 }
 
-.add-to-cart-btn:hover {
+.add-to-cart-btn:hover:not(:disabled) {
   background-color: #45a049;
 }
 
@@ -347,6 +339,9 @@ export default {
   text-align: center;
   padding: 40px;
   color: #666;
+  background-color: white;
+  border-radius: 8px;
+  margin: 20px;
 }
 
 .button-container {

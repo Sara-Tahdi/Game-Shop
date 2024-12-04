@@ -1,66 +1,86 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../views/HomePage.vue";
-import GameDetails from "@/views/GameDetails.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomePage.vue'
+import CatalogView from '../views/Catalog.vue'
+import GameDetails from '../views/GameDetails.vue'
+import Cart from '../views/Cart.vue'
+import Checkout from '../views/Checkout.vue'
+import Wishlist from '../views/Wishlist.vue'
+import Account from '../views/Account.vue'
+import EmployeeDashboard from '../views/EmployeeDashboard.vue'
+import OwnerDashboard from '../views/OwnerDashboard.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "Homepage",
-      component: HomePage,
+      path: '/',
+      name: 'home',
+      component: HomeView
     },
     {
-      path: "/catalog",
-      name: "Catalog",
-      component: () => import("../views/Catalog.vue"),
+      path: '/catalog',
+      name: 'catalog',
+      component: CatalogView
     },
     {
-      path: "/game/:id",
-      name: "Game Details",
+      path: '/games/:id',
+      name: 'GameDetails',
       component: GameDetails,
-      props: true,
+      props: true // Enable props for component
     },
     {
-      path: "/client-profile",
-      component: () => import("@/views/ClientProfile.vue"),
-      meta: { requiresAuth: true, userType: "client" },
+      path: '/cart',
+      name: 'cart',
+      component: Cart
     },
     {
-      path: "/employee-dashboard",
-      component: () => import("@/views/EmployeeDashboard.vue"),
-      meta: { requiresAuth: true, userType: "employee" },
+      path: '/checkout',
+      name: 'checkout',
+      component: Checkout
     },
     {
-      path: "/owner-dashboard",
-      component: () => import("@/views/OwnerDashboard.vue"),
-      meta: { requiresAuth: true, userType: "owner" },
+      path: '/wishlist',
+      name: 'wishlist',
+      component: Wishlist
     },
     {
-      path: "/account",
-      component: () => import("@/views/Account.vue"),
+      path: '/account',
+      name: 'account',
+      component: Account
     },
+    {
+      path: '/employee-dashboard',
+      name: 'employee-dashboard',
+      component: EmployeeDashboard
+    },
+    {
+      path: '/owner-dashboard',
+      name: 'owner-dashboard',
+      component: OwnerDashboard
+    },
+    // Redirect /game/:id to /games/:id
+    {
+      path: '/game/:id',
+      redirect: to => {
+        return { path: `/games/${to.params.id}` }
+      }
+    },
+    // Catch-all route for 404
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/catalog'
+    }
+  ]
+})
 
-    {
-      path: "/wishlist",
-      name: "wishlist",
-      component: () => import("../views/Wishlist.vue"),
-    },
+// Navigation guard for debugging
+router.beforeEach((to, from, next) => {
+  console.log('Navigation:', {
+    from: from.fullPath,
+    to: to.fullPath,
+    params: to.params
+  })
+  next()
+})
 
-    {
-      path: "/cart",
-      name: "Cart",
-      component: () => import("../views/Cart.vue"),
-    },
-    {
-      path: "/checkout",
-      name: "Checkout",
-      component: () => import("@/views/Checkout.vue"),
-      props: (route) => ({
-        cartData: route.params.cartData,
-      }),
-    },
-  ],
-});
-
-export default router;
+export default router
