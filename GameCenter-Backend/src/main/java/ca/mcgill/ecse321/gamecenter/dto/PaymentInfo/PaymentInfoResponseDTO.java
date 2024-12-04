@@ -8,7 +8,7 @@ public class PaymentInfoResponseDTO {
     private String lastFourDigits;
     private int expiryMonth;
     private int expiryYear;
-    private ClientResponseDTO client;
+    private int clientId;
 
     public PaymentInfoResponseDTO() {}
 
@@ -17,12 +17,12 @@ public class PaymentInfoResponseDTO {
         this.lastFourDigits = p.getCardNumber().substring(p.getCardNumber().length() - 4);
         this.expiryMonth = p.getExpiryMonth();
         this.expiryYear = p.getExpiryYear();
-        this.client = new ClientResponseDTO(p.getClient());
+        this.clientId = p.getClient().getId();
     }
 
     public int getId() { return id; }
     public String getLastFourDigits() { return this.lastFourDigits; }
     public int getExpiryMonth() { return expiryMonth; }
     public int getExpiryYear() { return expiryYear; }
-    public ClientResponseDTO getClient() { return client; }
+    public int getClientId() { return clientId; }
 }
